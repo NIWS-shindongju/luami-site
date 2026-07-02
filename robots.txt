@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Naver
+User-agent: Yeti
+Allow: /
+
+Sitemap: https://luamiphoto.com/sitemap.xml
+
+User-agent: *
+Disallow: /thanks.html
