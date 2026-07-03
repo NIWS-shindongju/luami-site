@@ -44,3 +44,12 @@ document.addEventListener('DOMContentLoaded', function(){
     window.addEventListener('load',function(){ScrollTrigger.refresh();});
   }catch(e){}
 })();
+
+/* 해시 앵커 — 핀 갤러리 레이아웃 반영 후 재정렬 */
+window.addEventListener('load',function(){
+  if(location.hash){setTimeout(function(){var el=document.querySelector(location.hash);if(el)el.scrollIntoView({block:'start'});},450);}
+});
+document.addEventListener('click',function(e){
+  var a=e.target.closest('a[href^="#"]');if(!a)return;var el=document.querySelector(a.getAttribute('href'));
+  if(el){setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'start'});},60);}
+});
