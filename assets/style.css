@@ -1,6 +1,6 @@
 :root{
   --ink:#1f2417; --ink2:#2c3322; --paper:#f3ecda; --paper2:#e9e1cb; --line:#d8cdb2;
-  --muted:#857b62; --accent:#71823f; --accent-l:#b8c08f; --gold:#c79a4b; --cream:#f7f1e2;
+  --muted:#6b6049; --accent:#71823f; --accent-l:#b8c08f; --gold:#c79a4b; --cream:#f7f1e2;
   --serif:"Fraunces",Georgia,serif; --sans:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   --maxw:1280px;
 }
