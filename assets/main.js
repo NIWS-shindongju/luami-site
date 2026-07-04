@@ -45,6 +45,41 @@ document.addEventListener('DOMContentLoaded', function(){
   }catch(e){}
 })();
 
+/* 시그니처: 히어로 사인파 리플 배경 (습득자산 SKILLS_ACQUIRED#3 재사용 — antenucci 기법, 루아미 그린 톤) */
+(function(){
+  try{
+    var svg=document.querySelector('.hero-ripple');
+    if(!svg) return;
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var W=1200,H=700,LINES=11,PTS=48,paths=[];
+    for(var i=0;i<LINES;i++){
+      var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+      var t=i/(LINES-1);
+      var r=Math.round(76+(245-76)*t), g=Math.round(133+(240-133)*t), b=Math.round(103+(222-103)*t);
+      p.setAttribute('stroke','rgba('+r+','+g+','+b+','+(0.05+0.09*(1-Math.abs(t-0.5)*2)).toFixed(3)+')');
+      p.setAttribute('fill','none');
+      p.setAttribute('stroke-width','1.2');
+      svg.appendChild(p);
+      paths.push(p);
+    }
+    function frame(ts){
+      for(var i=0;i<LINES;i++){
+        var baseY=60+(H-120)*(i/(LINES-1));
+        var phase=ts/1600+i*0.32;
+        var d='';
+        for(var j=0;j<=PTS;j++){
+          var x=(W/PTS)*j;
+          var y=baseY+Math.sin(j/7+phase)*20+Math.sin(j/2.6-phase*1.6)*6;
+          d+=(j?' L':'M')+x.toFixed(1)+' '+y.toFixed(1);
+        }
+        paths[i].setAttribute('d',d);
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }catch(e){}
+})();
+
 /* 해시 앵커 — 핀 갤러리 레이아웃 반영 후 재정렬 */
 window.addEventListener('load',function(){
   if(location.hash){setTimeout(function(){var el=document.querySelector(location.hash);if(el)el.scrollIntoView({block:'start'});},450);}
