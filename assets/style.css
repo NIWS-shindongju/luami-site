@@ -202,6 +202,14 @@ footer{background:var(--ink);color:var(--cream);padding:70px 0 40px;border-top:1
 @media(max-width:900px){.cases{column-count:2}}
 @media(max-width:560px){.cases{column-count:2;column-gap:14px}.case{margin-bottom:16px}.case .cx{margin-top:10px;padding-top:8px;flex-direction:column;gap:2px}.case .cx span{text-align:left;max-width:none}.case .cx b{font-size:15px}}
 
+/* 필터 탭 — 실제 사례가 많을 때 섹션을 쪼개지 않고 한 곳에서 골라보게 */
+.filter-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.filter-tabs button{font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:999px;padding:9px 20px;cursor:pointer;transition:border-color .25s,background .25s,color .25s}
+.filter-tabs button:hover{border-color:var(--accent);color:var(--ink)}
+.filter-tabs button.active{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+.case.hide{display:none}
+@media(max-width:560px){.filter-tabs{gap:8px;margin-top:20px}.filter-tabs button{padding:8px 16px;font-size:12.5px}}
+
 section:not(.hero){padding:clamp(66px,7.5vw,116px) 0}
 .kinetic+section, section:not(.hero)+section{border-top:1px solid var(--line)}
 .nav-links a{font-size:13px}
