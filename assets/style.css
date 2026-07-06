@@ -136,6 +136,7 @@ section{padding:clamp(80px,11vw,150px) 0;position:relative}
 .wrow h3{font-family:var(--serif);font-weight:600;font-size:23px;margin-bottom:2px}
 .wrow p{color:var(--muted);font-size:15px;line-height:1.7}
 @media(max-width:820px){.why{grid-template-columns:1fr;gap:14px}.wrow{padding:28px 24px}}
+@media(max-width:560px){.wrow{padding:20px 18px;gap:10px}.wrow .n{width:30px;height:30px;font-size:12px}.wrow h3{font-size:19px}.wrow p{font-size:14px;line-height:1.6}}
 
 .steps{margin-top:50px;border-top:1px solid var(--line)}
 .step{display:grid;grid-template-columns:90px 1fr;gap:28px;padding:32px 0;border-bottom:1px solid var(--line);align-items:start;transition:padding-left .35s}
@@ -143,7 +144,7 @@ section{padding:clamp(80px,11vw,150px) 0;position:relative}
 .step .num{font-family:var(--serif);font-size:42px;color:var(--accent);line-height:1}
 .step h3{font-family:var(--serif);font-weight:600;font-size:23px;margin-bottom:6px}
 .step p{color:var(--muted);max-width:54ch}
-@media(max-width:560px){.step{grid-template-columns:1fr;gap:6px}}
+@media(max-width:560px){.step{grid-template-columns:36px 1fr;gap:14px;padding:20px 0;align-items:baseline}.step .num{font-size:26px}.step h3{font-size:18px;margin-bottom:3px}.step p{font-size:14px;line-height:1.55}}
 
 .band{background:var(--ink);color:var(--cream);border-radius:4px;padding:clamp(50px,7vw,90px);text-align:center;position:relative;overflow:hidden;border:1px solid rgba(76,133,103,.3)}
 .band::before{content:"";position:absolute;inset:0;opacity:.5;background:radial-gradient(680px 280px at 50% -8%,rgba(76,133,103,.35),transparent)}
@@ -200,7 +201,7 @@ footer{background:var(--ink);color:var(--cream);padding:70px 0 40px;border-top:1
 .case .cx b{font-family:var(--serif);font-weight:600;font-size:18px;color:var(--ink)}
 .case .cx span{font-size:12px;color:var(--muted);text-align:right;max-width:16ch}
 @media(max-width:900px){.cases{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.cases{grid-template-columns:1fr}}
+@media(max-width:560px){.cases{grid-template-columns:repeat(2,1fr);gap:14px 12px}.case .cx{margin-top:10px;padding-top:8px;flex-direction:column;gap:2px}.case .cx span{text-align:left;max-width:none}.case .cx b{font-size:15px}}
 
 /* 필터 탭 — 실제 사례가 많을 때 섹션을 쪼개지 않고 한 곳에서 골라보게 */
 .filter-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
