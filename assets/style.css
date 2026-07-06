@@ -7,7 +7,9 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.6;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden;letter-spacing:-.01em}
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;letter-spacing:-.01em;
+  word-break:keep-all;overflow-wrap:break-word}
+h1,h2,h3,p{text-wrap:pretty}
 img{display:block;max-width:100%;image-orientation:from-image}
 a{color:inherit;text-decoration:none}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
@@ -188,16 +190,17 @@ footer{background:var(--ink);color:var(--cream);padding:70px 0 40px;border-top:1
 .page-head .idxlabel{color:var(--accent)}
 .page-head h1{font-family:var(--serif);font-weight:600;font-size:clamp(40px,6.2vw,92px);line-height:1.03;letter-spacing:-.02em;color:var(--ink);margin-top:14px}
 .page-head p{max-width:54ch;color:var(--muted);margin-top:20px;font-size:clamp(15px,1.3vw,18px);line-height:1.75}
-.cases{display:grid;grid-template-columns:repeat(3,1fr);gap:26px 24px}
-.case{margin:0}
-.case .im{overflow:hidden;border-radius:4px;aspect-ratio:4/5}
-.case img{width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.16,1,.3,1)}
+/* 매소너리: 원본 비율 그대로 — 크롭으로 이미지 일부가 잘려나가지 않도록 */
+.cases{column-count:3;column-gap:24px}
+.case{margin:0 0 26px;break-inside:avoid}
+.case .im{overflow:hidden;border-radius:4px;line-height:0}
+.case img{width:100%;height:auto;display:block;transition:transform .9s cubic-bezier(.16,1,.3,1)}
 .case:hover img{transform:scale(1.05)}
 .case .cx{display:flex;justify-content:space-between;gap:14px;align-items:baseline;margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
 .case .cx b{font-family:var(--serif);font-weight:600;font-size:18px;color:var(--ink)}
 .case .cx span{font-size:12px;color:var(--muted);text-align:right;max-width:16ch}
-@media(max-width:900px){.cases{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.cases{grid-template-columns:1fr}}
+@media(max-width:900px){.cases{column-count:2}}
+@media(max-width:560px){.cases{column-count:2;column-gap:14px}.case{margin-bottom:16px}.case .cx{margin-top:10px;padding-top:8px;flex-direction:column;gap:2px}.case .cx span{text-align:left;max-width:none}.case .cx b{font-size:15px}}
 
 section:not(.hero){padding:clamp(66px,7.5vw,116px) 0}
 .kinetic+section, section:not(.hero)+section{border-top:1px solid var(--line)}
@@ -345,16 +348,20 @@ body.nav-open{overflow:hidden}
 @media(max-width:760px){.wall{grid-template-columns:repeat(2,1fr);grid-auto-rows:clamp(90px,24vw,160px)}.wall .w1{grid-column:span 2;grid-row:span 1}}
 
 /* ===== 서브페이지 노출 강화(자세히 보기 3카드) ===== */
-.explore-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:50px}
-.explore-card{display:block;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--paper);transition:border-color .25s,transform .3s,box-shadow .3s}
+.explore-grid{column-count:3;column-gap:28px;margin-top:50px}
+.explore-grid.fullwide{display:block;column-count:1}
+.explore-card{display:block;break-inside:avoid;margin:0 0 28px;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--paper);transition:border-color .25s,transform .3s,box-shadow .3s}
 .explore-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 24px 44px -26px rgba(31,36,23,.3)}
-.explore-card figure{margin:0;aspect-ratio:4/3;overflow:hidden}
-.explore-card img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.16,1,.3,1)}
+.explore-card figure{margin:0;overflow:hidden;line-height:0}
+.explore-card img{width:100%;height:auto;display:block;transition:transform .8s cubic-bezier(.16,1,.3,1)}
 .explore-card:hover img{transform:scale(1.06)}
+.explore-card.wide figure{aspect-ratio:21/9}
+.explore-card.wide img{height:100%;object-fit:cover}
 .ec-body{padding:22px 22px 26px}
 .ec-body .idxlabel{font-size:10px}
 .ec-body h3{font-family:var(--serif);font-weight:600;font-size:22px;margin-top:8px;color:var(--ink)}
 .ec-body p{color:var(--muted);font-size:14px;line-height:1.65;margin-top:8px;position:relative;padding-right:22px}
 .ec-body p .arrow{position:absolute;right:0;bottom:0;color:var(--accent);opacity:0;transform:translateX(-6px);transition:.3s;font-size:16px}
 .explore-card:hover .arrow{opacity:1;transform:none}
-@media(max-width:820px){.explore-grid{grid-template-columns:1fr;gap:16px}}
+@media(max-width:820px){.explore-grid{column-count:2;column-gap:16px}.explore-card{margin-bottom:16px}}
+@media(max-width:560px){.explore-grid{column-count:1}}
