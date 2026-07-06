@@ -20,6 +20,20 @@ document.addEventListener('DOMContentLoaded', function(){
   var dcl=document.getElementById('drawerClose');if(dcl)dcl.addEventListener('click',dClose);
   if(drawer){drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',dClose);});}
   document.addEventListener('keydown',function(e){if(e.key==='Escape')dClose();});
+  /* 사례 필터 탭 */
+  document.querySelectorAll('.filter-tabs').forEach(function(tabs){
+    var grid=document.getElementById(tabs.dataset.target);
+    if(!grid)return;
+    var cards=grid.querySelectorAll('.case');
+    tabs.querySelectorAll('button').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        tabs.querySelectorAll('button').forEach(function(b){b.classList.remove('active')});
+        btn.classList.add('active');
+        var cat=btn.dataset.cat;
+        cards.forEach(function(c){c.classList.toggle('hide',cat!=='all'&&c.dataset.cat!==cat)});
+      });
+    });
+  });
 });
 
 /* 강화 레이어(선택): GSAP 스크롤·패럴럭스·마그네틱·핀 갤러리. 실패해도 head 스크립트가 콘텐츠·리빌 보장 */
