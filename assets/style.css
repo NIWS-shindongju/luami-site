@@ -388,3 +388,9 @@ body.nav-open{overflow:hidden}
 .ec-body p .arrow{position:absolute;right:0;bottom:0;color:var(--accent);opacity:0;transform:translateX(-6px);transition:.3s;font-size:16px}
 .explore-card:hover .arrow{opacity:1;transform:none}
 @media(max-width:820px){.explore-grid{grid-template-columns:1fr;gap:16px}}
+/* 모바일에서도 세로로 쌓지 않고 가로 스와이프로 — 사이트 내 다른 갤러리와 같은 패턴 */
+@media(max-width:560px){
+  .explore-grid:not(.fullwide){display:flex;grid-template-columns:none;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scroll-padding:0 4px;padding-bottom:6px;scrollbar-width:none}
+  .explore-grid:not(.fullwide)::-webkit-scrollbar{display:none}
+  .explore-grid:not(.fullwide) .explore-card{flex:0 0 78%;scroll-snap-align:center}
+}
