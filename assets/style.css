@@ -363,6 +363,7 @@ body.nav-open{overflow:hidden}
 .wall{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:clamp(130px,21vw,290px);gap:10px}
 .wall .w{position:relative;margin:0;border-radius:4px;overflow:hidden}
 .wall .w1{grid-column:span 2;grid-row:span 2}
+@media(min-width:761px){.wall .w:nth-last-child(-n+2){grid-column:span 2}}
 .wall img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.16,1,.3,1)}
 .wall .w:hover img{transform:scale(1.05)}
 .wall figcaption{position:absolute;left:10px;bottom:10px;background:rgba(31,36,23,.6);backdrop-filter:blur(5px);color:var(--cream);padding:6px 12px;border-radius:2px;font-size:11px;letter-spacing:.04em;opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s}
