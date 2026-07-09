@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>루아미 블로그 · 설치 현장의 이야기</title>
+<meta name="description" content="루아미가 직접 설치·운영한 포토부스 현장의 이야기. 테마 제작 뒷이야기부터 매장 운영 노하우까지, 사례 뒤에 있던 과정을 기록합니다.">
+<meta name="theme-color" content="#1F2417">
+<meta name="keywords" content="포토부스 블로그,무인 포토부스 렌탈,포토부스 설치 후기,테마 포토부스,루아미">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://luamiphoto.com/blog.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="루아미 (Luami)">
+<meta property="og:title" content="루아미 블로그 · 설치 현장의 이야기">
+<meta property="og:description" content="루아미가 직접 설치·운영한 포토부스 현장의 이야기를 기록합니다.">
+<meta property="og:image" content="https://luamiphoto.com/og.jpg">
+<meta property="og:url" content="https://luamiphoto.com/blog.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://luamiphoto.com/"}, {"@type": "ListItem", "position": 2, "name": "블로그", "item": "https://luamiphoto.com/blog.html"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Blog","name":"루아미 블로그","url":"https://luamiphoto.com/blog.html","publisher":{"@type":"Organization","name":"루아미 (Luami)"}}
+</script>
+<link rel="stylesheet" href="assets/style.css">
+<script>document.documentElement.className += ' js';</script>
+</head>
+<body>
+<div class="grain"></div>
+<div class="progress" id="prog"></div>
+<div class="util"><div class="wrap"><span>Luami — 무인 포토부스 렌탈</span><span>Est. 2026 · Korea</span></div></div>
+<header class="nav"><div class="wrap nav-in">
+  <a href="index.html" class="logo">Luami<span class="dot"></span></a>
+  <nav class="nav-links"><a href="index.html#about">소개</a><a href="services.html">서비스</a><a href="index.html#usecases">용도별</a><a href="portfolio.html">설치 사례</a><a href="blog.html">블로그</a><a href="guide.html">렌탈 가이드</a><a href="index.html#process">진행 과정</a><a href="index.html#faq">FAQ</a></nav>
+  <a href="index.html#contact" class="nav-cta">렌탈 문의</a>
+  <button class="navtoggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="drawer"><span></span><span></span></button>
+</div></header>
+
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-top">
+    <a href="index.html" class="logo dlogo">Luami<span class="dot"></span></a>
+    <button class="drawer-close" id="drawerClose" aria-label="메뉴 닫기">✕</button>
+  </div>
+  <nav class="drawer-links">
+    <a href="index.html#about"><i>01</i>소개</a>
+    <a href="services.html"><i>02</i>서비스</a>
+    <a href="index.html#usecases"><i>03</i>용도별</a>
+    <a href="portfolio.html"><i>04</i>설치 사례</a>
+    <a href="blog.html"><i>05</i>블로그</a>
+    <a href="guide.html"><i>06</i>렌탈 가이드</a>
+    <a href="index.html#process"><i>07</i>진행 과정</a>
+    <a href="index.html#faq"><i>08</i>FAQ</a>
+  </nav>
+  <div class="drawer-foot">
+    <a href="index.html#contact" class="btn drawer-cta">무료 견적 문의</a>
+    <div class="drawer-contact">
+      <a href="tel:01036297743">010-3629-7743</a>
+      <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a>
+      <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
+    </div>
+  </div>
+</div>
+
+<div class="stickybar" id="sbar">
+  <a href="index.html" class="logo">Luami<span class="dot"></span></a>
+  <a href="index.html#contact" class="btn-mini">렌탈 문의</a>
+  <button class="navtoggle" id="navToggle2" aria-label="메뉴 열기" aria-controls="drawer"><span></span><span></span></button>
+</div>
+
+<section class="page-head"><div class="wrap">
+  <span class="idxlabel fade">Blog</span>
+  <h1><span class="lm"><span>현장의 이야기를,</span></span><span class="lm"><span><i>기록</i>합니다.</span></span></h1>
+  <p class="fade">설치 사례가 "무엇을 만들었는가"를 보여준다면, 이 블로그는 "왜 그렇게 만들었는가"를 담습니다. 문의 단계에서 받은 질문, 현장에서 부딪힌 문제, 그걸 풀어간 과정 — 루아미가 부스를 설계하고 설치하며 쌓은 이야기를 하나씩 기록해 갑니다.</p>
+</div></section>
+
+<section style="padding-top:clamp(30px,5vw,60px)"><div class="wrap">
+  <span class="idxlabel fade">11 Stories</span>
+  <h2 class="serif fade" style="font-weight:400;font-size:clamp(26px,3.6vw,44px);margin-top:10px">모든 이야기</h2>
+  <p class="fade" style="color:var(--muted);margin-top:16px;max-width:62ch;line-height:1.8">설치 사례의 스펙이 궁금하다면 <a href="portfolio.html" style="color:var(--accent);text-decoration:underline">설치 사례 페이지</a>를, 그 뒤에 있던 결정과 과정이 궁금하다면 아래 글을 읽어보세요.</p>
+  <div class="explore-grid" style="margin-top:40px">
+    <a class="explore-card fade" href="blog/alley-photobooth-story.html">
+      <figure><img src="assets/images/alley-night-exterior-01.webp" width="1200" height="1951" alt="주택가 골목에 설치된 스테인리스 포토부스 야간 외관" loading="lazy" decoding="async"></figure>
+      <div class="ec-body"><span class="idxlabel">2026.06.23 · 로드샵</span><h3>차 한 대 겨우 지나가는 골목이었습니다</h3><p>도면으로는 안 보이던 것들, 실측으로 확인한 과정.<span class="arrow">↗</span></p></div>
+    </a>
+    <a class="explore-card fade" href="blog/festival-multi-unit-photobooth-story.html">
+      <figure><img src="assets/images/event-led-trio.webp" width="800" height="1066" alt="LED 랩핑 포토부스 3대 동시 설치" loading="lazy" decoding="async"></figure>
+      <div class="ec-body"><span class="idxlabel">2026.06.16 · 행사 운영</span><h3>부스가 5대가 되어도, 사람은 늘지 않습니다</h3><p>대형 페스티벌 다대수 운영의 실제 구조.<span class="arrow">↗</span></p></div>
+    </a>
+    <a class="explore-card fade" href="blog/self-studio-photobooth-story.html">
+      <figure><img src="assets/images/store-premium-02.webp" width="1200" height="1600" alt="프리미엄 셀프 스튜디오 매장 와이드 컷" loading="lazy" decoding="async"></figure>
+      <div class="ec-body"><span class="idxlabel">2026.06.09 · 매장 운영</span><h3>셀프 스튜디오에 부스를 놓을 때, 제일 조심하는 것</h3><p>이미 완성된 공간에 녹아드는 법.<span class="arrow">↗</span></p></div>
+    </a>
+    <a class="explore-card fade" href="blog/compact-kiosk-photobooth-story.html">
+      <figure><img src="assets/images/case-kiosk.webp" width="1080" height="1350" alt="컴팩트 무인 포토 키오스크" loading="lazy" decoding="async"></figure>
+      <div class="ec-body"><span class="idxlabel">2026.06.02 · 컴팩트 설치</span><h3>"저희 매장엔 그런 공간이 없어요"의 답</h3><p>부스형 대신 키오스크형을 택한 이유.<span class="arrow">↗</span></p></div>
+    </a>
+    <a class="explore-card fade" href="blog/rooftop-night-photobooth-story.html">
+      <figure><img src="assets/images/install-night-rooftop.webp" width="850" height="1063" alt="루프탑 야외 행사 포토부스 야간 설치" loading="lazy" decoding="async"></figure>
+      <div class="ec-body"><span class="idxlabel">2026.05.26 · 야외 행사</span><h3>낮에 예쁜 부스, 밤엔 사라진다</h3><p>야간 행사에서 조명이 결정하는 것.<span class="arrow">↗</span></p></div>
+    </a>
+    <a class="explore-card fade" href="blog/retail-photobooth-story.html">
+      <figure><img src="assets/images/g3.webp" width="901" height="1401" alt="매장형 포토부스 설치 사례" loading="lazy" decoding="async"></figure>
+      <div class="ec-body"><span class="idxlabel">2026.05.19 · 매장 운영</span><h3>제일 안 팔리던 자리가, 제일 바빠진 자리가 됐다</h3><p>유휴 공간을 상설 포토존으로 바꾼 이야기.<span class="arrow">↗</span></p></div>
+    </a>
+    <a class="explore-card fade" href="blog/custom-wrap-photobooth-story.html">
+      <figure><img src="assets/images/wrap-sky.webp" width="983" height="1200" alt="하늘 구름 그래픽 랩핑 포토부스" loading="lazy" decoding="async"></figure>
+      <div class="ec-body"><span class="idxlabel">2026.05.12 · 커스텀 디자인</span><h3>로고를 크게 넣는 대신, 우리가 골라낸 것</h3><p>브랜드 무드를 패턴으로 풀어낸 방식.<span class="arrow">↗</span></p></div>
+    </a>
+    <a class="explore-card fade" href="blog/winter-popup-photobooth-story.html">
+      <figure><img src="assets/images/winter-forest-hall.webp" width="1200" height="1500" alt="겨울숲 테마 포토부스 실내 설치" loading="lazy" decoding="async"></figure>
+      <div class="ec-body"><span class="idxlabel">2026.05.05 · 시즌 팝업</span><h3>크리스마스마다 새 부스를 사지 않는 이유</h3><p>본체는 그대로, 겉옷만 계절에 맞춰.<span class="arrow">↗</span></p></div>
+    </a>
+    <a class="explore-card fade" href="blog/hotel-premium-mirror-photobooth-story.html">
+      <figure><img src="assets/images/premium-mirror-front.webp" width="1200" height="1600" alt="다이아몬드 패턴 미러 마감의 프리미엄 포토부스" loading="lazy" decoding="async"></figure>
+      <div class="ec-body"><span class="idxlabel">2026.04.28 · 프리미엄 · 웨딩</span><h3>화려한데, 티 안 나게</h3><p>호텔 로비를 위한 절제된 디자인.<span class="arrow">↗</span></p></div>
+    </a>
+    <a class="explore-card fade" href="blog/vintage-elevator-photobooth-story.html">
+      <figure><img src="assets/images/theme-elevator-front.webp" width="901" height="1600" alt="빈티지 엘리베이터 테마 포토부스 정면" loading="lazy" decoding="async"></figure>
+      <div class="ec-body"><span class="idxlabel">2026.04.21 · 테마 설치</span><h3>옛날 엘리베이터, 소품이 아니라 진짜처럼</h3><p>그래픽이 아니라 소재로 만든 빈티지.<span class="arrow">↗</span></p></div>
+    </a>
+    <a class="explore-card fade" href="blog/subway-photobooth-story.html">
+      <figure><img src="assets/images/theme-subway-front.webp" width="901" height="1600" alt="지하철 테마 포토부스 정면" loading="lazy" decoding="async"></figure>
+      <div class="ec-body"><span class="idxlabel">2026.04.14 · 테마 설치</span><h3>시트지 한 장이 아니라, 지하철 한 칸을 옮긴 이유</h3><p>질문 하나가 제작 방식을 바꾼 과정.<span class="arrow">↗</span></p></div>
+    </a>
+  </div>
+</div></section>
+
+<section style="padding-top:clamp(60px,8vw,90px);padding-bottom:clamp(90px,12vw,150px)"><div class="wrap"><div class="band fade">
+  <h2>이런 부스,<br><i>우리 브랜드</i>에도.</h2><p>레퍼런스처럼 브랜드에 꼭 맞는 부스를 구성해 드립니다.</p>
+  <div class="contacts">
+    <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener" class="kakao">카카오톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="mailto:luami@luamiphoto.com">이메일 문의</a>
+    <a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a>
+  </div>
+</div></div></section>
+<div class="sprocket on-ink"></div>
+<footer><div class="wrap">
+  <div class="bigmark fade">Lua<i>mi</i>.</div>
+  <div class="foot-grid">
+    <div class="col"><b>루아미 (Luami)</b>무인 포토부스 렌탈 · 설치 · 운영<br>전국 상담 가능</div>
+    <div class="col"><b>문의</b>전화 010-3629-7743<br>이메일 luami@luamiphoto.com<br>카카오톡 채널 <a href="http://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br>인스타그램 · 유튜브 @luami_photo</div>
+    <div class="col"><b>바로가기</b><a href="services.html">서비스</a> · <a href="portfolio.html">사례</a> · <a href="blog.html">블로그</a> · <a href="guide.html">렌탈 가이드</a><br><a href="index.html#process">진행</a> · <a href="index.html#faq">FAQ</a></div>
+  </div>
+  <p class="note">© 2026 루아미(LUAMI). All rights reserved. · 무인 포토부스 렌탈 · 설치 · 운영</p>
+</div></footer>
+<div class="mcta"><a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="index.html#contact" class="p">무료 견적</a></div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="assets/main.js" defer></script>
+</body>
+</html>

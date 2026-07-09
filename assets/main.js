@@ -27,20 +27,15 @@ document.addEventListener('DOMContentLoaded', function(){
   try{
     if(!(window.gsap&&window.ScrollTrigger)) return;
     gsap.registerPlugin(ScrollTrigger);
-    /* 히어로 이미지 미세 패럴럭스 */
-    gsap.to('.hero-figure',{yPercent:-3.5,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:1}});
+    /* 히어로 이미지 미세 패럴럭스 (홈 외 페이지엔 .hero가 없으므로 가드) */
+    if(document.querySelector('.hero')){
+      gsap.to('.hero-mosaic',{yPercent:-3.5,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:1}});
+    }
     /* 마그네틱 버튼 */
     document.querySelectorAll('.btn,.btn-ghost').forEach(function(b){
       b.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();gsap.to(b,{x:(e.clientX-r.left-r.width/2)*0.12,y:(e.clientY-r.top-r.height/2)*0.16,duration:0.5,ease:'power2.out'})});
       b.addEventListener('mouseleave',function(){gsap.to(b,{x:0,y:0,duration:0.5,ease:'power2.out'})});
     });
-    var hg=document.querySelector('.hgallery'),gtrack=document.querySelector('.hgallery-track');
-    if(hg&&gtrack&&matchMedia('(min-width:881px)').matches){
-      hg.classList.add('pinned');
-      var gdist=function(){return Math.max(0,gtrack.scrollWidth-window.innerWidth+56);};
-      gsap.to(gtrack,{x:function(){return -gdist();},ease:'none',
-        scrollTrigger:{trigger:hg,start:'top top',end:function(){return '+='+gdist();},pin:true,scrub:1,anticipatePin:1,invalidateOnRefresh:true}});
-    }
     window.addEventListener('load',function(){ScrollTrigger.refresh();});
   }catch(e){}
 })();
