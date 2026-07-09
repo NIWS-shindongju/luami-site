@@ -7,7 +7,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.6;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden;letter-spacing:-.01em}
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;letter-spacing:-.01em;word-break:keep-all;overflow-wrap:break-word}
 img{display:block;max-width:100%;image-orientation:from-image}
 a{color:inherit;text-decoration:none}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
@@ -123,7 +123,7 @@ section{padding:clamp(80px,11vw,150px) 0;position:relative}
 .gpanel .cap b{color:var(--cream);font-family:var(--serif);font-weight:600}
 @media(max-width:1080px){.hgallery-track{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){.hgallery-track{grid-template-columns:repeat(2,1fr);gap:14px}}
-@media(max-width:460px){.hgallery-track{grid-template-columns:1fr;gap:12px}.gpanel img{height:clamp(200px,54vw,280px)}}
+@media(max-width:460px){.hgallery-track{gap:10px}.gpanel img{height:clamp(150px,42vw,220px)}.gpanel .cap{font-size:10.5px;margin-top:8px;padding-top:6px}}
 
 .why{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .why .head{grid-column:1/-1;margin-bottom:30px}
@@ -199,7 +199,12 @@ footer{background:var(--ink);color:var(--cream);padding:70px 0 40px;border-top:1
 .case .cx b{font-family:var(--serif);font-weight:600;font-size:18px;color:var(--ink)}
 .case .cx span{font-size:12px;color:var(--muted);text-align:right;max-width:16ch}
 @media(max-width:900px){.cases{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.cases{grid-template-columns:1fr}}
+@media(max-width:560px){
+  .cases{grid-template-columns:repeat(2,1fr);gap:16px 10px}
+  .case .cx{flex-direction:column;align-items:flex-start;gap:3px;margin-top:10px;padding-top:9px}
+  .case .cx b{font-size:13.5px;line-height:1.3}
+  .case .cx span{font-size:10px;text-align:left;max-width:none}
+}
 
 section:not(.hero){padding:clamp(66px,7.5vw,116px) 0}
 .kinetic+section, section:not(.hero)+section{border-top:1px solid var(--line)}
@@ -332,9 +337,9 @@ body.nav-open{overflow:hidden}
 @media(max-width:820px){.svc.with-thumbs{gap:14px}.svc.with-thumbs .srow{padding:18px;grid-template-columns:32px 1fr 64px}.svc.with-thumbs .sthumb{width:64px;height:64px}}
 @media(max-width:560px){
   .svc.with-thumbs .srow{grid-template-columns:24px 1fr;grid-template-rows:auto auto;padding:14px;gap:3px 8px}
-  .svc.with-thumbs .srow .idx{grid-row:1;font-size:15px}
+  .svc.with-thumbs .srow .idx{grid-column:1;grid-row:1;font-size:15px}
   .svc.with-thumbs .srow h3{grid-column:2;grid-row:1;font-size:13.5px;line-height:1.3}
-  .svc.with-thumbs .srow p{grid-column:1/-1;grid-row:2;font-size:11px;line-height:1.42;margin-top:2px}
+  .svc.with-thumbs .srow p{grid-column:2;grid-row:2;font-size:11px;line-height:1.42;margin-top:2px}
   .svc.with-thumbs .sthumb{display:none}
 }
 
@@ -370,11 +375,17 @@ body.nav-open{overflow:hidden}
 .ec-body p{color:var(--muted);font-size:14px;line-height:1.65;margin-top:8px;position:relative;padding-right:22px}
 .ec-body p .arrow{position:absolute;right:0;bottom:0;color:var(--accent);opacity:0;transform:translateX(-6px);transition:.3s;font-size:16px}
 .explore-card:hover .arrow{opacity:1;transform:none}
-@media(max-width:820px){.explore-grid{grid-template-columns:1fr;gap:16px}}
+@media(max-width:820px){.explore-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
+@media(max-width:560px){
+  .explore-grid{gap:12px}
+  .ec-body{padding:14px 14px 16px}
+  .ec-body h3{font-size:15px;margin-top:6px;line-height:1.3}
+  .ec-body p{font-size:11.5px;line-height:1.5;margin-top:6px;padding-right:0}
+  .ec-body p .arrow{display:none}
+}
 /* 홈 자세히보기 4카드 — 사례·블로그·서비스·가이드가 한 화면에 */
 .explore-grid.cols-4{grid-template-columns:repeat(4,1fr)}
 @media(max-width:1080px){.explore-grid.cols-4{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:820px){.explore-grid.cols-4{grid-template-columns:1fr}}
 
 /* ===== 블로그 포스트 ===== */
 .post-meta{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;color:var(--muted);font-size:13px;letter-spacing:.02em;margin-top:18px}
