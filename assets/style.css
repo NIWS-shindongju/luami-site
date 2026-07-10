@@ -395,3 +395,6 @@ body.nav-open{overflow:hidden}
 .post-body p{color:var(--muted);max-width:68ch;line-height:1.9;font-size:clamp(15px,1.2vw,17px)}
 .post-body p+p{margin-top:20px}
 .post-body h3{font-family:var(--serif);font-weight:600;font-size:clamp(21px,2.4vw,28px);color:var(--ink);margin:44px 0 16px}
+.abox{background:var(--paper2);border:1px solid var(--line);border-radius:2px;padding:24px 26px;max-width:68ch}
+.abox b{display:block;font-family:var(--serif);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.abox p{color:var(--ink);font-size:15.5px;line-height:1.8;margin:0;max-width:none}
