@@ -124,6 +124,11 @@ section{padding:clamp(80px,11vw,150px) 0;position:relative}
 @media(max-width:1080px){.hgallery-track{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){.hgallery-track{grid-template-columns:repeat(2,1fr);gap:14px}}
 @media(max-width:460px){.hgallery-track{gap:10px}.gpanel img{height:clamp(150px,42vw,220px)}.gpanel .cap{font-size:10.5px;margin-top:8px;padding-top:6px}}
+/* 갤러리 스태거 리빌 — 4열 리듬으로 순차 등장 */
+.hgallery-track .gpanel:nth-child(4n+1){transition-delay:0ms}
+.hgallery-track .gpanel:nth-child(4n+2){transition-delay:70ms}
+.hgallery-track .gpanel:nth-child(4n+3){transition-delay:140ms}
+.hgallery-track .gpanel:nth-child(4n+4){transition-delay:210ms}
 
 .why{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .why .head{grid-column:1/-1;margin-bottom:30px}
