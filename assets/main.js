@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function(){
       svg.appendChild(p);
       paths.push(p);
     }
+    var running=false,rafId=null;
     function frame(ts){
       for(var i=0;i<LINES;i++){
         var baseY=60+(H-120)*(i/(LINES-1));
@@ -69,9 +70,15 @@ document.addEventListener('DOMContentLoaded', function(){
         }
         paths[i].setAttribute('d',d);
       }
-      requestAnimationFrame(frame);
+      if(running) rafId=requestAnimationFrame(frame);
     }
-    requestAnimationFrame(frame);
+    function start(){if(running)return;running=true;rafId=requestAnimationFrame(frame);}
+    function stop(){running=false;if(rafId)cancelAnimationFrame(rafId);rafId=null;}
+    /* 화면 밖이거나 탭이 백그라운드면 정지 — 불필요한 CPU/배터리 소모 방지 */
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting&&!document.hidden?start():stop()})},{threshold:0}).observe(svg);
+    } else { start(); }
+    document.addEventListener('visibilitychange',function(){document.hidden?stop():(svg.getBoundingClientRect().bottom>0&&start())});
   }catch(e){}
 })();
 
