@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function(){
   });
   try{
     var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:0.12,rootMargin:'0px 0px -6% 0px'});
-    document.querySelectorAll('.fade,.lm,.manifesto h2').forEach(function(el){io.observe(el)});
+    document.querySelectorAll('.fade,.lm').forEach(function(el){io.observe(el)});
   }catch(e){document.querySelectorAll('.fade,.lm').forEach(function(e){e.classList.add('in')})}
   /* 실패세이프: 무슨 일이 있어도 2.6초 뒤 전부 노출.
      transition에 기대지 않고 즉시 최종 상태로 스냅 — 백그라운드 탭 등에서
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function(){
     el.classList.add('in');
     if(t){ void t.offsetHeight; t.style.transition=prev; }
   }
-  setTimeout(function(){document.querySelectorAll('.fade,.lm,.hero h1,.hero .sub,.manifesto h2').forEach(revealHard)},2600);
+  setTimeout(function(){document.querySelectorAll('.fade,.lm,.hero h1,.hero .sub').forEach(revealHard)},2600);
   /* 스티키 헤더 */
   var sbar=document.getElementById('sbar'),prog=document.getElementById('prog');
   addEventListener('scroll',function(){var st=window.pageYOffset||document.documentElement.scrollTop;if(sbar)sbar.classList.toggle('show',st>innerHeight*0.85);if(prog){var d=document.documentElement;prog.style.width=(st/(d.scrollHeight-d.clientHeight)*100)+'%'}},{passive:true});
