@@ -31,6 +31,23 @@ document.addEventListener('DOMContentLoaded', function(){
   document.addEventListener('keydown',function(e){if(e.key==='Escape')dClose();});
 });
 
+/* 시그니처: Lenis 관성 스무스 스크롤 — 실패해도 브라우저 기본 스크롤로 정상 동작 */
+(function(){
+  try{
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if(typeof Lenis==='undefined') return;
+    var lenis=new Lenis({duration:1.1,easing:function(t){return t===1?1:1-Math.pow(2,-10*t)}});
+    window.__lenis=lenis;
+    if(window.gsap&&window.ScrollTrigger){
+      lenis.on('scroll',ScrollTrigger.update);
+      gsap.ticker.add(function(time){lenis.raf(time*1000)});
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      requestAnimationFrame(function raf(time){lenis.raf(time);requestAnimationFrame(raf)});
+    }
+  }catch(e){}
+})();
+
 /* 강화 레이어(선택): GSAP 스크롤·패럴럭스·마그네틱·핀 갤러리. 실패해도 head 스크립트가 콘텐츠·리빌 보장 */
 (function(){
   try{
