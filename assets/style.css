@@ -218,7 +218,7 @@ section:not(.hero){padding:clamp(66px,7.5vw,116px) 0}
 .numlist{list-style:none;display:flex;flex-direction:column;gap:clamp(6px,1.2vw,15px);font-family:var(--serif);font-weight:600;font-size:clamp(24px,2.9vw,46px);color:var(--ink);letter-spacing:-.01em;margin:24px 0 0}
 .numlist li{line-height:1.14}
 .numlist sup{font-size:.4em;color:var(--accent);margin-right:.5em;font-family:var(--sans);font-weight:700;vertical-align:.55em}
-.numlist a{transition:color .25s}
+.numlist a{display:inline-block;padding:6px 0;transition:color .25s}
 .numlist a:hover{color:var(--accent)}
 /* 이미지+리스트 split */
 .svc-split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,96px);align-items:center}
