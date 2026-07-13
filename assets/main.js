@@ -23,7 +23,19 @@ document.addEventListener('DOMContentLoaded', function(){
   addEventListener('scroll',function(){var st=window.pageYOffset||document.documentElement.scrollTop;if(sbar)sbar.classList.toggle('show',st>innerHeight*0.85);if(prog){var d=document.documentElement;prog.style.width=(st/(d.scrollHeight-d.clientHeight)*100)+'%'}},{passive:true});
   /* 모바일 드로어 네비 */
   var drawer=document.getElementById('drawer');
-  function dOpen(){if(!drawer)return;drawer.classList.add('open');document.body.classList.add('nav-open');drawer.setAttribute('aria-hidden','false');var t=document.getElementById('navToggle');t&&t.setAttribute('aria-expanded','true');}
+  function dOpen(){
+    if(!drawer)return;
+    drawer.classList.add('open');document.body.classList.add('nav-open');drawer.setAttribute('aria-hidden','false');
+    var t=document.getElementById('navToggle');t&&t.setAttribute('aria-expanded','true');
+    /* 실패세이프: transition이 progress:0에 멈춰 드로어가 열린 것처럼 보이지 않는 경우 방지 */
+    setTimeout(function(){
+      if(drawer.classList.contains('open') && getComputedStyle(drawer).visibility!=='visible'){
+        drawer.style.transition='none';drawer.style.transform='none';drawer.style.opacity='1';drawer.style.visibility='visible';
+        void drawer.offsetHeight;
+        drawer.style.transition='';drawer.style.transform='';drawer.style.opacity='';drawer.style.visibility='';
+      }
+    },700);
+  }
   function dClose(){if(!drawer)return;drawer.classList.remove('open');document.body.classList.remove('nav-open');drawer.setAttribute('aria-hidden','true');var t=document.getElementById('navToggle');t&&t.setAttribute('aria-expanded','false');}
   ['navToggle','navToggle2'].forEach(function(id){var b=document.getElementById(id);if(b)b.addEventListener('click',dOpen);});
   var dcl=document.getElementById('drawerClose');if(dcl)dcl.addEventListener('click',dClose);
