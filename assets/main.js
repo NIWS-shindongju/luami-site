@@ -19,8 +19,27 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   setTimeout(function(){document.querySelectorAll('.fade,.lm,.hero h1,.hero .sub').forEach(revealHard)},2600);
   /* 스티키 헤더 */
-  var sbar=document.getElementById('sbar'),prog=document.getElementById('prog');
-  addEventListener('scroll',function(){var st=window.pageYOffset||document.documentElement.scrollTop;if(sbar)sbar.classList.toggle('show',st>innerHeight*0.85);if(prog){var d=document.documentElement;prog.style.width=(st/(d.scrollHeight-d.clientHeight)*100)+'%'}},{passive:true});
+  var sbar=document.getElementById('sbar'),prog=document.getElementById('prog'),sbarFailsafeArmed=false;
+  addEventListener('scroll',function(){
+    var st=window.pageYOffset||document.documentElement.scrollTop;
+    if(sbar){
+      var shouldShow=st>innerHeight*0.85;
+      sbar.classList.toggle('show',shouldShow);
+      /* 실패세이프: transition이 멈춰 스티키바가 완전히 나타나지 않는 경우 방지 */
+      if(shouldShow && !sbarFailsafeArmed){
+        sbarFailsafeArmed=true;
+        setTimeout(function(){
+          if(sbar.classList.contains('show') && getComputedStyle(sbar).transform!=='none'){
+            sbar.style.transition='none';sbar.style.transform='none';
+            void sbar.offsetHeight;
+            sbar.style.transition='';sbar.style.transform='';
+          }
+          sbarFailsafeArmed=false;
+        },700);
+      }
+    }
+    if(prog){var d=document.documentElement;prog.style.width=(st/(d.scrollHeight-d.clientHeight)*100)+'%'}
+  },{passive:true});
   /* 모바일 드로어 네비 */
   var drawer=document.getElementById('drawer');
   function dOpen(){
