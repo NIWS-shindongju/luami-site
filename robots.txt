@@ -1,11 +1,10 @@
 User-agent: *
 Allow: /
+Disallow: /thanks.html
 
 # Naver
 User-agent: Yeti
 Allow: /
+Disallow: /thanks.html
 
 Sitemap: https://luamiphoto.com/sitemap.xml
-
-User-agent: *
-Disallow: /thanks.html
