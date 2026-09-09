@@ -93,6 +93,60 @@ document.addEventListener('DOMContentLoaded', function(){
       b.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();gsap.to(b,{x:(e.clientX-r.left-r.width/2)*0.12,y:(e.clientY-r.top-r.height/2)*0.16,duration:0.5,ease:'power2.out'})});
       b.addEventListener('mouseleave',function(){gsap.to(b,{x:0,y:0,duration:0.5,ease:'power2.out'})});
     });
+    /* 시그니처: 필름 릴 — 세로 스크롤로 가로 컨택트 시트를 넘긴다.
+       ★GSAP pin:true는 핀 유지용 width를 캡처하다가 flex-basis를 전부 0px로
+       붕괴시키는 결함이 실측으로 재현됐다(로드 타이밍과 무관). 그래서 pin은 안 쓴다 —
+       고정은 순수 CSS position:sticky(.filmreel)가 담당하고, 여기선 스크롤 진행률에 맞춰
+       .filmreel-sec의 높이(스크롤 여유)를 잡고 x축 이동만 스크럽한다. */
+    function initFilmReel(){
+      var sec=document.querySelector('.filmreel-sec'), frTrack=document.getElementById('frTrack');
+      if(!sec || !frTrack || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      function distance(){return Math.max(0, frTrack.scrollWidth - window.innerWidth + 80);}
+      function sizeSection(){sec.style.height=(window.innerHeight + distance())+'px';}
+      sizeSection();
+      var trig=gsap.to(frTrack,{
+        x:function(){return -distance();},
+        ease:'none',
+        scrollTrigger:{
+          trigger:sec,
+          start:'top top',
+          end:function(){return '+=' + distance();},
+          scrub:0.6,
+          invalidateOnRefresh:true
+        }
+      });
+      window.addEventListener('resize',function(){sizeSection();ScrollTrigger.refresh();});
+    }
+    /* ★CLS 실측 결함 수정: 예전엔 window 'load'(모든 이미지 로드 완료, 페이지 맨 끝)까지 기다렸다가
+       .filmreel-sec 높이를 인라인으로 주입해 그 순간 아래 섹션 전체가 수천 px 밀리는 대형 레이아웃
+       시프트가 있었다. .fr-track 너비는 이미지 크기가 아니라 CSS flex-basis(clamp)로만 정해지므로
+       이미지 로드를 기다릴 필요가 없다 — defer 스크립트 실행 시점(DOM+CSS 적용 직후)에 한 번만
+       호출한다(resize 대응은 함수 내부의 리스너가 이미 담당 — 여기서 또 부르면 트윈이 중복 생성됨). */
+    initFilmReel();
+    /* 3D 틸트 카드 — 커서 위치에 따라 살짝 기울어짐(모델링 느낌의 깊이감) */
+    if(matchMedia('(hover:hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+      document.querySelectorAll('.gpanel,.explore-card,.wall .w').forEach(function(card){
+        card.addEventListener('mousemove',function(e){
+          var r=card.getBoundingClientRect();
+          var px=(e.clientX-r.left)/r.width-0.5, py=(e.clientY-r.top)/r.height-0.5;
+          gsap.to(card,{rotateY:px*10,rotateX:py*-10,duration:0.4,ease:'power2.out',transformPerspective:800});
+        });
+        card.addEventListener('mouseleave',function(){gsap.to(card,{rotateY:0,rotateX:0,duration:0.6,ease:'power3.out'})});
+      });
+    }
+    /* 히어로 모자이크 — 커서를 따라 레이어마다 다른 깊이로 움직임 */
+    var heroEl=document.querySelector('.hero');
+    var hm=document.querySelectorAll('.hero-mosaic .hm');
+    if(heroEl && hm.length && matchMedia('(hover:hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+      var qx=[],qy=[];
+      hm.forEach(function(el,i){qx[i]=gsap.quickTo(el,'x',{duration:0.7,ease:'power3.out'});qy[i]=gsap.quickTo(el,'y',{duration:0.7,ease:'power3.out'});});
+      heroEl.addEventListener('mousemove',function(e){
+        var r=heroEl.getBoundingClientRect();
+        var px=(e.clientX-r.left)/r.width-0.5, py=(e.clientY-r.top)/r.height-0.5;
+        hm.forEach(function(el,i){var depth=(i+1)*7;qx[i](px*depth);qy[i](py*depth*0.6);});
+      });
+      heroEl.addEventListener('mouseleave',function(){hm.forEach(function(el,i){qx[i](0);qy[i](0);});});
+    }
     window.addEventListener('load',function(){ScrollTrigger.refresh();});
   }catch(e){}
 })();
