@@ -135,6 +135,36 @@ function checkLinks(file, html) {
   }
 }
 
+// 규칙 8) sitemap lastmod ↔ 실제 최종수정일
+// 순수 함수로 분리한 이유: 합성 입력으로 양방향(정상판 통과 / 결함판 검출) 시험이 가능해야 한다.
+// entries = [{loc, lastmod}], dateOf(relPath) -> 'YYYY-MM-DD' | null
+function staleLastmod(entries, dateOf) {
+  const out = [];
+  for (const e of entries) {
+    const r = e.loc === '' ? 'index.html' : e.loc;
+    if (!r.endsWith('.html')) continue;
+    const real = dateOf(r);
+    if (!real) continue;
+    if (!e.lastmod) {
+      out.push({ loc: e.loc, msg: 'lastmod 없음 (실제 수정 ' + real + ')' });
+      continue;
+    }
+    if (e.lastmod < real) out.push({ loc: e.loc, msg: 'lastmod ' + e.lastmod + ' 인데 실제 수정 ' + real });
+  }
+  return out;
+}
+
+function gitDateOf(relPath) {
+  try {
+    const d = require('child_process')
+      .execSync('git log -1 --format=%ad --date=short -- "' + relPath + '"', { cwd: ROOT, encoding: 'utf8' })
+      .trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : null;
+  } catch (e) {
+    return null;
+  }
+}
+
 function checkSitemap(files) {
   const sp = path.join(ROOT, 'sitemap.xml');
   if (!fs.existsSync(sp)) return;
@@ -153,6 +183,12 @@ function checkSitemap(files) {
     if (r === '404.html' || r === 'thanks.html') continue;
     if (!set.has(r)) add(sp, 'sitemap', '파일이 sitemap에 없음: ' + r);
   }
+  const entries = [];
+  const re2 = /<loc>https:\/\/luamiphoto\.com\/([^<]*)<\/loc>\s*<lastmod>([^<]*)<\/lastmod>/g;
+  let m2;
+  while ((m2 = re2.exec(xml))) entries.push({ loc: m2[1], lastmod: m2[2] });
+  for (const l of locs) if (!entries.some((e) => e.loc === l)) entries.push({ loc: l, lastmod: '' });
+  for (const v of staleLastmod(entries, gitDateOf)) add(sp, 'stale-lastmod', v.msg + ' — ' + (v.loc || '/'));
 }
 
 // --selftest: 결함을 합성해 각 규칙이 실제로 무는지 + 정상판은 통과하는지 양방향 확인.
@@ -187,7 +223,41 @@ if (process.argv.includes('--selftest')) {
     checkLinks(tmp, html);
     return viol.map((v) => v.rule);
   };
+  // 규칙 8 stale-lastmod 는 파일이 아니라 (sitemap, git날짜) 쌍을 보므로 별도 대조군으로 시험한다.
+  // 대상 데이터가 나빠지길 기다리지 않고 정상판·결함판을 여기서 직접 합성한다.
+  const DATES = { 'index.html': '2026-09-08', 'guide.html': '2026-08-06' };
+  const dateOf = (r) => DATES[r] || null;
+  const lmClean = [
+    { loc: '', lastmod: '2026-09-08' },
+    { loc: 'guide.html', lastmod: '2026-08-06' },
+    { loc: 'assets/x.webp', lastmod: '2020-01-01' },
+    { loc: 'unknown.html', lastmod: '2020-01-01' },
+  ];
+  const lmStale = [
+    { loc: '', lastmod: '2026-07-13' },
+    { loc: 'guide.html', lastmod: '2026-08-06' },
+  ];
+  const lmMissing = [{ loc: '', lastmod: '' }];
   let bad = 0;
+  {
+    const okRes = staleLastmod(lmClean, dateOf);
+    if (okRes.length) {
+      console.log('  FAIL  stale-lastmod — 정상판이 걸림: ' + okRes.map((v) => v.loc).join(','));
+      bad++;
+    } else console.log('  ok    stale-lastmod 정상판 통과(최신 lastmod·비HTML·미추적 파일 오탐 없음)');
+    const st = staleLastmod(lmStale, dateOf);
+    if (st.length === 1 && st[0].loc === '') console.log('  ok    stale-lastmod — 낡은 lastmod 를 물었다');
+    else {
+      console.log('  FAIL  stale-lastmod — 낡은 lastmod 를 놓쳤다 (' + st.length + '건)');
+      bad++;
+    }
+    const ms = staleLastmod(lmMissing, dateOf);
+    if (ms.length === 1) console.log('  ok    stale-lastmod — lastmod 누락을 물었다');
+    else {
+      console.log('  FAIL  stale-lastmod — lastmod 누락을 놓쳤다');
+      bad++;
+    }
+  }
   const clean = run(CLEAN);
   if (clean.length) {
     console.log('  FAIL  정상판이 걸림: ' + clean.join(','));
@@ -202,7 +272,7 @@ if (process.argv.includes('--selftest')) {
     }
   }
   fs.unlinkSync(tmp);
-  console.log(bad ? '\n역검증 FAIL — ' + bad + '건' : '\n역검증 PASS — 9개 규칙 + 정상판 대조군 전부 정상');
+  console.log(bad ? '\n역검증 FAIL — ' + bad + '건' : '\n역검증 PASS — 10개 규칙 + 정상판 대조군 전부 정상');
   process.exit(bad ? 1 : 0);
 }
 
