@@ -38,7 +38,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"HowTo","name":"포토부스 렌탈 진행 과정","step":[{"@type":"HowToStep","name":"문의 · 상담","text":"장소·기간·목적을 알려주시면 맞춤 포토부스 견적을 드립니다."},{"@type":"HowToStep","name":"구성 제안","text":"제품·테마·브랜딩을 현장에 맞게 설계합니다."},{"@type":"HowToStep","name":"설치 · 세팅","text":"방문 설치 후 시연까지. 바로 운영 가능한 상태로 인계합니다."},{"@type":"HowToStep","name":"운영 · 회수","text":"원격 관리로 안정 운영하고, 종료 시 회수까지 책임집니다."}]}
 </script>
-<link rel="stylesheet" href="assets/style.css?v=20260910a">
+<link rel="stylesheet" href="assets/style.css?v=20260911a">
 <script>document.documentElement.className += ' js';</script>
 </head>
 <body class="home">
@@ -89,6 +89,7 @@
 
 <section class="hero" id="top">
   <svg class="hero-ripple" aria-hidden="true" focusable="false" viewBox="0 0 1200 700" preserveAspectRatio="none"></svg>
+  <div class="hero-spotlight" aria-hidden="true"></div>
   <div class="wrap hero-grid">
   <div class="hero-copy">
     <span class="eyebrow fade">(00) 무인 포토부스 렌탈·대여 · 브랜드 맞춤</span>
@@ -105,7 +106,14 @@
     </button>
   </div>
   <div class="hero-mosaic">
-    <figure class="hm hm-a"><img src="assets/images/hero.webp" width="1501" height="1600" alt="지하철 테마 무인 포토부스 — Subway Train 사이니지" fetchpriority="high" decoding="async"><figcaption class="chip">Subway Train</figcaption></figure>
+    <figure class="hm hm-a" id="hmSeq">
+      <img src="assets/images/hero.webp" width="1501" height="1600" alt="지하철 테마 무인 포토부스 — Subway Train 사이니지" fetchpriority="high" decoding="async" data-caption="Subway Train">
+      <img src="assets/images/promo-kcon-hechi-booth-exterior.webp" width="1600" height="1600" alt="KCON HECHI 콜라보 부스" loading="lazy" decoding="async" data-caption="KCON × HECHI">
+      <img src="assets/images/festival-peaches-oneuniverse-wrap.webp" width="1600" height="1600" alt="Peaches One Universe 페스티벌 래핑 부스" loading="lazy" decoding="async" data-caption="Festival Wrap">
+      <img src="assets/images/promo-dynamicduo-concert-booth.webp" width="1050" height="1400" alt="다이나믹듀오 콘서트 부스" loading="lazy" decoding="async" data-caption="Concert Stage">
+      <img src="assets/images/install-night-rooftop.webp" width="850" height="1063" alt="루프탑 야간 설치 현장" loading="lazy" decoding="async" data-caption="Night Rooftop">
+      <figcaption class="chip" id="hmChip">Subway Train</figcaption>
+    </figure>
     <figure class="hm"><img src="assets/images/theme-elevator-front.webp" width="901" height="1600" alt="빈티지 엘리베이터 테마 부스" decoding="async"><figcaption class="chip">Vintage Elevator</figcaption></figure>
     <figure class="hm"><img src="assets/images/event-season-red.webp" width="1140" height="855" alt="시즌 이벤트 레드 랩핑 부스" decoding="async"><figcaption class="chip">Holiday Event</figcaption></figure>
   </div>
@@ -225,7 +233,7 @@
 
 <section class="statement"><div class="wrap">
   <span class="idxlabel fade">The Luami Way</span>
-  <h2 class="fade">브랜드의 순간을,<br><i>하나의 부스</i>로.</h2>
+  <h2 class="fade riso">브랜드의 순간을,<br><i>하나의 부스</i>로.</h2>
   <p class="st-sub fade">기획부터 설치·무인 운영·회수까지 — 공간을 '경험'으로 바꿔, 방문객이 알아서 공유하고 싶은 장면을 만듭니다.</p>
 </div></section>
 
@@ -415,6 +423,6 @@
 <script src="https://unpkg.com/lenis@1/dist/lenis.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-<script src="assets/main.js?v=20260910a" defer></script>
+<script src="assets/main.js?v=20260911a" defer></script>
 </body>
 </html>

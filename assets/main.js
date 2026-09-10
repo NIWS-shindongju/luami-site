@@ -144,6 +144,26 @@ document.addEventListener('DOMContentLoaded', function(){
     /* 히어로 이미지 미세 패럴럭스 (홈 외 페이지엔 .hero가 없으므로 가드) */
     if(document.querySelector('.hero')){
       gsap.to('.hero-mosaic',{yPercent:-3.5,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:1}});
+      /* 필름 인화 이미지 시퀀스 — 히어로를 지나는 동안 hm-a 사진 5장을 스크럽 진행률로 크로스디졸브 */
+      var hmSeq=document.getElementById('hmSeq'), hmChip=document.getElementById('hmChip');
+      if(hmSeq && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+        var hmImgs=hmSeq.querySelectorAll('img');
+        if(hmImgs.length>1){
+          var hmCurrent=0;
+          ScrollTrigger.create({
+            trigger:'.hero', start:'top top', end:'bottom top', scrub:true,
+            onUpdate:function(self){
+              var idx=Math.min(hmImgs.length-1, Math.floor(self.progress*hmImgs.length));
+              if(idx!==hmCurrent){
+                hmImgs[hmCurrent].classList.remove('hm-on');
+                hmImgs[idx].classList.add('hm-on');
+                hmCurrent=idx;
+                if(hmChip) hmChip.textContent=hmImgs[idx].getAttribute('data-caption')||'';
+              }
+            }
+          });
+        }
+      }
     }
     /* 마그네틱 버튼 */
     document.querySelectorAll('.btn,.btn-ghost').forEach(function(b){
@@ -207,10 +227,12 @@ document.addEventListener('DOMContentLoaded', function(){
     if(heroEl && hm.length && matchMedia('(hover:hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){
       var qx=[],qy=[];
       hm.forEach(function(el,i){qx[i]=gsap.quickTo(el,'x',{duration:0.7,ease:'power3.out'});qy[i]=gsap.quickTo(el,'y',{duration:0.7,ease:'power3.out'});});
+      var spotlight=document.querySelector('.hero-spotlight');
       heroEl.addEventListener('mousemove',function(e){
         var r=heroEl.getBoundingClientRect();
         var px=(e.clientX-r.left)/r.width-0.5, py=(e.clientY-r.top)/r.height-0.5;
         hm.forEach(function(el,i){var depth=(i+1)*7;qx[i](px*depth);qy[i](py*depth*0.6);});
+        if(spotlight){spotlight.style.setProperty('--mx',((px+0.5)*100)+'%');spotlight.style.setProperty('--my',((py+0.5)*100)+'%');}
       });
       heroEl.addEventListener('mouseleave',function(){hm.forEach(function(el,i){qx[i](0);qy[i](0);});});
     }
