@@ -40,26 +40,83 @@ document.addEventListener('DOMContentLoaded', function(){
     }
     if(prog){var d=document.documentElement;prog.style.width=(st/(d.scrollHeight-d.clientHeight)*100)+'%'}
   },{passive:true});
-  /* 모바일 드로어 네비 */
-  var drawer=document.getElementById('drawer');
+  /* 모바일 바텀시트 네비 */
+  var drawer=document.getElementById('drawer'), scrim=document.getElementById('drawerScrim');
   function dOpen(){
     if(!drawer)return;
-    drawer.classList.add('open');document.body.classList.add('nav-open');drawer.setAttribute('aria-hidden','false');
+    drawer.classList.add('open');scrim&&scrim.classList.add('open');document.body.classList.add('nav-open');drawer.setAttribute('aria-hidden','false');
     var t=document.getElementById('navToggle');t&&t.setAttribute('aria-expanded','true');
     /* 실패세이프: transition이 progress:0에 멈춰 드로어가 열린 것처럼 보이지 않는 경우 방지 */
     setTimeout(function(){
       if(drawer.classList.contains('open') && getComputedStyle(drawer).visibility!=='visible'){
-        drawer.style.transition='none';drawer.style.transform='none';drawer.style.opacity='1';drawer.style.visibility='visible';
+        drawer.style.transition='none';drawer.style.transform='none';drawer.style.visibility='visible';
         void drawer.offsetHeight;
-        drawer.style.transition='';drawer.style.transform='';drawer.style.opacity='';drawer.style.visibility='';
+        drawer.style.transition='';drawer.style.transform='';drawer.style.visibility='';
       }
     },700);
   }
-  function dClose(){if(!drawer)return;drawer.classList.remove('open');document.body.classList.remove('nav-open');drawer.setAttribute('aria-hidden','true');var t=document.getElementById('navToggle');t&&t.setAttribute('aria-expanded','false');}
+  function dClose(){if(!drawer)return;drawer.classList.remove('open');scrim&&scrim.classList.remove('open');document.body.classList.remove('nav-open');drawer.setAttribute('aria-hidden','true');var t=document.getElementById('navToggle');t&&t.setAttribute('aria-expanded','false');}
   ['navToggle','navToggle2'].forEach(function(id){var b=document.getElementById(id);if(b)b.addEventListener('click',dOpen);});
   var dcl=document.getElementById('drawerClose');if(dcl)dcl.addEventListener('click',dClose);
+  if(scrim)scrim.addEventListener('click',dClose);
   if(drawer){drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',dClose);});}
   document.addEventListener('keydown',function(e){if(e.key==='Escape')dClose();});
+
+  /* 모바일 전용 — 롱프레스 셔터: 클릭이 아니라 "누르고 있는 시간"으로 히어로 사진을 인화시킨다 */
+  (function(){
+    var btn=document.getElementById('shutterBtn');
+    if(!btn) return;
+    /* 진행 링은 순수 CSS transition(컴포지터 구동)이 채운다 — JS는 완료 판정(setTimeout)만
+       맡는다. rAF 스텝 루프에 기대지 않아 저사양 기기·백그라운드 리페인트 지연에도 안정적. */
+    var HOLD_MS=850, timer=null, done=false;
+    function develop(){
+      done=true; btn.classList.remove('pressing'); btn.classList.add('done');
+      var label=btn.querySelector('.shutter-label'); if(label) label.innerHTML='DONE<br>인화됨';
+      var imgs=document.querySelectorAll('.hero-mosaic .hm img');
+      if(window.gsap && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+        gsap.fromTo(imgs,{filter:'grayscale(0.85) contrast(.75) brightness(.55) sepia(.15)'},{filter:'none',duration:1.1,ease:'power2.out',stagger:0.06});
+        gsap.fromTo('.hero-mosaic',{scale:0.985},{scale:1,duration:1.1,ease:'power2.out'});
+      }
+      if(navigator.vibrate) try{navigator.vibrate(12)}catch(e){}
+    }
+    function start(e){
+      if(done) return;
+      btn.classList.add('pressing');
+      timer=setTimeout(develop,HOLD_MS);
+    }
+    function cancel(){
+      if(done) return;
+      btn.classList.remove('pressing');
+      if(timer) clearTimeout(timer); timer=null;
+    }
+    btn.addEventListener('pointerdown',start);
+    btn.addEventListener('pointerup',cancel);
+    btn.addEventListener('pointerleave',cancel);
+    btn.addEventListener('pointercancel',cancel);
+    btn.addEventListener('contextmenu',function(e){e.preventDefault()});
+  })();
+
+  /* 모바일 전용 — wall 피드의 "지금 촬영 중" 카운터: 그리드가 아니라 스와이프 피드이므로 현재 보이는 컷을 센다 */
+  (function(){
+    var wall=document.querySelector('.wall'), counter=document.getElementById('wfCount');
+    if(!wall||!counter) return;
+    var items=wall.querySelectorAll('.w');
+    if(!items.length) return;
+    function pad(n){return n<10?'0'+n:''+n}
+    function render(i){counter.textContent=pad(i+1)+' / '+pad(items.length)}
+    render(0);
+    if(!('IntersectionObserver' in window)) return;
+    var current=0;
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting && en.intersectionRatio>0.55){
+          var idx=Array.prototype.indexOf.call(items,en.target);
+          if(idx>-1 && idx!==current){current=idx;render(idx)}
+        }
+      });
+    },{root:wall,threshold:[0.55]});
+    items.forEach(function(el){io.observe(el)});
+  })();
 });
 
 /* 시그니처: Lenis 관성 스무스 스크롤 — 실패해도 브라우저 기본 스크롤로 정상 동작 */
@@ -104,6 +161,15 @@ document.addEventListener('DOMContentLoaded', function(){
       function distance(){return Math.max(0, frTrack.scrollWidth - window.innerWidth + 80);}
       function sizeSection(){sec.style.height=(window.innerHeight + distance())+'px';}
       sizeSection();
+      /* 필름 컷 카운터 — 스크럽 진행률을 프레임 번호로 표시(브랜드의 필름 모티프 강화) */
+      var counter=document.getElementById('frCounter');
+      var total=frTrack.querySelectorAll('.fr-cell').length || 8;
+      function pad2(n){return n<10?'0'+n:''+n}
+      function updateCounter(p){
+        if(!counter) return;
+        var idx=Math.max(0,Math.min(total-1, Math.floor(p*total)));
+        counter.textContent='CUT '+pad2(idx+1)+'/'+pad2(total);
+      }
       var trig=gsap.to(frTrack,{
         x:function(){return -distance();},
         ease:'none',
@@ -112,7 +178,8 @@ document.addEventListener('DOMContentLoaded', function(){
           start:'top top',
           end:function(){return '+=' + distance();},
           scrub:0.6,
-          invalidateOnRefresh:true
+          invalidateOnRefresh:true,
+          onUpdate:function(self){updateCounter(self.progress)}
         }
       });
       window.addEventListener('resize',function(){sizeSection();ScrollTrigger.refresh();});
