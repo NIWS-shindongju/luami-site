@@ -225,12 +225,18 @@ footer{background:var(--ink);color:var(--cream);padding:70px 0 40px;border-top:1
 .page-head::before{content:"";position:absolute;right:-60px;top:-90px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(76,133,103,.12),transparent 68%);z-index:0;pointer-events:none}
 .page-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16px;background-repeat:repeat-x;background-position:14px center;background-size:26px 10px;background-image:radial-gradient(circle,rgba(76,133,103,.3) 2.6px,transparent 3px);opacity:.55;pointer-events:none}
 .page-head .wrap{position:relative;z-index:1}
+.page-head:hover .ph-spotlight{opacity:1}
+@media(hover:none),(prefers-reduced-motion:reduce){.ph-spotlight{display:none}}
+/* 서브페이지 진입점을 홈 히어로와 같은 언어로 — JS가 페이지헤드 뒤에 삽입하는 축소 킨네틱 티커 */
+.ph-kinetic{padding:12px 0;margin-top:-1px}
+.ph-kinetic .ticker{animation-duration:26s}
+.ph-kinetic .t{font-size:clamp(16px,2.2vw,26px)!important}
 .page-head .idxlabel{color:var(--accent)}
 .page-head h1{font-family:var(--serif);font-weight:600;font-size:clamp(40px,6.2vw,92px);line-height:1.03;letter-spacing:-.02em;color:var(--ink);margin-top:14px}
 .page-head p{max-width:54ch;color:var(--muted);margin-top:20px;font-size:clamp(15px,1.3vw,18px);line-height:1.75}
 .cases{display:grid;grid-template-columns:repeat(3,1fr);gap:26px 24px}
 .case{margin:0;transition:transform .5s cubic-bezier(.16,1,.3,1);transform-style:preserve-3d}
-.case .im{overflow:hidden;border-radius:4px;aspect-ratio:4/5;position:relative}
+.case .im{overflow:hidden;border-radius:4px;aspect-ratio:4/5;position:relative;box-shadow:0 14px 28px -20px rgba(31,36,23,.22)}
 .case img{width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.16,1,.3,1)}
 .case:hover img{transform:scale(1.05)}
 .case .im::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 58%,rgba(31,36,23,.4));opacity:0;transition:opacity .4s ease}
@@ -461,7 +467,10 @@ body.nav-open{overflow:hidden}
    읽어 x축 이동만 담당한다. */
 .filmreel-sec{background:var(--ink);position:relative}
 .filmreel{position:sticky;top:0;overflow:hidden;padding:clamp(50px,8vw,90px) 0;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
-.fr-head{margin-bottom:38px}
+/* 와이어프레임 필름릴 터널(Three.js, 홈페이지 전용 장식 레이어) — 콘텐츠 뒤, 순수 시각효과이므로 상호작용 없음 */
+.wf-tunnel{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;mix-blend-mode:screen;opacity:.55}
+.fr-head{margin-bottom:38px;position:relative;z-index:1}
+.fr-track{position:relative;z-index:1}
 .fr-head .idxlabel{color:var(--accent-l)}
 .fr-counter{position:absolute;top:clamp(50px,8vw,90px);right:28px;font-family:var(--serif);font-size:12.5px;letter-spacing:.08em;color:var(--accent-l);background:rgba(245,240,222,.08);border:1px solid rgba(245,240,222,.2);padding:5px 12px;border-radius:20px;z-index:2}
 @media(max-width:640px){.fr-counter{position:static;display:inline-block;margin-top:10px}}
@@ -508,8 +517,11 @@ body.nav-open{overflow:hidden}
 
 /* ===== 서브페이지 노출 강화(자세히 보기 3카드) ===== */
 .explore-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:50px}
-.explore-card{display:block;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--paper);transition:border-color .25s,transform .3s,box-shadow .3s}
+.explore-card{display:block;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--paper);box-shadow:0 12px 26px -20px rgba(31,36,23,.22);transition:border-color .25s,transform .3s,box-shadow .3s}
 .explore-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 24px 44px -26px rgba(31,36,23,.3)}
+/* 목록 첫 항목 — 위계 없이 나열되던 카드들 중 하나를 대표로 */
+.cases > .case:first-child,.explore-grid > .explore-card:first-child{border:1px solid var(--accent);box-shadow:0 16px 34px -22px rgba(76,133,103,.28)}
+.cases > .case:first-child .cx b{color:var(--accent)}
 .explore-card figure{margin:0;aspect-ratio:4/3;overflow:hidden}
 .explore-card img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.16,1,.3,1)}
 .explore-card:hover img{transform:scale(1.06)}

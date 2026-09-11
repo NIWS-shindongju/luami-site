@@ -62,6 +62,30 @@ document.addEventListener('DOMContentLoaded', function(){
   if(drawer){drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',dClose);});}
   document.addEventListener('keydown',function(e){if(e.key==='Escape')dClose();});
 
+  /* 서브페이지 진입점 승격 — .page-head(홈 히어로 4대 이펙트가 하나도 없던 범용 배너) 뒤에
+     축소 킨네틱 티커 + 커서 스포트라이트를 붙여, 어느 페이지든 같은 "살아있는" 언어를 쓰게 한다.
+     마크업 변경 없이 JS가 런타임에 삽입 — 58개 페이지 전부에 자동 적용. */
+  (function(){
+    var ph=document.querySelector('.page-head');
+    if(!ph) return;
+    var tick=document.createElement('div');
+    tick.className='kinetic ph-kinetic';
+    var t='웨딩<i>·</i>기업행사<i>·</i>팝업스토어<i>·</i>매장 상설<i>·</i>무인 운영<i>·</i>즉석 인쇄<i>·</i>QR 저장<i>·</i>맞춤 브랜딩<i>·</i>';
+    tick.innerHTML='<div class="ticker"><span class="t">'+t+'</span><span class="t" aria-hidden="true">'+t+'</span></div>';
+    ph.insertAdjacentElement('afterend',tick);
+    if(matchMedia('(hover:hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+      var sl=document.createElement('div');
+      sl.className='hero-spotlight ph-spotlight';
+      sl.setAttribute('aria-hidden','true');
+      ph.insertBefore(sl, ph.firstChild);
+      ph.addEventListener('mousemove',function(e){
+        var r=ph.getBoundingClientRect();
+        sl.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+        sl.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+      });
+    }
+  })();
+
   /* 모바일 전용 — 롱프레스 셔터: 클릭이 아니라 "누르고 있는 시간"으로 히어로 사진을 인화시킨다 */
   (function(){
     var btn=document.getElementById('shutterBtn');
