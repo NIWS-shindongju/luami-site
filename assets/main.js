@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function(){
     initFilmReel();
     /* 3D 틸트 카드 — 커서 위치에 따라 살짝 기울어짐(모델링 느낌의 깊이감) */
     if(matchMedia('(hover:hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches){
-      document.querySelectorAll('.gpanel,.explore-card,.wall .w').forEach(function(card){
+      document.querySelectorAll('.gpanel,.explore-card,.wall .w,.case').forEach(function(card){
         card.addEventListener('mousemove',function(e){
           var r=card.getBoundingClientRect();
           var px=(e.clientX-r.left)/r.width-0.5, py=(e.clientY-r.top)/r.height-0.5;

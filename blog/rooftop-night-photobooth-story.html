@@ -31,7 +31,7 @@
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://luamiphoto.com/"}, {"@type": "ListItem", "position": 2, "name": "블로그", "item": "https://luamiphoto.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "낮에 예쁜 부스, 밤엔 사라진다", "item": "https://luamiphoto.com/blog/rooftop-night-photobooth-story.html"}]}
 </script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "야외 행사 포토부스는 밤에도 잘 보이나요?", "acceptedAnswer": {"@type": "Answer", "text": "네. 낮에는 외관 디자인만으로 충분히 눈에 띄지만, 밤에는 주변 조명에 묻히기 쉽습니다. 그래서 사인에 발광 소재를 적용하고 커튼형 도어로 내부가 은은하게 비치도록 구성해, 조명이 낮아진 뒤에도 부스가 스스로 빛나도록 만듭니다."}}, {"@type": "Question", "name": "루프탑 같은 실외 팝업 포토부스는 전원과 방수를 어떻게 확인하나요?", "acceptedAnswer": {"@type": "Answer", "text": "실외 기준으로 전원·방수·고정 조건을 사전 답사 단계에서 점검하고, 옥상 특유의 바람과 배선 동선까지 함께 확인한 뒤 설치합니다."}}]}</script>
-<link rel="stylesheet" href="../assets/style.css?v=20260714a">
+<link rel="stylesheet" href="../assets/style.css?v=20260911b">
 <script>document.documentElement.className += ' js';</script>
 </head>
 <body>
@@ -42,10 +42,12 @@
   <a href="../index.html" class="logo">Luami<span class="dot"></span></a>
   <nav class="nav-links"><a href="../index.html#about">소개</a><a href="../services.html">서비스</a><a href="../index.html#usecases">용도별</a><a href="../portfolio.html">설치 사례</a><a href="../blog.html">블로그</a><a href="../guide.html">렌탈 가이드</a><a href="../index.html#process">진행 과정</a><a href="../index.html#faq">FAQ</a></nav>
   <a href="../index.html#contact" class="nav-cta">렌탈 문의</a>
-  <button class="navtoggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="drawer"><span></span><span></span></button>
+  <button class="navtoggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button>
 </div></header>
 
+<div class="drawer-scrim" id="drawerScrim" aria-hidden="true"></div>
 <div class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-grab" aria-hidden="true"></div>
   <div class="drawer-top">
     <a href="../index.html" class="logo dlogo">Luami<span class="dot"></span></a>
     <button class="drawer-close" id="drawerClose" aria-label="메뉴 닫기">✕</button>
@@ -73,7 +75,7 @@
 <div class="stickybar" id="sbar">
   <a href="../index.html" class="logo">Luami<span class="dot"></span></a>
   <a href="../index.html#contact" class="btn-mini">렌탈 문의</a>
-  <button class="navtoggle" id="navToggle2" aria-label="메뉴 열기" aria-controls="drawer"><span></span><span></span></button>
+  <button class="navtoggle" id="navToggle2" aria-label="메뉴 열기" aria-controls="drawer"><span></span><span></span><span></span></button>
 </div>
 
 <section class="page-head"><div class="wrap">
@@ -178,6 +180,6 @@
 <script src="https://unpkg.com/lenis@1/dist/lenis.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-<script src="../assets/main.js?v=20260713d" defer></script>
+<script src="../assets/main.js?v=20260911b" defer></script>
 </body>
 </html>
