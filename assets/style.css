@@ -543,6 +543,13 @@ body.nav-open{overflow:hidden}
 .explore-grid.cols-4{grid-template-columns:repeat(4,1fr)}
 @media(max-width:1080px){.explore-grid.cols-4{grid-template-columns:repeat(2,1fr)}}
 
+/* ===== sticky 카테고리 인덱스 레일 (Kurppa Hosk 레퍼런스) ===== */
+.pf-rail{position:sticky;top:58px;z-index:50;display:flex;gap:7px;overflow-x:auto;padding:12px 28px;margin:0 auto;max-width:var(--maxw);background:rgba(245,240,222,.92);backdrop-filter:saturate(150%) blur(10px);border-bottom:1px solid var(--line);scrollbar-width:none}
+.pf-rail::-webkit-scrollbar{display:none}
+.pf-rail-a{flex:0 0 auto;padding:7px 15px;border-radius:20px;font-size:12.5px;font-weight:600;letter-spacing:.01em;color:var(--muted);border:1px solid var(--line);white-space:nowrap;transition:color .25s,border-color .25s,background .25s}
+.pf-rail-a:hover{border-color:var(--accent);color:var(--ink)}
+.pf-rail-a.active{color:var(--ink);border-color:var(--accent);background:var(--paper2)}
+
 /* ===== 블로그 포스트 ===== */
 .post-meta{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;color:var(--muted);font-size:13px;letter-spacing:.02em;margin-top:18px}
 .post-meta .tag{color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:11px;border:1px solid var(--line);padding:4px 10px;border-radius:20px}

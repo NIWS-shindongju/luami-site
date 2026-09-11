@@ -86,6 +86,28 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   })();
 
+  /* sticky 카테고리 인덱스 레일 — 링크의 href(#섹션id)로 대상 섹션을 찾아 IntersectionObserver로 현재 섹션 하이라이트 */
+  (function(){
+    var rail=document.getElementById('pfRail');
+    if(!rail) return;
+    var links=Array.prototype.slice.call(rail.querySelectorAll('.pf-rail-a'));
+    var map={};
+    links.forEach(function(a){
+      var id=a.getAttribute('href').slice(1);
+      var sec=document.getElementById(id);
+      if(sec) map[id]=a;
+    });
+    if(!('IntersectionObserver' in window)) return;
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        var a=map[en.target.id];
+        if(!a) return;
+        if(en.isIntersecting) links.forEach(function(l){l.classList.toggle('active', l===a)});
+      });
+    },{rootMargin:'-30% 0px -60% 0px'});
+    Object.keys(map).forEach(function(id){io.observe(document.getElementById(id))});
+  })();
+
   /* 모바일 전용 — 롱프레스 셔터: 클릭이 아니라 "누르고 있는 시간"으로 히어로 사진을 인화시킨다 */
   (function(){
     var btn=document.getElementById('shutterBtn');
