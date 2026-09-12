@@ -468,14 +468,13 @@ body.nav-open{overflow:hidden}
 .filmreel-sec{background:var(--ink);position:relative}
 .filmreel{position:sticky;top:0;overflow:hidden;padding:clamp(50px,8vw,90px) 0;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
 /* 와이어프레임 필름릴 터널(Three.js, 홈페이지 전용 장식 레이어) — 콘텐츠 뒤, 순수 시각효과이므로 상호작용 없음 */
-.wf-tunnel{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;mix-blend-mode:screen;opacity:.55}
+.wf-tunnel{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;mix-blend-mode:screen;opacity:.32}
 .fr-head{margin-bottom:38px;position:relative;z-index:1}
-.fr-track{position:relative;z-index:1}
 .fr-head .idxlabel{color:var(--accent-l)}
 .fr-counter{position:absolute;top:clamp(50px,8vw,90px);right:28px;font-family:var(--serif);font-size:12.5px;letter-spacing:.08em;color:var(--accent-l);background:rgba(245,240,222,.08);border:1px solid rgba(245,240,222,.2);padding:5px 12px;border-radius:20px;z-index:2}
 @media(max-width:640px){.fr-counter{position:static;display:inline-block;margin-top:10px}}
 .fr-head h2{color:var(--cream);font-weight:400;font-size:clamp(26px,3.8vw,48px);margin-top:10px}
-.fr-track{display:flex;width:max-content;gap:18px;padding:0 0 0 28px;will-change:transform}
+.fr-track{position:relative;z-index:1;display:flex;width:max-content;gap:18px;padding:0 0 0 28px;will-change:transform}
 .fr-cell{position:relative;flex:0 0 clamp(240px,30vw,420px);flex-shrink:0;margin:0;border:2px solid rgba(245,240,222,.14);border-radius:2px;overflow:hidden;background:#0d0f0a}
 .fr-cell::before,.fr-cell::after{content:"";position:absolute;left:0;right:0;height:14px;background-repeat:repeat-x;background-position:10px center;background-size:20px 8px;background-image:radial-gradient(circle,rgba(20,22,16,.92) 2.2px,transparent 2.6px);background-color:rgba(245,240,222,.85);z-index:2}
 .fr-cell::before{top:0}
