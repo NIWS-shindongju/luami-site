@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ko">
+<!--
+  ★초안 상태 — 2026-09-22. 스펙·가격·실물 사진이 아직 없어 noindex 로 올려둔다.
+  동주 대리가 디자인/스펙/가격을 확정하면: (1) robots noindex 제거 (2) sitemap.xml 추가
+  (3) 관련 페이지(index.html·services.html 등)에 내부링크 추가 — 이 세 가지를 해야
+  실제로 손님·검색엔진에 노출된다. 그 전까진 직접 URL로만 열린다.
+
+  구조 근거(2026-09-22 워크플로 조사+반증, 13개 에이전트 — work-hub/brands/snap-studio/
+  mini-kiosk/접합계획.md 참고): "PICKYPIC 페이지 구조 = 업계 국룰"이라는 첫 가설은
+  반증에서 깨졌다 — PICKYPIC 특유의 사업모델(대여+판매+맞춤제작 겸업)에서 나온 구성이었다.
+  아래 섹션 순서는 "국룰이라서"가 아니라 "루아미도 대여+판매를 겸하므로 필요해서" 그대로 뒀다.
+  히어로 직후 CTA를 강제하는 것도 근거가 약해서 안 넣었다(기존 luami-site 다른 페이지들과
+  같게, CTA는 마지막 band 섹션에 뒀다).
+-->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>미니 포토부스 구매 | 루아미</title>
+<meta name="description" content="테이블 위에도 올라가는 크기의 무인 포토부스. 카페·소형 매장·팝업을 위한 루아미의 소형 구매형 포토부스입니다.">
+<meta name="theme-color" content="#1F2417">
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://luamiphoto.com/mini-kiosk.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="루아미 (Luami)">
+<meta property="og:title" content="미니 포토부스 구매 | 루아미">
+<meta property="og:description" content="테이블 위에도 올라가는 크기의 무인 포토부스. 카페·소형 매장·팝업을 위한 루아미의 소형 구매형 포토부스입니다.">
+<meta property="og:image" content="https://luamiphoto.com/og.jpg">
+<meta property="og:url" content="https://luamiphoto.com/mini-kiosk.html">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://luamiphoto.com/"}, {"@type": "ListItem", "position": 2, "name": "미니 포토부스 구매", "item": "https://luamiphoto.com/mini-kiosk.html"}]}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Product", "name": "루아미 미니 포토부스", "brand": {"@type": "Brand", "name": "루아미 (Luami)"}, "description": "테이블 위에도 올라가는 소형 무인 포토부스 — 카페·소형 매장·팝업용", "offers": {"@type": "Offer", "availability": "https://schema.org/PreOrder", "priceCurrency": "KRW", "url": "https://luamiphoto.com/mini-kiosk.html", "seller": {"@id": "https://luamiphoto.com/#business"}}}
+</script>
+<link rel="stylesheet" href="assets/style.css?v=20260911b">
+<style>
+  /* 이 페이지 전용 — 스펙표·비교표. 사이트 공용 style.css 는 안 건드린다(표 컴포넌트가
+     이전에 없었다 — 다른 58페이지에 영향 없이 이 페이지에만 스코프). */
+  .spectbl{width:100%;border-collapse:collapse;margin-top:22px}
+  .spectbl th,.spectbl td{text-align:left;padding:14px 18px;border-bottom:1px solid var(--line)}
+  .spectbl th{width:34%;color:var(--muted);font-weight:500;font-size:.95rem}
+  .spectbl td{font-size:1.02rem}
+  .tbd{color:var(--muted);font-style:normal}
+  .tbd::after{content:" 《확정 후 채움》";font-size:.82em;opacity:.7}
+  .comparewrap{overflow-x:auto;margin-top:22px}
+  .comparetbl{width:100%;border-collapse:collapse;min-width:520px}
+  .comparetbl th,.comparetbl td{padding:14px 16px;border-bottom:1px solid var(--line);text-align:left;font-size:.98rem}
+  .comparetbl thead th{color:var(--ink);font-weight:600;background:var(--paper2)}
+  .comparetbl thead th:first-child{background:transparent}
+  .comparetbl tbody th{color:var(--muted);font-weight:500;width:26%}
+  .draftnote{background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin-bottom:28px;font-size:.92rem;color:var(--muted)}
+</style>
+<script>document.documentElement.className += ' js';</script>
+</head>
+<body>
+<div class="grain"></div>
+<div class="progress" id="prog"></div>
+<div class="util"><div class="wrap"><span>Luami — 무인 포토부스 렌탈</span><span>Est. 2026 · Korea</span></div></div>
+<header class="nav"><div class="wrap nav-in">
+  <a href="index.html" class="logo">Luami<span class="dot"></span></a>
+  <nav class="nav-links"><a href="index.html#about">소개</a><a href="services.html">서비스</a><a href="index.html#usecases">용도별</a><a href="portfolio.html">설치 사례</a><a href="blog.html">블로그</a><a href="guide.html">렌탈 가이드</a><a href="index.html#process">진행 과정</a><a href="index.html#faq">FAQ</a></nav>
+  <a href="index.html#contact" class="nav-cta">렌탈 문의</a>
+  <button class="navtoggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button>
+</div></header>
+
+<div class="drawer-scrim" id="drawerScrim" aria-hidden="true"></div>
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-grab" aria-hidden="true"></div>
+  <div class="drawer-top">
+    <a href="index.html" class="logo dlogo">Luami<span class="dot"></span></a>
+    <button class="drawer-close" id="drawerClose" aria-label="메뉴 닫기">✕</button>
+  </div>
+  <nav class="drawer-links">
+    <a href="index.html#about"><i>01</i>소개</a>
+    <a href="services.html"><i>02</i>서비스</a>
+    <a href="index.html#usecases"><i>03</i>용도별</a>
+    <a href="portfolio.html"><i>04</i>설치 사례</a>
+    <a href="blog.html"><i>05</i>블로그</a>
+    <a href="guide.html"><i>06</i>렌탈 가이드</a>
+    <a href="index.html#process"><i>07</i>진행 과정</a>
+    <a href="index.html#faq"><i>08</i>FAQ</a>
+  </nav>
+  <div class="drawer-foot">
+    <a href="index.html#contact" class="btn drawer-cta">무료 견적 문의</a>
+    <div class="drawer-contact">
+      <a href="tel:01036297743">010-3629-7743</a>
+      <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a>
+      <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
+    </div>
+  </div>
+</div>
+
+<div class="stickybar" id="sbar">
+  <a href="index.html" class="logo">Luami<span class="dot"></span></a>
+  <a href="index.html#contact" class="btn-mini">구매 문의</a>
+  <button class="navtoggle" id="navToggle2" aria-label="메뉴 열기" aria-controls="drawer"><span></span><span></span><span></span></button>
+</div>
+
+<section class="page-head"><div class="wrap">
+  <div class="draftnote">이 페이지는 초안입니다 — 스펙·가격·실물 사진 확정 전까지 검색엔진에는 노출되지 않습니다(noindex). 직접 링크로만 열립니다.</div>
+  <span class="idxlabel fade">Mini Photobooth</span>
+  <h1><span class="lm"><span>테이블 위에 올라가는</span></span><span class="lm"><span>포토부스, 이제 소유하세요</span></span></h1>
+  <p class="fade">카페·소형 매장·팝업처럼 넓은 공간이 없어도, 루아미의 노하우가 담긴 무인 포토부스를 직접 소유할 수 있습니다. 구성·운영 방식은 대형 렌탈 부스와 동일하게, 크기만 줄였습니다.</p>
+</div></section>
+
+<section style="padding-top:clamp(40px,6vw,80px)"><div class="wrap">
+  <span class="idxlabel fade">(01) 이런 곳에 맞습니다</span>
+  <div class="svc">
+    <div class="srow fade"><div class="idx">01</div><h3>카페 · 소형 매장 무인사진관</h3><p>테이블 하나만큼의 공간으로 부가 매출을 만듭니다. 유휴 코너를 인건비 없이 돌리는 방법입니다.<span class="arrow">↗</span></p></div>
+    <div class="srow fade"><div class="idx">02</div><h3>이벤트 · 팝업</h3><p>이동·설치가 간편해 짧은 기간 여러 현장을 옮겨 다니며 쓰기 좋습니다.<span class="arrow">↗</span></p></div>
+    <div class="srow fade"><div class="idx">03</div><h3>사무실 · 매장 한켠</h3><p>큰 부스를 둘 공간이 없는 곳에도 루아미의 촬영·인화 경험을 그대로 들여놓을 수 있습니다.<span class="arrow">↗</span></p></div>
+  </div>
+</div></section>
+
+<section style="background:var(--paper2)"><div class="wrap">
+  <span class="idxlabel fade">(02) 제품 사양</span>
+  <h2 class="serif fade" style="font-weight:400;font-size:clamp(30px,4.4vw,58px);margin-top:10px;letter-spacing:-.02em">확정된 것과 <i style="font-style:normal;color:var(--accent)">아직인 것</i></h2>
+  <table class="spectbl">
+    <tbody>
+      <tr><th>프린터</th><td>DNP QW410</td></tr>
+      <tr><th>카메라</th><td>Canon EOS 200D (또는 더 작은 기종 검토 중)</td></tr>
+      <tr><th>제어부</th><td>박스PC 또는 태블릿(터치 모니터)</td></tr>
+      <tr><th>외관 소재</th><td class="tbd">목재</td></tr>
+      <tr><th>크기 · 무게</th><td class="tbd"></td></tr>
+      <tr><th>가격</th><td class="tbd"></td></tr>
+      <tr><th>커스터마이징</th><td class="tbd">외관·화면 UI·인화 프레임 브랜드 맞춤(대형 부스와 동일한 방식으로 검토 중)</td></tr>
+    </tbody>
+  </table>
+</div></section>
+
+<section><div class="wrap why">
+  <div class="head"><span class="idxlabel fade">(03) 구매 vs 렌탈</span>
+    <h2 class="serif fade" style="font-weight:400;font-size:clamp(30px,4.4vw,58px);margin-top:10px;letter-spacing:-.02em">무엇이 <i style="font-style:normal;color:var(--accent)">더 맞을까요</i></h2></div>
+  <div class="comparewrap">
+    <table class="comparetbl">
+      <thead><tr><th></th><th>구매</th><th>렌탈</th></tr></thead>
+      <tbody>
+        <tr><th>초기 비용</th><td>상대적으로 높음</td><td>낮음(1회 이용료)</td></tr>
+        <tr><th>적합한 용도</th><td>상설 운영(카페·매장)</td><td>단기 이벤트·팝업</td></tr>
+        <tr><th>수익 구조</th><td>매출 전액 귀속</td><td>렌탈비 차감</td></tr>
+        <tr><th>유지보수</th><td>자체 관리 + 루아미 지원</td><td>루아미가 운영까지 책임</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="fade" style="margin-top:18px;color:var(--muted);max-width:64ch;line-height:1.85">한 달에 여러 번, 여러 날 쓰신다면 구매가 유리하고, 특정 기간·행사 한 번이라면 렌탈이 부담이 적습니다. 상담 시 사용 빈도를 알려주시면 어느 쪽이 유리한지 같이 계산해 드립니다.</p>
+</div></section>
+
+<section style="background:var(--paper2)"><div class="wrap">
+  <span class="idxlabel fade">(04) 구매 절차</span>
+  <h2 class="serif fade" style="font-weight:400;font-size:clamp(30px,4.4vw,58px);margin-top:10px;letter-spacing:-.02em">문의에서 인도까지</h2>
+  <div class="steps">
+    <div class="step fade"><div class="num">01</div><div><h3>문의 · 상담</h3><p>설치 공간·용도를 알려주시면 구성을 제안해 드립니다.</p></div></div>
+    <div class="step fade"><div class="num">02</div><div><h3>맞춤 구성</h3><p>외관·화면·인화 프레임을 필요에 맞게 구성합니다.</p></div></div>
+    <div class="step fade"><div class="num">03</div><div><h3>제작 · 설치</h3><p>제작 후 설치·시연까지 진행합니다.</p></div></div>
+    <div class="step fade"><div class="num">04</div><div><h3>운영 지원</h3><p>구매 후에도 대형 부스와 같은 원격 관리·지원을 받을 수 있습니다(세부 정책은 상담 시 안내).</p></div></div>
+  </div>
+</div></section>
+
+<section style="padding-bottom:clamp(90px,12vw,150px)"><div class="wrap"><div class="band fade">
+  <h2>미니 포토부스가<br><i>궁금하신가요?</i></h2><p>설치 공간과 용도를 알려주시면 구성과 일정을 안내해 드립니다. (가격·출시 시점은 확정 후 별도 안내)</p>
+  <div class="contacts">
+    <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener" class="kakao">카카오톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="mailto:luami@luamiphoto.com">이메일 문의</a>
+    <a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a>
+  </div>
+</div></div></section>
+<div class="sprocket on-ink"></div>
+<footer><div class="wrap">
+  <div class="bigmark fade">Lua<i>mi</i>.</div>
+  <div class="foot-grid">
+    <div class="col"><b>루아미 (Luami)</b>무인 포토부스 렌탈 · 설치 · 운영<br>전국 상담 가능</div>
+    <div class="col"><b>문의</b>전화 010-3629-7743<br>이메일 luami@luamiphoto.com<br>카카오톡 채널 <a href="http://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br>인스타그램 · 유튜브 @luami_photo</div>
+    <div class="col"><b>바로가기</b><a href="services.html">서비스</a> · <a href="portfolio.html">사례</a> · <a href="blog.html">블로그</a> · <a href="guide.html">렌탈 가이드</a><br><a href="index.html#process">진행</a> · <a href="index.html#faq">FAQ</a></div>
+  </div>
+  <p class="note">© 2026 루아미(LUAMI). All rights reserved. · 무인 포토부스 렌탈 · 설치 · 운영</p>
+</div></footer>
+<div class="mcta"><a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="index.html#contact" class="p">무료 견적</a></div>
+<script src="https://unpkg.com/lenis@1/dist/lenis.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="assets/main.js?v=20260911b" defer></script>
+</body>
+</html>

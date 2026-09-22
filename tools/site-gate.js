@@ -181,6 +181,11 @@ function checkSitemap(files) {
   for (const f of files) {
     const r = rel(f);
     if (r === '404.html' || r === 'thanks.html') continue;
+    // ★noindex 페이지는 sitemap 완전성 검사에서 뺀다 — 원리는 하드코딩 파일명이 아니라
+    // robots 메타다. noindex 페이지를 sitemap에 넣는 건 구글이 스스로 모순 신호라고
+    // 지적하는 관행이라(권장하지 않음), 초안/비공개 페이지는 넣지 않는 게 맞다.
+    const body = fs.readFileSync(f, 'utf8');
+    if (/meta\s+name="robots"[^>]*noindex/i.test(body)) continue;
     if (!set.has(r)) add(sp, 'sitemap', '파일이 sitemap에 없음: ' + r);
   }
   const entries = [];
