@@ -589,3 +589,7 @@ body.nav-open{overflow:hidden}
   .drawer-contact{gap:0}
   .drawer-contact a{display:inline-block;padding:12px 0}
 }
+/* 사례 → 제품군 연결 한 줄(cases/*.html 페이지헤드 끝) */
+.page-head p.rel-prod{margin-top:14px;font-size:14px;line-height:1.7;color:var(--muted)}
+.rel-prod a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;display:inline-block;padding:4px 0}
+@media(max-width:560px){.rel-prod a{padding:10px 0}}
