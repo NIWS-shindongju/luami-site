@@ -128,6 +128,116 @@
 .lgroups[data-filter="outdoor"] .lgroup:not(:has(.lcard[data-use~="outdoor"])),#use-outdoor:target ~ .lp-main .lgroups .lgroup:not(:has(.lcard[data-use~="outdoor"])){display:none}
 #use-outdoor:target ~ .lp-main .use-chip[data-use="outdoor"]{color:var(--ink);border-color:var(--accent);background:var(--paper2)}
 #use-outdoor:target ~ .lp-main .use-chip[data-use=""]{color:var(--muted);border-color:var(--line);background:transparent}
+
+/* ===== 모바일 전용 설계(≤880px) — 데스크톱 축소판이 아니라 별개의 레이아웃(한 URL, CSS 분기).
+   원칙: 마크업·문구는 데스크톱과 동일, 배치만 바꾼다. 데스크톱(>880px)은 이 블록에 닿지 않는다.
+   구성: ①컴팩트 히어로(H1+한 줄+수치 3개) ②상단 고정 세그먼트 컨트롤(5 형태) ③용도 칩 가로 한 줄
+        ④그룹별 가로 스와이프 카드 레일(스냅·다음 카드 살짝 보임·도트) ⑤설명 2줄 접기 ⑥하단 고정 액션바(.mcta) */
+.ph-stats{display:none}
+.lcard-more,.lrail-nav{display:none}
+@media(max-width:880px){
+  html{--sbar-h:0px}
+  /* 스티키 헤더의 메뉴 점(.navtoggle span)은 header.nav 의 --navfg 를 상속 못 해 투명이었다 — 이 페이지에서 보정 */
+  .stickybar{--navfg:var(--ink)}
+  /* ① 컴팩트 히어로 */
+  section.page-head{padding-top:118px;padding-bottom:20px}
+  .page-head h1{font-size:clamp(28px,7.7vw,40px);line-height:1.1;margin-top:10px}
+  .page-head p{margin-top:12px;font-size:15px;line-height:1.65;max-width:none}
+  .page-head .ph-more{display:none}
+  .ph-stats{display:flex;list-style:none;margin:18px 0 0;padding:16px 0 0;border-top:1px solid var(--line)}
+  .ph-stats li{flex:1;display:flex;flex-direction:column;gap:6px;padding:0 14px;border-left:1px solid var(--line)}
+  .ph-stats li:first-child{padding-left:0;border-left:0}
+  .ph-stats b{font-family:var(--serif);font-weight:600;font-size:28px;line-height:1;color:var(--ink)}
+  .ph-stats span{font-size:11px;letter-spacing:.06em;color:var(--accent-dark);font-weight:700}
+  /* ② 본문 컬럼 — 세그먼트 컨트롤을 시각적으로 맨 위로(DOM 순서는 데스크톱 그대로) */
+  .lp-main{display:flex;flex-direction:column}
+  /* flex 컬럼 안에서 margin:auto 항목은 stretch 되지 않아 내용폭(651px)으로 넘친다 → 폭 고정 */
+  .pf-rail{order:-1;width:100%;max-width:none;margin:0;top:var(--sbar-h);padding:8px 22px;gap:6px;counter-reset:seg;scroll-snap-type:x proximity;scroll-padding:0 22px;transition:top .45s cubic-bezier(.16,1,.3,1)}
+  .pf-rail-a{scroll-snap-align:start;min-height:44px;display:inline-flex;align-items:center;gap:7px;padding:0 15px;font-size:13.5px;border-color:transparent;background:transparent;color:var(--muted)}
+  .pf-rail-a::before{counter-increment:seg;content:"0" counter(seg);font-family:var(--serif);font-size:10.5px;letter-spacing:.08em;color:var(--accent)}
+  .pf-rail-a.active{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+  .pf-rail-a.active::before{color:var(--accent-l)}
+  /* ③ 용도 칩 — 가로 한 줄 스크롤 */
+  .lp-find{padding-top:18px!important;padding-bottom:4px!important}
+  .lp-find .idxlabel{display:none}
+  .lp-find h2{font-size:20px;margin-top:0}
+  .lp-find-note{display:none}
+  .use-chips{flex-wrap:nowrap;overflow-x:auto;gap:8px;margin:12px -22px 0;padding:2px 22px 6px;scroll-snap-type:x proximity;scroll-padding:0 22px;scrollbar-width:none}
+  .use-chips::-webkit-scrollbar{display:none}
+  .use-chip{flex:0 0 auto;scroll-snap-align:start;min-height:44px;padding:0 16px;font-size:13.5px}
+  .use-count{margin-top:6px;font-size:11.5px}
+  /* ④ 그룹 = 가로 스와이프 카드 레일 */
+  .lgroup{padding:30px 0 4px!important}
+  .lgroup,.lp-faq{scroll-margin-top:calc(var(--sbar-h) + 62px)}
+  .lgroup-head{gap:8px}
+  .lgroup-head h2{font-size:clamp(26px,7vw,34px);margin-top:8px}
+  .lgroup-head p{font-size:13.5px;line-height:1.7;padding-bottom:0}
+  .lgrid{display:flex;gap:12px;margin:18px -22px 0;padding:6px 22px 4px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding:0 22px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .lgrid::-webkit-scrollbar{display:none}
+  .lcard,.lcard-lead{flex:0 0 min(84vw,430px);scroll-snap-align:start;display:grid;grid-template-columns:1fr;grid-auto-rows:auto;align-content:start;grid-column:auto;border-radius:14px;border-color:var(--line);box-shadow:0 18px 34px -26px rgba(31,36,23,.35);transform:none}
+  .lcard:hover{transform:none;border-color:var(--line);box-shadow:0 18px 34px -26px rgba(31,36,23,.35)}
+  .lcard-im,.lcard-lead .lcard-im{grid-area:1/1;aspect-ratio:4/5;min-height:0}
+  .lcard:hover .lcard-im>img{transform:none}
+  .lcard-body,.lcard-lead .lcard-body{display:contents}
+  /* 이름 + 그룹 태그를 사진 하단 그라데이션 위에 */
+  .lcard h3,.lcard-lead h3{grid-area:1/1;align-self:end;z-index:2;margin:0;padding:64px 18px 16px;font-size:21px;line-height:1.22;color:var(--cream);background:linear-gradient(180deg,rgba(31,36,23,0),rgba(31,36,23,.5) 42%,rgba(31,36,23,.84));text-shadow:0 1px 2px rgba(0,0,0,.25)}
+  .lcard:hover h3{color:var(--cream)}
+  .lcard h3::before{display:block;content:"";font-family:var(--sans);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--accent-l);margin-bottom:7px}
+  #g-booth .lcard h3::before{content:"부스형 · Booth"}
+  #g-kiosk .lcard h3::before{content:"키오스크형 · Kiosk"}
+  #g-theme .lcard h3::before{content:"테마·세트형 · Theme & Set"}
+  #g-experience .lcard h3::before{content:"체험·출력형 · Experience"}
+  #g-event .lcard h3::before{content:"행사 운영형 · Event Operation"}
+  .lcard-alt{color:rgba(245,240,222,.72);margin-top:5px}
+  .lcard-no{left:14px;top:14px}
+  .lcard-en{padding:14px 18px 0;margin-top:0;font-size:10px}
+  .lcard-hook,.lcard-lead .lcard-hook{padding:8px 18px 0;font-size:16.5px;line-height:1.45;max-width:none}
+  .lcard-desc,.lcard-lead .lcard-desc{padding:10px 18px 0;font-size:13.5px;line-height:1.7;max-width:none}
+  .js .lcard-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .js .lcard.is-open .lcard-desc{display:block;-webkit-line-clamp:unset;overflow:visible}
+  .lcard-more{display:inline-flex;align-items:center;gap:5px;min-height:44px;margin:0 18px;padding:0;border:0;background:none;font:inherit;font-size:12.5px;font-weight:700;letter-spacing:.06em;color:var(--accent-dark);cursor:pointer;-webkit-tap-highlight-color:transparent;justify-self:start}
+  .lcard-more::after{content:"+";font-size:17px;line-height:1;color:var(--accent)}
+  .lcard.is-open .lcard-more::after{content:"−"}
+  .lcard-tags,.lcard-lead .lcard-tags{padding:0 18px;margin-top:0;gap:6px}
+  .lcard-tags li,.lcard-lead .lcard-tags li{font-size:11px;padding:7px 11px;background:var(--paper2);border-color:transparent;color:var(--ink2)}
+  .lcard-ctas{margin:14px 18px 18px;padding-top:0;border-top:0;flex-direction:column;gap:8px}
+  .lcard-cta{display:flex;justify-content:center;min-height:50px;border-radius:8px;background:var(--ink);color:var(--cream);font-size:13px;letter-spacing:.08em}
+  .lcard-cta:hover{color:var(--cream)}
+  .lcard-cta .arrow{color:var(--accent-l)}
+  .lcard-cta2{background:transparent;color:var(--accent-dark);border:1px solid var(--line);min-height:46px}
+  .lcard-cta2:hover{color:var(--ink)}
+  /* 레일 도트 + 카운터(JS) */
+  .lrail-nav{display:flex;align-items:center;justify-content:space-between;margin-top:4px;min-height:44px}
+  .lrail-dots{display:flex}
+  .lrail-dot{width:22px;height:44px;border:0;background:none;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .lrail-dot::before{content:"";width:6px;height:6px;border-radius:3px;background:rgba(76,133,103,.35);transition:width .3s,background .3s}
+  .lrail-dot.is-on::before{width:18px;background:var(--accent)}
+  .lrail-count{font-family:var(--serif);font-size:12px;letter-spacing:.14em;color:var(--accent-dark)}
+  /* ⑤ FAQ 아코디언 / 마무리 밴드 */
+  .lp-faq{padding-top:36px!important}
+  .lp-faq h2{font-size:26px}
+  .faq{margin-top:22px}
+  .faq details{padding:16px 2px}
+  .faq summary{min-height:44px;font-size:16px;line-height:1.45;align-items:center;gap:14px}
+  .faq summary::after{font-size:22px;line-height:1;flex-shrink:0}
+  .faq details p{font-size:14px;line-height:1.7;margin-top:10px}
+  .lp-links{display:flex;flex-direction:column;gap:8px;margin-top:24px!important}
+  .lp-links .btn-ghost{justify-content:center;min-height:48px;margin-left:0!important}
+  .band{padding:34px 22px;border-radius:14px;text-align:left}
+  .band h2{font-size:28px}
+  .band p{margin:12px 0 20px;font-size:14px}
+  .contacts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .contacts a{display:flex;align-items:center;justify-content:center;min-height:48px;padding:12px 10px;font-size:12.5px}
+  /* ⑥ 하단 고정 액션바 — 사이트 공용 .mcta(카톡·전화·견적) 재사용: 안전영역·드로어 열림 시 숨김 */
+  body{padding-bottom:calc(74px + env(safe-area-inset-bottom,0px))}
+  .mcta{padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));transition:transform .35s cubic-bezier(.16,1,.3,1)}
+  .mcta a{display:flex;align-items:center;justify-content:center;min-height:48px;padding:0 10px;border-radius:8px}
+  body.nav-open .mcta{transform:translateY(120%)}
+}
+@media(max-width:880px) and (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .pf-rail,.mcta,.lrail-dot::before,.lgrid,.use-chips{transition:none;scroll-behavior:auto}
+}
 </style>
 <script>document.documentElement.className += ' js';</script>
 </head>
@@ -179,7 +289,8 @@
 <section class="page-head"><div class="wrap">
   <span class="idxlabel fade">Products · 29 Forms</span>
   <h1><span class="lm"><span>포토부스 · 포토키오스크 </span></span><span class="lm"><span>제품군</span></span></h1>
-  <p class="fade">루아미는 무인 포토부스와 포토키오스크를 <b>렌탈·설치·운영</b>하는 팀입니다. 하루 행사와 팝업부터 매장 상설, 브랜드 맞춤 캠페인까지 — 아래 29가지 형태 모두 현장의 공간·전원·동선과 목적에 맞춰 구성해 설치하고, 운영과 회수까지 맡습니다. 형태별로 묶고, 용도별로 다시 찾을 수 있게 정리했습니다.</p>
+  <p class="fade"><span class="ph-lead">루아미는 무인 포토부스와 포토키오스크를 <b>렌탈·설치·운영</b>하는 팀입니다.</span> <span class="ph-more">하루 행사와 팝업부터 매장 상설, 브랜드 맞춤 캠페인까지 — 아래 29가지 형태 모두 현장의 공간·전원·동선과 목적에 맞춰 구성해 설치하고, 운영과 회수까지 맡습니다. 형태별로 묶고, 용도별로 다시 찾을 수 있게 정리했습니다.</span></p>
+  <ul class="ph-stats fade" aria-label="제품군 요약"><li><b>29</b><span>가지 형태</span></li><li><b>5</b><span>그룹</span></li><li><b>5</b><span>용도</span></li></ul>
 </div></section>
 
 <span id="use-all" class="use-target" aria-hidden="true"></span><span id="use-event" class="use-target" aria-hidden="true"></span><span id="use-store" class="use-target" aria-hidden="true"></span><span id="use-wedding" class="use-target" aria-hidden="true"></span><span id="use-school" class="use-target" aria-hidden="true"></span><span id="use-outdoor" class="use-target" aria-hidden="true"></span>
@@ -187,7 +298,7 @@
 <section class="lp-find" id="find"><div class="wrap">
   <span class="idxlabel fade">Find by use</span>
   <h2 class="serif fade">용도별로 <i>찾기</i></h2>
-  <p class="fade">칩을 누르면 그 용도에 맞는 구성만 남습니다. 형태별 목차는 바로 아래 바에서 이동하세요.</p>
+  <p class="fade lp-find-note">칩을 누르면 그 용도에 맞는 구성만 남습니다. 형태별 목차는 바로 아래 바에서 이동하세요.</p>
   <div class="use-chips fade" role="group" aria-label="용도별 필터"><a class="use-chip is-on" href="#use-all" data-use="" aria-current="true">전체 <b>29</b></a><a class="use-chip" href="#use-event" data-use="event">행사 · 팝업 <b>23</b></a><a class="use-chip" href="#use-store" data-use="store">상설 매장 <b>17</b></a><a class="use-chip" href="#use-wedding" data-use="wedding">웨딩 · 파티 <b>9</b></a><a class="use-chip" href="#use-school" data-use="school">학교 · 공공 <b>10</b></a><a class="use-chip" href="#use-outdoor" data-use="outdoor">야외 · 페스티벌 <b>5</b></a></div>
   <p class="use-count" id="useCount" aria-live="polite"></p>
 </div></section>
@@ -572,7 +683,7 @@
     <details class="fade"><summary>브랜드나 행사에 맞춰 어디까지 바꿀 수 있나요?</summary><p>부스 외장 랩핑, 시작화면·촬영 UI, 인화 프레임, 포토카드·스티커 같은 결과물, 배경·소품까지 한 세트로 구성합니다. 학교 엠블럼 컬러와 학위수여식 문구, 캐릭터·아티스트 IP 콜라보, 시즌 그래픽처럼 기간 한정으로 운영한 뒤 원복하는 것까지 포함합니다.</p></details>
     <details class="fade"><summary>여러 형태를 한 현장에 함께 둘 수 있나요?</summary><p>네. 지하철·엘리베이터·스튜디오 세트를 한 매장에 배치하는 멀티 테마존, 동일 키오스크를 여러 대 일렬로 두고 촬영·수령 동선을 나누는 다대수 운영처럼 형태를 조합해 구성합니다. 촬영과 수령을 분리하면 대기가 줄어 박람회·대학축제 같은 대형 행사에 맞습니다.</p></details>
   </div>
-  <p class="fade" style="text-align:center;margin-top:38px"><a href="guide.html" class="btn-ghost">렌탈 가이드 — 종류·비용·체크리스트</a> <a href="portfolio.html" class="btn-ghost" style="margin-left:8px">설치 사례 보기</a></p>
+  <p class="fade lp-links" style="text-align:center;margin-top:38px"><a href="guide.html" class="btn-ghost">렌탈 가이드 — 종류·비용·체크리스트</a> <a href="portfolio.html" class="btn-ghost" style="margin-left:8px">설치 사례 보기</a></p>
 </div></section>
 
 <section style="padding-bottom:clamp(90px,12vw,150px)"><div class="wrap"><div class="band fade">
@@ -612,10 +723,99 @@
     if(count) count.textContent=use?(LABEL[use]+' — '+n+'개 구성 / 전체 '+cards.length+'개'):('전체 '+cards.length+'개 구성 · 5가지 형태');
     /* display:none 상태였던 .fade 카드는 IntersectionObserver가 못 봤으므로 즉시 노출 */
     cards.forEach(function(c){c.classList.add('in')});
+    /* 모바일 레일 도트 등 다른 강화 스크립트에 필터 변경을 알린다 */
+    try{document.dispatchEvent(new CustomEvent('lp:filter',{detail:use||''}))}catch(e){}
   }
   chips.forEach(function(c){c.addEventListener('click',function(e){e.preventDefault();apply(c.getAttribute('data-use')||'');if(history.replaceState)history.replaceState(null,'',location.pathname+location.search);});});
   var m=(location.hash||'').match(/^#use-(event|store|wedding|school|outdoor)$/);
   apply(m?m[1]:'');
+})();
+</script>
+<script>
+/* 모바일(≤880px) 점진적 강화 — 없어도 CSS만으로 가로 스크롤·전체 설명·앵커 이동은 동작한다.
+   ① 오프스크린 카드 즉시 노출 ② 설명 2줄 접기 '더 보기' ③ 레일 도트·카운터(IntersectionObserver)
+   ④ 세그먼트 컨트롤이 스티키 헤더(#sbar) 아래에 붙도록 --sbar-h 동기화 + 앵커 이동 오프셋 ⑤ 활성 세그먼트 자동 스크롤 */
+(function(){
+  var mq=matchMedia('(max-width:880px)'), reduce=matchMedia('(prefers-reduced-motion: reduce)');
+  var groups=document.getElementById('lgroups'), sbar=document.getElementById('sbar'), rail=document.getElementById('pfRail');
+  if(!groups) return;
+  var root=document.documentElement;
+  function pad(n){return n<10?'0'+n:''+n}
+  function behavior(){return reduce.matches?'auto':'smooth'}
+  /* ④ 스티키 헤더 높이 동기화 — main.js가 #sbar에 .show를 토글하면 그 실측 높이를 CSS 변수로 */
+  function syncSbar(){root.style.setProperty('--sbar-h',(sbar&&mq.matches&&sbar.classList.contains('show'))?sbar.offsetHeight+'px':'0px')}
+  if(sbar&&'MutationObserver' in window){new MutationObserver(syncSbar).observe(sbar,{attributes:true,attributeFilter:['class']})}
+  syncSbar();
+  if(rail){
+    rail.addEventListener('click',function(e){
+      var a=e.target.closest&&e.target.closest('.pf-rail-a'); if(!a||!mq.matches) return;
+      var sec=document.querySelector(a.getAttribute('href')); if(!sec) return;
+      e.preventDefault(); e.stopPropagation();
+      var y=sec.getBoundingClientRect().top+window.pageYOffset, railH=rail.offsetHeight;
+      var sbarH=(sbar&&(y-railH>innerHeight*0.85))?sbar.offsetHeight:0; /* main.js 스티키바 노출 조건과 동일 */
+      var top=Math.max(0,y-railH-sbarH-6);
+      if(window.__lenis&&!reduce.matches){window.__lenis.scrollTo(top)}else{window.scrollTo({top:top,behavior:behavior()})}
+      if(history.replaceState) history.replaceState(null,'',location.pathname+location.search+a.getAttribute('href'));
+    });
+    /* ⑤ main.js가 .active를 옮기면 그 칩이 보이도록 레일을 가로 스크롤 */
+    if('MutationObserver' in window){
+      new MutationObserver(function(){
+        var a=rail.querySelector('.pf-rail-a.active'); if(!a||!mq.matches) return;
+        rail.scrollTo({left:Math.max(0,a.offsetLeft-(rail.clientWidth-a.offsetWidth)/2),behavior:behavior()});
+      }).observe(rail,{attributes:true,subtree:true,attributeFilter:['class']});
+    }
+  }
+  var inited=false;
+  function init(){
+    if(inited||!mq.matches) return; inited=true;
+    var cards=Array.prototype.slice.call(groups.querySelectorAll('.lcard'));
+    /* ① 레일 오른쪽(가로 오프스크린) 카드는 IntersectionObserver 리빌이 못 잡으므로 즉시 노출 */
+    cards.forEach(function(c){c.classList.add('in')});
+    /* ② 설명 2줄 접기 */
+    cards.forEach(function(card){
+      var desc=card.querySelector('.lcard-desc'); if(!desc) return;
+      if(!desc.id) desc.id='desc-'+card.id;
+      var b=document.createElement('button'); b.type='button'; b.className='lcard-more'; b.textContent='더 보기';
+      b.setAttribute('aria-expanded','false'); b.setAttribute('aria-controls',desc.id);
+      b.addEventListener('click',function(){var on=card.classList.toggle('is-open');b.setAttribute('aria-expanded',on?'true':'false');b.textContent=on?'접기':'더 보기'});
+      desc.insertAdjacentElement('afterend',b);
+    });
+    /* ③ 레일 도트 + 카운터 */
+    Array.prototype.forEach.call(groups.querySelectorAll('.lgrid'),function(track){
+      var nav=document.createElement('div'); nav.className='lrail-nav';
+      var dots=document.createElement('div'); dots.className='lrail-dots';
+      var count=document.createElement('span'); count.className='lrail-count'; count.setAttribute('aria-hidden','true');
+      nav.appendChild(dots); nav.appendChild(count); track.insertAdjacentElement('afterend',nav);
+      var io=null, vis=[], cur=-1;
+      function left(c){return c.getBoundingClientRect().left-track.getBoundingClientRect().left+track.scrollLeft-22}
+      function setOn(i){
+        if(i===cur) return; cur=i;
+        Array.prototype.forEach.call(dots.children,function(d,j){d.classList.toggle('is-on',j===i);if(j===i)d.setAttribute('aria-current','true');else d.removeAttribute('aria-current')});
+        count.textContent=pad(i+1)+' / '+pad(vis.length);
+      }
+      function build(){
+        vis=Array.prototype.filter.call(track.querySelectorAll('.lcard'),function(c){return getComputedStyle(c).display!=='none'});
+        dots.innerHTML=''; cur=-1;
+        vis.forEach(function(c,i){
+          var d=document.createElement('button'); d.type='button'; d.className='lrail-dot'; d.setAttribute('aria-label',(i+1)+'번째 구성 보기');
+          d.addEventListener('click',function(){track.scrollTo({left:left(c),behavior:behavior()})});
+          dots.appendChild(d);
+        });
+        nav.style.display=vis.length>1?'':'none';
+        if(io){io.disconnect();io=null}
+        if(!vis.length) return;
+        setOn(0);
+        if(!('IntersectionObserver' in window)) return;
+        io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var i=vis.indexOf(e.target);if(i>-1)setOn(i)}})},{root:track,threshold:.6});
+        vis.forEach(function(c){io.observe(c)});
+      }
+      build();
+      document.addEventListener('lp:filter',function(){track.scrollTo({left:0});build()});
+    });
+  }
+  if(mq.matches) init();
+  else if(mq.addEventListener) mq.addEventListener('change',function(e){if(e.matches)init()});
+  else if(mq.addListener) mq.addListener(function(e){if(e.matches)init()});
 })();
 </script>
 </body>
