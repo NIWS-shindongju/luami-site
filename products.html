@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://luamiphoto.com/"},{"@type":"ListItem","position":2,"name":"제품군","item":"https://luamiphoto.com/products.html"}]}
 </script>
@@ -34,7 +34,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"어떤 형태를 골라야 할지 모르겠어요.","acceptedAnswer":{"@type":"Answer","text":"공간과 목적으로 좁힙니다. 벽에 붙여 두는 상설 매장이면 박스형·캐비닛형, 포토월 앞에 세우기만 하면 되는 행사·팝업이면 스탠드형 키오스크, 사진 배경 자체가 콘텐츠여야 하면 지하철·엘리베이터 같은 테마 세트, 결과물로 차별화하려면 플립북·스티커·360도·AI 같은 체험·출력형을 봅니다. 위 '용도별로 찾기'로 후보를 남긴 뒤 문의 주시면 현장 조건에 맞춰 최종 구성을 제안합니다."}},{"@type":"Question","name":"공간과 전원은 어느 정도 필요한가요?","acceptedAnswer":{"@type":"Answer","text":"스탠드형 키오스크는 일반 전원만 있으면 설치가 끝나고 별도 부스 공간이 필요 없습니다. 박스형·테마 세트는 부스가 놓일 바닥 면적과 출입 동선이 필요하고, 야외는 캐노피·텐트와 전원·케이블, 바람·습도 대비를 함께 구성합니다. 정확한 규격은 형태마다 다르므로 현장 사진이나 도면을 주시면 배치까지 안내해 드립니다."}},{"@type":"Question","name":"브랜드나 행사에 맞춰 어디까지 바꿀 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"부스 외장 랩핑, 시작화면·촬영 UI, 인화 프레임, 포토카드·스티커 같은 결과물, 배경·소품까지 한 세트로 구성합니다. 학교 엠블럼 컬러와 학위수여식 문구, 캐릭터·아티스트 IP 콜라보, 시즌 그래픽처럼 기간 한정으로 운영한 뒤 원복하는 것까지 포함합니다."}},{"@type":"Question","name":"여러 형태를 한 현장에 함께 둘 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"네. 지하철·엘리베이터·스튜디오 세트를 한 매장에 배치하는 멀티 테마존, 동일 키오스크를 여러 대 일렬로 두고 촬영·수령 동선을 나누는 다대수 운영처럼 형태를 조합해 구성합니다. 촬영과 수령을 분리하면 대기가 줄어 박람회·대학축제 같은 대형 행사에 맞습니다."}}]}
 </script>
-<link rel="stylesheet" href="assets/style.css?v=20260923a">
+<link rel="stylesheet" href="assets/style.css?v=20260925r">
 <style>
   /* 제품군 페이지 전용 — 사이트 공용 style.css 는 안 건드린다(다른 페이지 영향 0). 카드·필터·그룹 헤더만 스코프. */
   .use-target{display:block;height:0;overflow:hidden}
@@ -43,7 +43,7 @@
      services/portfolio 도 같은 증상(교차 백로그) — 여기선 원래 의도값 112px 을 같은 특이성으로 되살린다. */
   @media(max-width:880px){section.page-head{padding-top:112px}}
   .lp-find{padding-top:clamp(40px,6vw,72px)!important;padding-bottom:clamp(28px,4vw,44px)!important}
-  .lp-find h2{font-weight:400;font-size:clamp(28px,4vw,50px);margin-top:10px;letter-spacing:-.02em}
+  .lp-find h2{font-weight:400;font-size:var(--h2);margin-top:10px;letter-spacing:-.02em}
   .lp-find h2 i{font-style:normal;color:var(--accent)}
   .lp-find p{color:var(--muted);max-width:62ch;line-height:1.8;margin-top:14px}
   .use-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
@@ -54,7 +54,7 @@
   .use-count{margin-top:14px;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-dark);font-weight:700;min-height:1.4em}
   .lgroup{padding-top:clamp(48px,6vw,88px)!important}
   .lgroup-head{display:grid;grid-template-columns:1.1fr 1fr;gap:20px clamp(28px,4vw,64px);align-items:end}
-  .lgroup-head h2{font-weight:400;font-size:clamp(30px,4.4vw,58px);margin-top:10px;letter-spacing:-.02em;line-height:1.08}
+  .lgroup-head h2{font-weight:400;font-size:var(--h2);margin-top:10px;letter-spacing:-.02em;line-height:1.08}
   .lgroup-head h2 i{font-style:normal;color:var(--accent)}
   .lgroup-head p{color:var(--muted);line-height:1.8;font-size:15px;max-width:52ch;padding-bottom:6px}
   @media(max-width:820px){.lgroup-head{grid-template-columns:1fr;gap:12px}.lgroup-head p{font-size:14px}}
@@ -107,7 +107,7 @@
     .use-chip{padding:9px 14px;font-size:13px}
   }
   .lp-faq{padding-top:clamp(48px,6vw,88px)!important}
-  .lp-faq h2{font-weight:400;font-size:clamp(28px,4vw,50px);margin-top:10px;letter-spacing:-.02em}
+  .lp-faq h2{font-weight:400;font-size:var(--h2);margin-top:10px;letter-spacing:-.02em}
   @media(prefers-reduced-motion:reduce){.lcard,.lcard-im img,.use-chip{transition:none!important}}
 
 .lgroups[data-filter="event"] .lcard:not([data-use~="event"]),#use-event:target ~ .lp-main .lgroups .lcard:not([data-use~="event"]){display:none}
@@ -172,7 +172,7 @@
   .lgroup{padding:30px 0 4px!important}
   .lgroup,.lp-faq{scroll-margin-top:calc(var(--sbar-h) + 62px)}
   .lgroup-head{gap:8px}
-  .lgroup-head h2{font-size:clamp(26px,7vw,34px);margin-top:8px}
+  .lgroup-head h2{margin-top:8px}
   .lgroup-head p{font-size:13.5px;line-height:1.7;padding-bottom:0}
   .lgrid{display:flex;gap:12px;margin:18px -22px 0;padding:6px 22px 4px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding:0 22px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .lgrid::-webkit-scrollbar{display:none}
@@ -217,7 +217,7 @@
   .lrail-count{font-family:var(--serif);font-size:12px;letter-spacing:.14em;color:var(--accent-dark)}
   /* ⑤ FAQ 아코디언 / 마무리 밴드 */
   .lp-faq{padding-top:36px!important}
-  .lp-faq h2{font-size:26px}
+  
   .faq{margin-top:22px}
   .faq details{padding:16px 2px}
   .faq summary{min-height:44px;font-size:16px;line-height:1.45;align-items:center;gap:14px}
@@ -244,6 +244,7 @@
 <script>document.documentElement.className += ' js';</script>
 </head>
 <body>
+<a class="skip-link" href="#main">본문 바로가기</a>
 <div class="grain"></div>
 <div class="progress" id="prog"></div>
 <div class="util"><div class="wrap"><span>Luami — 무인 포토부스 렌탈</span><span>Est. 2026 · Korea</span></div></div>
@@ -255,7 +256,7 @@
 </div></header>
 
 <div class="drawer-scrim" id="drawerScrim" aria-hidden="true"></div>
-<div class="drawer" id="drawer" aria-hidden="true">
+<div class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="메뉴">
   <div class="drawer-grab" aria-hidden="true"></div>
   <div class="drawer-top">
     <a href="index.html" class="logo dlogo">Luami<span class="dot"></span></a>
@@ -273,7 +274,7 @@
     <div class="drawer-contact">
       <a href="tel:01036297743">010-3629-7743</a>
       <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a>
-      <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
+      <a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
     </div>
   </div>
 </div>
@@ -283,6 +284,7 @@
   <a href="index.html#contact" class="btn-mini">렌탈 문의</a>
   <button class="navtoggle" id="navToggle2" aria-label="메뉴 열기" aria-controls="drawer"><span></span><span></span><span></span></button>
 </div>
+<main id="main">
 
 <section class="page-head"><div class="wrap">
   <span class="idxlabel fade">Products · 21 Forms</span>
@@ -314,7 +316,7 @@
   </div>
   <div class="lgrid">
 <article class="lcard lcard-lead fade" id="p-a01" data-id="A01" data-use="store event">
-  <figure class="lcard-im cover"><span class="lcard-no">01</span><img src="assets/images/g3.webp" width="1024" height="1024" alt="박스형 4컷 포토부스 — 도어 패널이 달린 밀폐형 셸, 출고 전 모습" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">01</span><img src="assets/images/g3.webp" width="1024" height="1024" alt="박스형 4컷 포토부스 — 도어 패널이 달린 밀폐형 셸, 출고 전 모습" loading="lazy" decoding="async" srcset="assets/images/g3-480w.webp 480w, assets/images/g3.webp 1024w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>박스형 4컷 포토부스 <span class="lcard-alt">(밀폐형 셀프 포토부스)</span></h3>
     <span class="lcard-en">Enclosed 4-cut box booth</span>
@@ -325,7 +327,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-a05" data-id="A05" data-use="store event">
-  <figure class="lcard-im cover"><span class="lcard-no">02</span><img src="assets/images/store-premium-02.webp" width="1200" height="1600" alt="우드그레인 마감의 개방형 프리미엄 셀프스튜디오 부스" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">02</span><img src="assets/images/store-premium-02.webp" width="1200" height="1600" alt="우드그레인 마감의 개방형 프리미엄 셀프스튜디오 부스" loading="lazy" decoding="async" srcset="assets/images/store-premium-02-480w.webp 480w, assets/images/store-premium-02-960w.webp 960w, assets/images/store-premium-02.webp 1200w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>프리미엄 셀프스튜디오형 부스 (개방형)</h3>
     <span class="lcard-en">Open self-studio booth</span>
@@ -336,7 +338,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-a07" data-id="A07" data-use="store">
-  <figure class="lcard-im cover"><span class="lcard-no">03</span><img src="assets/images/retail-cabinet-shop-in-shop.webp" width="1600" height="1200" alt="카페·편의점 한 칸에 들어가는 캐비닛형 샵인샵 포토머신" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">03</span><img src="assets/images/retail-cabinet-shop-in-shop.webp" width="1600" height="1200" alt="카페·편의점 한 칸에 들어가는 캐비닛형 샵인샵 포토머신" loading="lazy" decoding="async" srcset="assets/images/retail-cabinet-shop-in-shop-480w.webp 480w, assets/images/retail-cabinet-shop-in-shop-960w.webp 960w, assets/images/retail-cabinet-shop-in-shop.webp 1600w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>캐비닛형 샵인샵 포토머신</h3>
     <span class="lcard-en">Cabinet-type shop-in-shop photo unit</span>
@@ -347,7 +349,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-a17" data-id="A17" data-use="wedding event">
-  <figure class="lcard-im cover"><span class="lcard-no">04</span><img src="assets/images/premium-mirror-front.webp" width="1200" height="1600" alt="다이아몬드 패턴 미러 마감의 프리미엄 미러 부스" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">04</span><img src="assets/images/premium-mirror-front.webp" width="1200" height="1600" alt="다이아몬드 패턴 미러 마감의 프리미엄 미러 부스" loading="lazy" decoding="async" srcset="assets/images/premium-mirror-front-480w.webp 480w, assets/images/premium-mirror-front-960w.webp 960w, assets/images/premium-mirror-front.webp 1200w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>미러 부스</h3>
     <span class="lcard-en">Mirror photo booth</span>
@@ -358,7 +360,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-a06" data-id="A06" data-use="store event">
-  <figure class="lcard-im cover"><span class="lcard-no">05</span><img src="assets/images/lineup-cylinder-booth-01.webp" width="1200" height="1280" alt="도시 스카이라인 그래픽의 원통형 실린더 포토부스 2대" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">05</span><img src="assets/images/lineup-cylinder-booth-01.webp" width="1200" height="1280" alt="도시 스카이라인 그래픽의 원통형 실린더 포토부스 2대" loading="lazy" decoding="async" srcset="assets/images/lineup-cylinder-booth-01-480w.webp 480w, assets/images/lineup-cylinder-booth-01-960w.webp 960w, assets/images/lineup-cylinder-booth-01.webp 1200w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>실린더 부스 (원통형)</h3>
     <span class="lcard-en">Cylinder photo booth</span>
@@ -369,7 +371,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-b04" data-id="B04" data-use="store event school">
-  <figure class="lcard-im cover"><span class="lcard-no">06</span><img src="assets/images/lineup-gen-b04.webp" width="1088" height="1456" alt="하이앵글 부감 셀프 스튜디오 — 천장 암 카메라와 바닥 연출" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">06</span><img src="assets/images/lineup-gen-b04.webp" width="1088" height="1456" alt="하이앵글 부감 셀프 스튜디오 — 천장 암 카메라와 바닥 연출" loading="lazy" decoding="async" srcset="assets/images/lineup-gen-b04-480w.webp 480w, assets/images/lineup-gen-b04.webp 1088w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>하이앵글(부감) 셀프 스튜디오</h3>
     <span class="lcard-en">High-angle self studio</span>
@@ -382,7 +384,7 @@
   </div>
 <!-- HIDDEN-UNTIL-IMAGE (B05) — 실사 이미지 확보 전까지 비공개. 복원: 이 주석을 풀어 lgrid 안 원래 자리로 옮기고 .lcard-no·그룹/칩 카운트·JSON-LD ItemList 재계산. 원래 순서/번호는 tools/PENDING_GEN_IMAGES.txt 참조.
 <article class="lcard fade" id="p-b05" data-id="B05" data-use="store event">
-  <figure class="lcard-im cover"><span class="lcard-no">07</span><img src="assets/images/lineup-gen-b05.webp" width="1600" height="1200" alt="레트로 아날로그 필름 부스 — 둥근 금속 캐비닛과 커튼 (사진 준비 중)" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">07</span><img src="assets/images/lineup-gen-b05.webp" width="1600" height="1200" alt="레트로 아날로그 필름 부스 — 둥근 금속 캐비닛과 커튼 (사진 준비 중)" loading="lazy" decoding="async" srcset="assets/images/lineup-gen-b05-480w.webp 480w, assets/images/lineup-gen-b05-960w.webp 960w, assets/images/lineup-gen-b05.webp 1600w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>레트로 아날로그 필름 부스</h3>
     <span class="lcard-en">Retro analog-style photo booth</span>
@@ -402,7 +404,7 @@
   </div>
   <div class="lgrid">
 <article class="lcard lcard-lead fade" id="p-a02" data-id="A02" data-use="event store wedding school">
-  <figure class="lcard-im cover"><span class="lcard-no">07</span><img src="assets/images/case-kiosk.webp" width="1080" height="1350" alt="스탠드형 포토키오스크 — 카메라·터치스크린·프린터·결제기 일체형" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">07</span><img src="assets/images/case-kiosk.webp" width="1080" height="1350" alt="스탠드형 포토키오스크 — 카메라·터치스크린·프린터·결제기 일체형" loading="lazy" decoding="async" srcset="assets/images/case-kiosk-480w.webp 480w, assets/images/case-kiosk.webp 1080w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>포토키오스크 (스탠드형)</h3>
     <span class="lcard-en">Stand-alone photo kiosk</span>
@@ -413,7 +415,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-b01" data-id="B01" data-use="event school">
-  <figure class="lcard-im cover"><span class="lcard-no">08</span><img src="assets/images/lineup-gen-b01.webp" width="1088" height="1456" alt="AI 포토부스 · AI 프로필 키오스크 — 촬영 후 QR 전송 화면" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">08</span><img src="assets/images/lineup-gen-b01.webp" width="1088" height="1456" alt="AI 포토부스 · AI 프로필 키오스크 — 촬영 후 QR 전송 화면" loading="lazy" decoding="async" srcset="assets/images/lineup-gen-b01-480w.webp 480w, assets/images/lineup-gen-b01.webp 1088w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>AI 포토부스 / AI 프로필 키오스크</h3>
     <span class="lcard-en">Generative-AI photo kiosk</span>
@@ -426,7 +428,7 @@
   </div>
 <!-- HIDDEN-UNTIL-IMAGE (B06 B08 B09 B11) — 실사 이미지 확보 전까지 비공개. 복원: 이 주석을 풀어 lgrid 안 원래 자리로 옮기고 .lcard-no·그룹/칩 카운트·JSON-LD ItemList 재계산. 원래 순서/번호는 tools/PENDING_GEN_IMAGES.txt 참조.
 <article class="lcard fade" id="p-b06" data-id="B06" data-use="store school event">
-  <figure class="lcard-im cover"><span class="lcard-no">10</span><img src="assets/images/lineup-gen-b06.webp" width="1600" height="1200" alt="증명사진 키오스크 — 흰 배경과 규격 가이드 (사진 준비 중)" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">10</span><img src="assets/images/lineup-gen-b06.webp" width="1600" height="1200" alt="증명사진 키오스크 — 흰 배경과 규격 가이드 (사진 준비 중)" loading="lazy" decoding="async" srcset="assets/images/lineup-gen-b06-480w.webp 480w, assets/images/lineup-gen-b06-960w.webp 960w, assets/images/lineup-gen-b06.webp 1600w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>증명사진 키오스크</h3>
     <span class="lcard-en">ID / passport photo kiosk</span>
@@ -437,7 +439,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-b08" data-id="B08" data-use="store wedding">
-  <figure class="lcard-im cover"><span class="lcard-no">11</span><img src="assets/images/lineup-gen-b08.webp" width="1600" height="1200" alt="카운터 위에 올라가는 미니·탁상형 포토부스 (사진 준비 중)" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">11</span><img src="assets/images/lineup-gen-b08.webp" width="1600" height="1200" alt="카운터 위에 올라가는 미니·탁상형 포토부스 (사진 준비 중)" loading="lazy" decoding="async" srcset="assets/images/lineup-gen-b08-480w.webp 480w, assets/images/lineup-gen-b08-960w.webp 960w, assets/images/lineup-gen-b08.webp 1600w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>미니·탁상형 포토부스</h3>
     <span class="lcard-en">Mini / countertop photo booth</span>
@@ -448,7 +450,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-b09" data-id="B09" data-use="event store">
-  <figure class="lcard-im cover"><span class="lcard-no">12</span><img src="assets/images/lineup-gen-b09.webp" width="1600" height="1200" alt="포토카드 규격으로 즉석 출력하는 포토카드 키오스크 (사진 준비 중)" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">12</span><img src="assets/images/lineup-gen-b09.webp" width="1600" height="1200" alt="포토카드 규격으로 즉석 출력하는 포토카드 키오스크 (사진 준비 중)" loading="lazy" decoding="async" srcset="assets/images/lineup-gen-b09-480w.webp 480w, assets/images/lineup-gen-b09-960w.webp 960w, assets/images/lineup-gen-b09.webp 1600w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>포토카드 키오스크</h3>
     <span class="lcard-en">Photocard print kiosk</span>
@@ -459,7 +461,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-b11" data-id="B11" data-use="event school">
-  <figure class="lcard-im cover"><span class="lcard-no">13</span><img src="assets/images/lineup-gen-b11.webp" width="1600" height="1200" alt="그린스크린 앞 크로마키·배경합성 키오스크 (사진 준비 중)" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">13</span><img src="assets/images/lineup-gen-b11.webp" width="1600" height="1200" alt="그린스크린 앞 크로마키·배경합성 키오스크 (사진 준비 중)" loading="lazy" decoding="async" srcset="assets/images/lineup-gen-b11-480w.webp 480w, assets/images/lineup-gen-b11-960w.webp 960w, assets/images/lineup-gen-b11.webp 1600w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>크로마키·배경합성 키오스크</h3>
     <span class="lcard-en">Chroma-key composite kiosk</span>
@@ -479,7 +481,7 @@
   </div>
   <div class="lgrid">
 <article class="lcard lcard-lead fade" id="p-a03" data-id="A03" data-use="store event">
-  <figure class="lcard-im cover"><span class="lcard-no">09</span><img src="assets/images/theme-subway-front.webp" width="901" height="1600" alt="지하철 객차를 재현한 테마 포토부스 정면 — 스테인리스 도어와 노선도" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">09</span><img src="assets/images/theme-subway-front.webp" width="901" height="1600" alt="지하철 객차를 재현한 테마 포토부스 정면 — 스테인리스 도어와 노선도" loading="lazy" decoding="async" srcset="assets/images/theme-subway-front-480w.webp 480w, assets/images/theme-subway-front.webp 901w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>지하철 테마 부스</h3>
     <span class="lcard-en">Subway-car themed booth</span>
@@ -490,7 +492,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-a04" data-id="A04" data-use="store event">
-  <figure class="lcard-im cover"><span class="lcard-no">10</span><img src="assets/images/theme-elevator-front.webp" width="901" height="1600" alt="빈티지 엘리베이터 테마 포토부스 정면 — 우드 도어와 층수 사인" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">10</span><img src="assets/images/theme-elevator-front.webp" width="901" height="1600" alt="빈티지 엘리베이터 테마 포토부스 정면 — 우드 도어와 층수 사인" loading="lazy" decoding="async" srcset="assets/images/theme-elevator-front-480w.webp 480w, assets/images/theme-elevator-front.webp 901w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>빈티지 엘리베이터 테마 부스</h3>
     <span class="lcard-en">Vintage elevator themed booth</span>
@@ -501,7 +503,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-a10" data-id="A10" data-use="store">
-  <figure class="lcard-im cover"><span class="lcard-no">11</span><img src="assets/images/themezone-pair.webp" width="901" height="1501" alt="지하철·엘리베이터 두 테마 세트가 나란히 선 멀티 테마존" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">11</span><img src="assets/images/themezone-pair.webp" width="901" height="1501" alt="지하철·엘리베이터 두 테마 세트가 나란히 선 멀티 테마존" loading="lazy" decoding="async" srcset="assets/images/themezone-pair-480w.webp 480w, assets/images/themezone-pair.webp 901w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>멀티 테마존 복합 매장</h3>
     <span class="lcard-en">Multi-theme zone photo complex</span>
@@ -512,7 +514,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-a08" data-id="A08" data-use="event">
-  <figure class="lcard-im cover"><span class="lcard-no">12</span><img src="assets/images/promo-bgbb-christmas-popup.webp" width="1600" height="1600" alt="캐릭터 키비주얼로 풀랩핑한 브랜드 콜라보 포토부스 설치 작업" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">12</span><img src="assets/images/promo-bgbb-christmas-popup.webp" width="1600" height="1600" alt="캐릭터 키비주얼로 풀랩핑한 브랜드 콜라보 포토부스 설치 작업" loading="lazy" decoding="async" srcset="assets/images/promo-bgbb-christmas-popup-480w.webp 480w, assets/images/promo-bgbb-christmas-popup-960w.webp 960w, assets/images/promo-bgbb-christmas-popup.webp 1600w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>브랜드·캐릭터 콜라보 랩핑 부스</h3>
     <span class="lcard-en">Brand / character collaboration wrapped booth</span>
@@ -523,7 +525,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-a15" data-id="A15" data-use="school">
-  <figure class="lcard-im contain"><span class="lcard-no">13</span><img src="assets/images/inu-custom-ui-wait.webp" width="1400" height="794" alt="학교명과 학위수여식 문구가 들어간 포토부스 시작화면" loading="lazy" decoding="async"><span class="lcard-inset"><img src="assets/images/inu-graduation-booth-exterior.webp" width="640" height="360" alt="학위수여식 현장에 설치된 포토부스 외관" loading="lazy" decoding="async"></span></figure>
+  <figure class="lcard-im contain"><span class="lcard-no">13</span><img src="assets/images/inu-custom-ui-wait.webp" width="1400" height="794" alt="학교명과 학위수여식 문구가 들어간 포토부스 시작화면" loading="lazy" decoding="async" srcset="assets/images/inu-custom-ui-wait-480w.webp 480w, assets/images/inu-custom-ui-wait-960w.webp 960w, assets/images/inu-custom-ui-wait.webp 1400w" sizes="(max-width: 720px) 90vw, 440px"><span class="lcard-inset"><img src="assets/images/inu-graduation-booth-exterior.webp" width="640" height="360" alt="학위수여식 현장에 설치된 포토부스 외관" loading="lazy" decoding="async" srcset="assets/images/inu-graduation-booth-exterior-480w.webp 480w, assets/images/inu-graduation-booth-exterior.webp 640w" sizes="(max-width: 720px) 90vw, 440px"></span></figure>
   <div class="lcard-body">
     <h3>학교·학위수여식 커스텀 UI 부스</h3>
     <span class="lcard-en">School / graduation custom-UI booth</span>
@@ -534,7 +536,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-a09" data-id="A09" data-use="event outdoor">
-  <figure class="lcard-im cover"><span class="lcard-no">14</span><img src="assets/images/winter-forest-hall.webp" width="1200" height="1500" alt="겨울 시즌 그래픽으로 랩핑한 포토부스 — 몰 행사장 설치" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">14</span><img src="assets/images/winter-forest-hall.webp" width="1200" height="1500" alt="겨울 시즌 그래픽으로 랩핑한 포토부스 — 몰 행사장 설치" loading="lazy" decoding="async" srcset="assets/images/winter-forest-hall-480w.webp 480w, assets/images/winter-forest-hall-960w.webp 960w, assets/images/winter-forest-hall.webp 1200w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>시즌 랩핑 부스</h3>
     <span class="lcard-en">Seasonal wrap booth</span>
@@ -554,7 +556,7 @@
   </div>
   <div class="lgrid">
 <article class="lcard lcard-lead fade" id="p-a13" data-id="A13" data-use="outdoor event wedding store">
-  <figure class="lcard-im cover"><span class="lcard-no">15</span><img src="assets/images/booth-flipbook-outdoor-tent.webp" width="1050" height="1400" alt="야외 텐트 아래 설치된 플립북 포토부스" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">15</span><img src="assets/images/booth-flipbook-outdoor-tent.webp" width="1050" height="1400" alt="야외 텐트 아래 설치된 플립북 포토부스" loading="lazy" decoding="async" srcset="assets/images/booth-flipbook-outdoor-tent-480w.webp 480w, assets/images/booth-flipbook-outdoor-tent.webp 1050w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>플립북 포토부스</h3>
     <span class="lcard-en">Flipbook photo booth</span>
@@ -565,7 +567,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-a16" data-id="A16" data-use="store event">
-  <figure class="lcard-im cover"><span class="lcard-no">16</span><img src="assets/images/sticker-photo-sign.webp" width="1200" height="1500" alt="스티커 인화 포토부스 존 입구 사이니지" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">16</span><img src="assets/images/sticker-photo-sign.webp" width="1200" height="1500" alt="스티커 인화 포토부스 존 입구 사이니지" loading="lazy" decoding="async" srcset="assets/images/sticker-photo-sign-480w.webp 480w, assets/images/sticker-photo-sign-960w.webp 960w, assets/images/sticker-photo-sign.webp 1200w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>스티커 인화 포토부스 (붙이는 인화지)</h3>
     <span class="lcard-en">Sticker-back print photo booth</span>
@@ -576,7 +578,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-b02" data-id="B02" data-use="event outdoor wedding">
-  <figure class="lcard-im cover"><span class="lcard-no">17</span><img src="assets/images/lineup-gen-b02.webp" width="1088" height="1456" alt="360도 회전 영상 부스 — 원형 플랫폼과 회전 카메라 암" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">17</span><img src="assets/images/lineup-gen-b02.webp" width="1088" height="1456" alt="360도 회전 영상 부스 — 원형 플랫폼과 회전 카메라 암" loading="lazy" decoding="async" srcset="assets/images/lineup-gen-b02-480w.webp 480w, assets/images/lineup-gen-b02.webp 1088w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>360도 회전 영상 부스</h3>
     <span class="lcard-en">360 spin video booth</span>
@@ -587,7 +589,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-b03" data-id="B03" data-use="store event">
-  <figure class="lcard-im cover"><span class="lcard-no">18</span><img src="assets/images/lineup-gen-b03.webp" width="1088" height="1456" alt="실루엣 컷 스티커 키오스크 — 인물 윤곽 다이컷 출력 기기" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">18</span><img src="assets/images/lineup-gen-b03.webp" width="1088" height="1456" alt="실루엣 컷 스티커 키오스크 — 인물 윤곽 다이컷 출력 기기" loading="lazy" decoding="async" srcset="assets/images/lineup-gen-b03-480w.webp 480w, assets/images/lineup-gen-b03.webp 1088w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>실루엣 컷 스티커 키오스크 <span class="lcard-alt">(인물 윤곽 다이컷 스티커 포토 키오스크)</span></h3>
     <span class="lcard-en">AI contour-cut sticker kiosk</span>
@@ -600,7 +602,7 @@
   </div>
 <!-- HIDDEN-UNTIL-IMAGE (B10) — 실사 이미지 확보 전까지 비공개. 복원: 이 주석을 풀어 lgrid 안 원래 자리로 옮기고 .lcard-no·그룹/칩 카운트·JSON-LD ItemList 재계산. 원래 순서/번호는 tools/PENDING_GEN_IMAGES.txt 참조.
 <article class="lcard fade" id="p-b10" data-id="B10" data-use="event wedding store">
-  <figure class="lcard-im cover"><span class="lcard-no">24</span><img src="assets/images/lineup-gen-b10.webp" width="1600" height="1200" alt="즉석필름으로 출력하는 즉석필름 부스 (사진 준비 중)" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">24</span><img src="assets/images/lineup-gen-b10.webp" width="1600" height="1200" alt="즉석필름으로 출력하는 즉석필름 부스 (사진 준비 중)" loading="lazy" decoding="async" srcset="assets/images/lineup-gen-b10-480w.webp 480w, assets/images/lineup-gen-b10-960w.webp 960w, assets/images/lineup-gen-b10.webp 1600w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>즉석필름 부스</h3>
     <span class="lcard-en">Instant-film booth</span>
@@ -620,7 +622,7 @@
   </div>
   <div class="lgrid">
 <article class="lcard lcard-lead fade" id="p-a11" data-id="A11" data-use="event school">
-  <figure class="lcard-im cover"><span class="lcard-no">19</span><img src="assets/images/event-led-trio.webp" width="800" height="1066" alt="대형 행사용으로 일렬 배치되는 동일 사양 포토키오스크" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">19</span><img src="assets/images/event-led-trio.webp" width="800" height="1066" alt="대형 행사용으로 일렬 배치되는 동일 사양 포토키오스크" loading="lazy" decoding="async" srcset="assets/images/event-led-trio-480w.webp 480w, assets/images/event-led-trio.webp 800w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>대형 행사 다대수 키오스크 운영</h3>
     <span class="lcard-en">Multi-unit kiosk fleet for large events</span>
@@ -631,7 +633,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-a12" data-id="A12" data-use="event school wedding">
-  <figure class="lcard-im cover"><span class="lcard-no">20</span><img src="assets/images/corporate-lampers-art-exhibition.webp" width="1600" height="1200" alt="플라이트케이스로 옮겨 세우는 출장형 타워 키오스크" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">20</span><img src="assets/images/corporate-lampers-art-exhibition.webp" width="1600" height="1200" alt="플라이트케이스로 옮겨 세우는 출장형 타워 키오스크" loading="lazy" decoding="async" srcset="assets/images/corporate-lampers-art-exhibition-480w.webp 480w, assets/images/corporate-lampers-art-exhibition-960w.webp 960w, assets/images/corporate-lampers-art-exhibition.webp 1600w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>이동형(출장) 포토부스</h3>
     <span class="lcard-en">Mobile / on-site photo booth</span>
@@ -642,7 +644,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-a14" data-id="A14" data-use="outdoor school wedding">
-  <figure class="lcard-im cover"><span class="lcard-no">21</span><img src="assets/images/install-night-rooftop.webp" width="850" height="1063" alt="야외 페스티벌 현장에 래핑 설치된 포토부스" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">21</span><img src="assets/images/install-night-rooftop.webp" width="850" height="1063" alt="야외 페스티벌 현장에 래핑 설치된 포토부스" loading="lazy" decoding="async" srcset="assets/images/install-night-rooftop-480w.webp 480w, assets/images/install-night-rooftop.webp 850w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>야외 텐트형·루프탑 부스</h3>
     <span class="lcard-en">Outdoor canopy / rooftop booth</span>
@@ -655,7 +657,7 @@
   </div>
 <!-- HIDDEN-UNTIL-IMAGE (B07 B12) — 실사 이미지 확보 전까지 비공개. 복원: 이 주석을 풀어 lgrid 안 원래 자리로 옮기고 .lcard-no·그룹/칩 카운트·JSON-LD ItemList 재계산. 원래 순서/번호는 tools/PENDING_GEN_IMAGES.txt 참조.
 <article class="lcard fade" id="p-b07" data-id="B07" data-use="wedding">
-  <figure class="lcard-im cover"><span class="lcard-no">28</span><img src="assets/images/lineup-gen-b07.webp" width="1600" height="1200" alt="웨딩 게스트 포토부스와 포토 방명록 테이블 (사진 준비 중)" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">28</span><img src="assets/images/lineup-gen-b07.webp" width="1600" height="1200" alt="웨딩 게스트 포토부스와 포토 방명록 테이블 (사진 준비 중)" loading="lazy" decoding="async" srcset="assets/images/lineup-gen-b07-480w.webp 480w, assets/images/lineup-gen-b07-960w.webp 960w, assets/images/lineup-gen-b07.webp 1600w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>웨딩 게스트 포토부스 (포토 방명록)</h3>
     <span class="lcard-en">Wedding guest booth with photo guestbook</span>
@@ -666,7 +668,7 @@
   </div>
 </article>
 <article class="lcard fade" id="p-b12" data-id="B12" data-use="outdoor school event">
-  <figure class="lcard-im cover"><span class="lcard-no">29</span><img src="assets/images/lineup-gen-b12.webp" width="1600" height="1200" alt="촬영룸을 실은 트레일러·트럭 이동형 부스 (사진 준비 중)" loading="lazy" decoding="async"></figure>
+  <figure class="lcard-im cover"><span class="lcard-no">29</span><img src="assets/images/lineup-gen-b12.webp" width="1600" height="1200" alt="촬영룸을 실은 트레일러·트럭 이동형 부스 (사진 준비 중)" loading="lazy" decoding="async" srcset="assets/images/lineup-gen-b12-480w.webp 480w, assets/images/lineup-gen-b12-960w.webp 960w, assets/images/lineup-gen-b12.webp 1600w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="lcard-body">
     <h3>트레일러·트럭 이동형 부스</h3>
     <span class="lcard-en">Trailer / truck mobile booth</span>
@@ -700,19 +702,18 @@
   </div>
 </div></div></section>
 </div>
+</main>
 <footer><div class="wrap">
   <div class="foot-grid">
     <div class="col"><b>루아미 (Luami)</b>무인 포토부스 렌탈 · 설치 · 운영<br>전국 상담 가능</div>
-    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="http://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
+    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="https://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
     <div class="col"><b>바로가기</b><a href="services.html">서비스</a> · <a href="products.html">제품군</a> · <a href="portfolio.html">설치 사례</a> · <a href="guide.html">렌탈 가이드</a> · <a href="blog.html">블로그</a><br><a href="index.html#faq">자주 묻는 질문</a></div>
+    <div class="col"><b>용도별 렌탈</b><a href="wedding-photobooth-rental.html">웨딩</a> · <a href="corporate-event-photobooth.html">기업행사</a> · <a href="popup-store-photobooth.html">팝업스토어</a> · <a href="store-photobooth-rental.html">매장 상설</a> · <a href="festival-outdoor-photobooth.html">축제·야외</a> · <a href="university-graduation-photobooth.html">졸업식</a> · <a href="brand-wrap-photobooth.html">브랜드 래핑</a> · <a href="theme-photobooth.html">테마 부스</a> · <a href="character-collab-photobooth.html">캐릭터 콜라보</a> · <a href="photo-kiosk-rental.html">포토키오스크</a></div>
   </div>
   <p class="note">© 2026 루아미(LUAMI). All rights reserved. · 무인 포토부스 렌탈 · 설치 · 운영</p>
 </div></footer>
 <div class="mcta"><a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="index.html#contact" class="p">무료 견적</a></div>
-<script src="https://unpkg.com/lenis@1/dist/lenis.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-<script src="assets/main.js?v=20260911b" defer></script>
+<script src="assets/main.js?v=20260925r" defer></script>
 <script>
 (function(){
   var groups=document.getElementById('lgroups'); if(!groups) return;

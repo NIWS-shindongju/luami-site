@@ -1,4 +1,15 @@
-/* Luami shared JS */
+/* Luami shared JS — GSAP·Lenis 없이도 전부 동작해야 한다(둘 다 선택 강화 레이어, 모든 사용처 가드됨) */
+/* 첫 화면 즉시 노출: defer 로 실행되는 이 시점엔 DOM 이 이미 파싱돼 있다. 뷰포트 안의 .fade/.lm 은
+   IntersectionObserver 콜백·폴백 타이머를 기다리지 않고 바로 .in — LCP 가 리빌 대기에 묶이지 않게 */
+(function(){
+  try{
+    var vh=window.innerHeight||document.documentElement.clientHeight;
+    document.querySelectorAll('.fade,.lm').forEach(function(el){
+      var r=el.getBoundingClientRect();
+      if(r.top<vh && r.bottom>0) el.classList.add('in');
+    });
+  }catch(e){}
+})();
 document.addEventListener('DOMContentLoaded', function(){
   requestAnimationFrame(function(){
     document.querySelectorAll('.hero h1,.hero .sub').forEach(function(e){e.classList.add('in')});
@@ -7,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function(){
     var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:0.12,rootMargin:'0px 0px -6% 0px'});
     document.querySelectorAll('.fade,.lm').forEach(function(el){io.observe(el)});
   }catch(e){document.querySelectorAll('.fade,.lm').forEach(function(e){e.classList.add('in')})}
-  /* 실패세이프: 무슨 일이 있어도 2.6초 뒤 전부 노출.
+  /* 실패세이프: 무슨 일이 있어도 1초 뒤 전부 노출(이미 드러난 요소는 건드리지 않음).
      transition에 기대지 않고 즉시 최종 상태로 스냅 — 백그라운드 탭 등에서
      transition이 progress:0에 멈춰 텍스트가 영구히 안 보이는 경우 방지. */
   function revealHard(el){
@@ -17,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function(){
     el.classList.add('in');
     if(t){ void t.offsetHeight; t.style.transition=prev; }
   }
-  setTimeout(function(){document.querySelectorAll('.fade,.lm,.hero h1,.hero .sub').forEach(revealHard)},2600);
+  setTimeout(function(){document.querySelectorAll('.fade:not(.in),.lm:not(.in),.hero h1,.hero .sub').forEach(revealHard)},1000);
   /* 스티키 헤더 */
   var sbar=document.getElementById('sbar'),prog=document.getElementById('prog'),sbarFailsafeArmed=false;
   addEventListener('scroll',function(){
@@ -40,12 +51,29 @@ document.addEventListener('DOMContentLoaded', function(){
     }
     if(prog){var d=document.documentElement;prog.style.width=(st/(d.scrollHeight-d.clientHeight)*100)+'%'}
   },{passive:true});
-  /* 모바일 바텀시트 네비 */
+  /* 모바일 바텀시트 네비 — 열면 닫기 버튼으로 포커스, 닫으면 연 버튼으로 복귀, 열린 동안 나머지 페이지 inert */
   var drawer=document.getElementById('drawer'), scrim=document.getElementById('drawerScrim');
-  function dOpen(){
-    if(!drawer)return;
+  var toggles=['navToggle','navToggle2'].map(function(id){return document.getElementById(id)}).filter(Boolean);
+  var dcl=document.getElementById('drawerClose'), dOpener=null, dInert=[];
+  function setExpanded(v){toggles.forEach(function(t){t.setAttribute('aria-expanded',v?'true':'false')});}
+  setExpanded(false);
+  function setInert(on){
+    if(on){
+      dInert=[];
+      Array.prototype.forEach.call(document.body.children,function(el){
+        if(el===drawer||el===scrim||el.tagName==='SCRIPT'||el.hasAttribute('inert'))return;
+        el.setAttribute('inert','');dInert.push(el);
+      });
+    } else {dInert.forEach(function(el){el.removeAttribute('inert')});dInert=[];}
+  }
+  function isOpen(){return !!(drawer&&drawer.classList.contains('open'));}
+  function dOpen(e){
+    if(!drawer||isOpen())return;
+    dOpener=(e&&e.currentTarget)||document.activeElement;
     drawer.classList.add('open');scrim&&scrim.classList.add('open');document.body.classList.add('nav-open');drawer.setAttribute('aria-hidden','false');
-    var t=document.getElementById('navToggle');t&&t.setAttribute('aria-expanded','true');
+    setExpanded(true);setInert(true);
+    /* visibility:hidden→visible 전환 첫 프레임엔 포커스가 안 먹는다 — 스타일 반영 후 이동 */
+    if(dcl){setTimeout(function(){if(isOpen()){try{dcl.focus({preventScroll:true})}catch(_){dcl.focus()}}},60);}
     /* 실패세이프: transition이 progress:0에 멈춰 드로어가 열린 것처럼 보이지 않는 경우 방지 */
     setTimeout(function(){
       if(drawer.classList.contains('open') && getComputedStyle(drawer).visibility!=='visible'){
@@ -55,13 +83,26 @@ document.addEventListener('DOMContentLoaded', function(){
       }
     },700);
   }
-  function dClose(){if(!drawer)return;drawer.classList.remove('open');scrim&&scrim.classList.remove('open');document.body.classList.remove('nav-open');drawer.setAttribute('aria-hidden','true');var t=document.getElementById('navToggle');t&&t.setAttribute('aria-expanded','false');}
-  ['navToggle','navToggle2'].forEach(function(id){var b=document.getElementById(id);if(b)b.addEventListener('click',dOpen);});
-  var dcl=document.getElementById('drawerClose');if(dcl)dcl.addEventListener('click',dClose);
-  if(scrim)scrim.addEventListener('click',dClose);
-  if(drawer){drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',dClose);});}
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')dClose();});
+  function dClose(opts){
+    if(!drawer||!isOpen())return;
+    drawer.classList.remove('open');scrim&&scrim.classList.remove('open');document.body.classList.remove('nav-open');drawer.setAttribute('aria-hidden','true');
+    setExpanded(false);setInert(false);
+    var back=dOpener;dOpener=null;
+    if(!(opts&&opts.noFocus)&&back&&document.contains(back)&&back.offsetParent!==null){try{back.focus({preventScroll:true})}catch(_){back.focus()}}
+  }
+  toggles.forEach(function(b){b.addEventListener('click',dOpen);});
+  if(dcl)dcl.addEventListener('click',function(){dClose()});
+  if(scrim)scrim.addEventListener('click',function(){dClose()});
+  /* 링크로 이동할 땐 포커스를 되돌리지 않는다(이동 대상으로 스크롤/포커스가 가야 함) */
+  if(drawer){drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){dClose({noFocus:true})});});}
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&isOpen())dClose();});
 
+  /* 모바일 하단 고정 바(.mcta) — 문의 섹션(#contact)이 화면에 있는 동안 숨김: 폼 입력칸을 가리지 않게 */
+  (function(){
+    var bar=document.querySelector('.mcta'), sec=document.getElementById('contact');
+    if(!bar||!sec||!('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function(es){es.forEach(function(en){bar.classList.toggle('is-away',en.isIntersecting)})},{rootMargin:'0px 0px -35% 0px'}).observe(sec);
+  })();
 
   /* sticky 카테고리 인덱스 레일 — 링크의 href(#섹션id)로 대상 섹션을 찾아 IntersectionObserver로 현재 섹션 하이라이트 */
   (function(){
@@ -188,8 +229,8 @@ document.addEventListener('DOMContentLoaded', function(){
         }
       }
     }
-    /* 마그네틱 버튼 */
-    document.querySelectorAll('.btn,.btn-ghost').forEach(function(b){
+    /* 마그네틱 버튼 — 동작 줄이기 설정·터치 기기에선 끔 */
+    if(matchMedia('(hover:hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelectorAll('.btn,.btn-ghost').forEach(function(b){
       b.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();gsap.to(b,{x:(e.clientX-r.left-r.width/2)*0.12,y:(e.clientY-r.top-r.height/2)*0.16,duration:0.5,ease:'power2.out'})});
       b.addEventListener('mouseleave',function(){gsap.to(b,{x:0,y:0,duration:0.5,ease:'power2.out'})});
     });

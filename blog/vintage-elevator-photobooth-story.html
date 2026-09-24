@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","headline":"소품이 아니라 진짜처럼 — 빈티지 엘리베이터 포토부스","description":"빈티지 엘리베이터 테마 포토부스를 만들며 가장 신경 쓴 건 소품처럼 보이지 않는 것이었습니다.","image":"https://luamiphoto.com/assets/images/theme-elevator-front.webp","datePublished":"2026-04-21","dateModified":"2026-09-24","author":{"@type":"Organization","name":"루아미 (Luami)"},"publisher":{"@id":"https://luamiphoto.com/#business"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://luamiphoto.com/blog/vintage-elevator-photobooth-story.html"}}
 </script>
@@ -31,10 +31,11 @@
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://luamiphoto.com/"}, {"@type": "ListItem", "position": 2, "name": "블로그", "item": "https://luamiphoto.com/blog.html"}, {"@type": "ListItem", "position": 3, "name": "옛날 엘리베이터, 소품이 아니라 진짜처럼 만들려면", "item": "https://luamiphoto.com/blog/vintage-elevator-photobooth-story.html"}]}
 </script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "테마 포토부스는 그래픽 시트지가 아니라 실제 소재로도 제작이 가능한가요?", "acceptedAnswer": {"@type": "Answer", "text": "네. 루아미는 우드 패널, 자바라 게이트, 체커보드 바닥재 등 실제 소재를 그대로 시공하는 방식으로 테마 포토부스를 만듭니다. 인쇄 시트지로 흉내 내는 대신 손이 닿는 부분까지 진짜 질감을 살리는 것이 저희 제작 방향입니다."}}, {"@type": "Question", "name": "빈티지 컨셉 테마 포토부스는 어떤 공간에 잘 어울리나요?", "acceptedAnswer": {"@type": "Answer", "text": "상설 매장의 멀티 테마존처럼 여러 컨셉을 함께 구성하는 공간에 잘 어울립니다. 조명 색온도까지 함께 조정하면 같은 매장 안에서도 전혀 다른 시대감을 연출할 수 있습니다. 정확한 구성은 공간과 목적에 따라 달라지므로 문의 주시면 맞춤 견적을 무료로 안내합니다."}}]}</script>
-<link rel="stylesheet" href="../assets/style.css?v=20260923a">
+<link rel="stylesheet" href="../assets/style.css?v=20260925r">
 <script>document.documentElement.className += ' js';</script>
 </head>
 <body>
+<a class="skip-link" href="#main">본문 바로가기</a>
 <div class="grain"></div>
 <div class="progress" id="prog"></div>
 <div class="util"><div class="wrap"><span>Luami — 무인 포토부스 렌탈</span><span>Est. 2026 · Korea</span></div></div>
@@ -46,7 +47,7 @@
 </div></header>
 
 <div class="drawer-scrim" id="drawerScrim" aria-hidden="true"></div>
-<div class="drawer" id="drawer" aria-hidden="true">
+<div class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="메뉴">
   <div class="drawer-grab" aria-hidden="true"></div>
   <div class="drawer-top">
     <a href="../index.html" class="logo dlogo">Luami<span class="dot"></span></a>
@@ -64,7 +65,7 @@
     <div class="drawer-contact">
       <a href="tel:01036297743">010-3629-7743</a>
       <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a>
-      <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
+      <a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
     </div>
   </div>
 </div>
@@ -74,6 +75,7 @@
   <a href="../index.html#contact" class="btn-mini">렌탈 문의</a>
   <button class="navtoggle" id="navToggle2" aria-label="메뉴 열기" aria-controls="drawer"><span></span><span></span><span></span></button>
 </div>
+<main id="main">
 
 <section class="page-head"><div class="wrap">
   <span class="idxlabel fade">Blog</span>
@@ -88,10 +90,10 @@
 </div></div></section>
 
 <section style="padding-top:clamp(30px,5vw,60px)"><div class="wrap feat-grid">
-  <figure class="feat-img fade"><img src="../assets/images/theme-elevator-front.webp" width="901" height="1600" alt="빈티지 엘리베이터 테마 포토부스 정면 — 사이니지와 목재 도어" loading="lazy" decoding="async"></figure>
+  <figure class="feat-img fade"><img src="../assets/images/theme-elevator-front.webp" width="901" height="1600" alt="빈티지 엘리베이터 테마 포토부스 정면 — 사이니지와 목재 도어" loading="lazy" decoding="async" srcset="../assets/images/theme-elevator-front-480w.webp 480w, ../assets/images/theme-elevator-front.webp 901w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="feat-txt post-body">
     <span class="idxlabel fade">Behind the Install</span>
-    <h2 class="fade" style="font-size:clamp(28px,3.6vw,44px)">"예쁜데,<br>어딘가 <i>가짜 같다</i>."</h2>
+    <h2 class="fade">"예쁜데,<br>어딘가 <i>가짜 같다</i>."</h2>
     <p class="fade">빈티지 콘셉트를 문의하시는 분들 대부분이 말은 다르게 해도 결국 같은 걱정을 하고 계셨습니다. 소품 대여점에서 흔히 보는, 그럴듯하지만 만지면 바로 티가 나는 세트장 같은 결과물이 나올까 봐 걱정하시는 겁니다.</p>
     <p class="fade" style="margin-top:18px">그 우려를 알고 나니 답은 명확해졌습니다. 인쇄된 나무 무늬 시트지 대신 실제 목재 패널을, 플라스틱 대신 자바라 게이트 구조를, 프린팅된 타일 패턴 대신 내마모성 체커보드 바닥재를 그대로 시공하기로 했습니다. 손이 먼저 닿는 부분일수록 가짜와 진짜의 차이가 크게 드러나기 때문입니다.</p>
   </div>
@@ -106,7 +108,7 @@
 
 <section style="background:var(--paper2)"><div class="wrap why">
   <div class="head"><span class="idxlabel fade">Takeaway</span>
-    <h2 class="serif fade" style="font-weight:400;font-size:clamp(26px,3.6vw,44px);margin-top:10px">이야기가 남긴 것</h2></div>
+    <h2 class="serif fade" style="font-weight:400;margin-top:10px">이야기가 남긴 것</h2></div>
   <div>
     <div class="wrow fade"><div class="n">01</div><div><h3>소재가 곧 완성도</h3><p>테마 포토부스의 완성도는 그래픽보다 소재에서 갈립니다. 손이 닿는 부분일수록 진짜 재료를 쓰는 것이 결과물의 신뢰도를 좌우했습니다.</p></div></div>
   </div>
@@ -125,14 +127,14 @@
 
 <section style="padding-top:clamp(60px,8vw,90px)"><div class="wrap">
   <span class="idxlabel fade">이 사례 더 보기</span>
-  <h2 class="serif fade" style="font-weight:400;font-size:clamp(26px,3.6vw,44px);margin-top:10px">설치 스펙이 궁금하다면</h2>
+  <h2 class="serif fade" style="font-weight:400;margin-top:10px">설치 스펙이 궁금하다면</h2>
   <div class="explore-grid" style="grid-template-columns:repeat(2,1fr)">
     <a class="explore-card fade" href="../cases/vintage-elevator-booth.html">
-      <figure><img src="../assets/images/elevator-interior-wood.webp" width="1200" height="1500" alt="빈티지 엘리베이터 부스 내부 — 우드 패널과 체커보드 바닥" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/elevator-interior-wood.webp" width="1200" height="1500" alt="빈티지 엘리베이터 부스 내부 — 우드 패널과 체커보드 바닥" loading="lazy" decoding="async" srcset="../assets/images/elevator-interior-wood-480w.webp 480w, ../assets/images/elevator-interior-wood-960w.webp 960w, ../assets/images/elevator-interior-wood.webp 1200w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Case 02</span><h3>빈티지 엘리베이터 테마 — 설치 사례</h3><p>소재·마감·FAQ까지 상세 스펙 보기.<span class="arrow">↗</span></p></div>
     </a>
     <a class="explore-card fade" href="../blog.html">
-      <figure><img src="../assets/images/themezone-pair.webp" width="901" height="1501" alt="루아미 블로그 전체 보기" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/themezone-pair.webp" width="901" height="1501" alt="루아미 블로그 전체 보기" loading="lazy" decoding="async" srcset="../assets/images/themezone-pair-480w.webp 480w, ../assets/images/themezone-pair.webp 901w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Blog</span><h3>루아미 블로그 전체 보기</h3><p>현장의 이야기를 기록합니다.<span class="arrow">↗</span></p></div>
     </a>
   </div>
@@ -140,18 +142,18 @@
 
 <section><div class="wrap">
   <span class="idxlabel fade">(더 보기)</span>
-  <h2 class="serif fade" style="font-weight:400;font-size:clamp(26px,3.6vw,44px);margin-top:10px">다른 이야기</h2>
+  <h2 class="serif fade" style="font-weight:400;margin-top:10px">다른 이야기</h2>
   <div class="explore-grid">
     <a class="explore-card fade" href="subway-photobooth-story.html">
-      <figure><img src="../assets/images/theme-subway-front.webp" width="901" height="1600" alt="지하철 테마 포토부스 정면" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/theme-subway-front.webp" width="901" height="1600" alt="지하철 테마 포토부스 정면" loading="lazy" decoding="async" srcset="../assets/images/theme-subway-front-480w.webp 480w, ../assets/images/theme-subway-front.webp 901w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Blog</span><h3>시트지 한 장이 아니라, 지하철 한 칸을</h3><p>같은 매장, 실측 제작 이야기.<span class="arrow">↗</span></p></div>
     </a>
     <a class="explore-card fade" href="winter-popup-photobooth-story.html">
-      <figure><img src="../assets/images/winter-forest-hall.webp" width="1200" height="1500" alt="겨울숲 테마 포토부스 실내 설치" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/winter-forest-hall.webp" width="1200" height="1500" alt="겨울숲 테마 포토부스 실내 설치" loading="lazy" decoding="async" srcset="../assets/images/winter-forest-hall-480w.webp 480w, ../assets/images/winter-forest-hall-960w.webp 960w, ../assets/images/winter-forest-hall.webp 1200w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Blog</span><h3>크리스마스마다 새 부스를 사지 않는 이유</h3><p>같은 부스, 계절마다 다른 얼굴.<span class="arrow">↗</span></p></div>
     </a>
     <a class="explore-card fade" href="../blog.html">
-      <figure><img src="../assets/images/hero.webp" width="1501" height="1600" alt="루아미 블로그 전체 보기" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/hero.webp" width="1501" height="1600" alt="루아미 블로그 전체 보기" loading="lazy" decoding="async" srcset="../assets/images/hero-480w.webp 480w, ../assets/images/hero-960w.webp 960w, ../assets/images/hero.webp 1501w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Blog</span><h3>블로그 전체 보기</h3><p>설치 현장에서 쓴 이야기 모음.<span class="arrow">↗</span></p></div>
     </a>
   </div>
@@ -164,18 +166,17 @@
     <a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a>
   </div>
 </div></div></section>
+</main>
 <footer><div class="wrap">
   <div class="foot-grid">
     <div class="col"><b>루아미 (Luami)</b>무인 포토부스 렌탈 · 설치 · 운영<br>전국 상담 가능</div>
-    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="http://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
+    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="https://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
     <div class="col"><b>바로가기</b><a href="../services.html">서비스</a> · <a href="../products.html">제품군</a> · <a href="../portfolio.html">설치 사례</a> · <a href="../guide.html">렌탈 가이드</a> · <a href="../blog.html">블로그</a><br><a href="../index.html#faq">자주 묻는 질문</a></div>
+    <div class="col"><b>용도별 렌탈</b><a href="../wedding-photobooth-rental.html">웨딩</a> · <a href="../corporate-event-photobooth.html">기업행사</a> · <a href="../popup-store-photobooth.html">팝업스토어</a> · <a href="../store-photobooth-rental.html">매장 상설</a> · <a href="../festival-outdoor-photobooth.html">축제·야외</a> · <a href="../university-graduation-photobooth.html">졸업식</a> · <a href="../brand-wrap-photobooth.html">브랜드 래핑</a> · <a href="../theme-photobooth.html">테마 부스</a> · <a href="../character-collab-photobooth.html">캐릭터 콜라보</a> · <a href="../photo-kiosk-rental.html">포토키오스크</a></div>
   </div>
   <p class="note">© 2026 루아미(LUAMI). All rights reserved. · 무인 포토부스 렌탈 · 설치 · 운영</p>
 </div></footer>
 <div class="mcta"><a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="../index.html#contact" class="p">무료 견적</a></div>
-<script src="https://unpkg.com/lenis@1/dist/lenis.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-<script src="../assets/main.js?v=20260911b" defer></script>
+<script src="../assets/main.js?v=20260925r" defer></script>
 </body>
 </html>
