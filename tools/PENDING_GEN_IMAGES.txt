@@ -1,8 +1,3 @@
-assets/images/lineup-gen-b01.webp
-assets/images/lineup-gen-b02.webp
-assets/images/lineup-gen-b03.webp
-assets/images/lineup-gen-b03-sheet.webp
-assets/images/lineup-gen-b04.webp
 assets/images/lineup-gen-b05.webp
 assets/images/lineup-gen-b06.webp
 assets/images/lineup-gen-b07.webp
@@ -11,5 +6,3 @@ assets/images/lineup-gen-b09.webp
 assets/images/lineup-gen-b10.webp
 assets/images/lineup-gen-b11.webp
 assets/images/lineup-gen-b12.webp
-assets/images/lineup-gen-a13-closeup.webp
-assets/images/lineup-gen-a16-peel.webp
