@@ -67,13 +67,13 @@ def chrome(prefix, current):
 
 '''
     quick = " · ".join(f'<a href="{prefix}{h}">{l}</a>' for h, l in MENU)
-    uses = " · ".join(f'<a href="{prefix}{h}">{l}</a>' for h, l in USES)
+    uses = "".join(f'<a href="{prefix}{h}">{l}</a>' for h, l in USES)
     footer = f'''<footer><div class="wrap">
   <div class="foot-grid">
     <div class="col"><b>루아미 (Luami)</b>무인 포토부스 렌탈 · 설치 · 운영<br>전국 상담 가능</div>
     <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="https://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
     <div class="col"><b>바로가기</b>{quick}<br><a href="{prefix}index.html#faq">자주 묻는 질문</a></div>
-    <div class="col"><b>용도별 렌탈</b>{uses}</div>
+    <div class="col col-uses"><b>용도별 렌탈</b>{uses}</div>
   </div>
   <p class="note">© 2026 루아미(LUAMI). All rights reserved. · 무인 포토부스 렌탈 · 설치 · 운영</p>
 </div></footer>'''
@@ -99,6 +99,9 @@ def process(path):
     if '<main' not in out and '<div class="stickybar"' in out:
         out = re.sub(r'(<div class="stickybar"[^>]*>.*?</div>\n)', r'\1<main id="main">\n', out, count=1, flags=re.S)
         out = out.replace('<footer>', '</main>\n<footer>', 1)
+    out = out.replace('<main id="main">', '<main id="main" tabindex="-1">')
+    out = out.replace('<div class="util">', '<div class="util" aria-hidden="true">')
+    out = out.replace('<div class="stickybar" id="sbar">', '<div class="stickybar" id="sbar" role="navigation" aria-label="빠른 메뉴">')
     if out != src:
         path.write_text(out, encoding="utf-8")
         return True

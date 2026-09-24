@@ -21,10 +21,11 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap"></noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://luamiphoto.com/"}, {"@type": "ListItem", "position": 2, "name": "설치 사례", "item": "https://luamiphoto.com/portfolio.html"}]}
 </script>
@@ -38,7 +39,7 @@
 <a class="skip-link" href="#main">본문 바로가기</a>
 <div class="grain"></div>
 <div class="progress" id="prog"></div>
-<div class="util"><div class="wrap"><span>Luami — 무인 포토부스 렌탈</span><span>Est. 2026 · Korea</span></div></div>
+<div class="util" aria-hidden="true"><div class="wrap"><span>Luami — 무인 포토부스 렌탈</span><span>Est. 2026 · Korea</span></div></div>
 <header class="nav"><div class="wrap nav-in">
   <a href="index.html" class="logo">Luami<span class="dot"></span></a>
   <nav class="nav-links"><a href="services.html">서비스</a><a href="products.html">제품군</a><a href="portfolio.html" aria-current="page">설치 사례</a><a href="guide.html">렌탈 가이드</a><a href="blog.html">블로그</a></nav>
@@ -70,12 +71,12 @@
   </div>
 </div>
 
-<div class="stickybar" id="sbar">
+<div class="stickybar" id="sbar" role="navigation" aria-label="빠른 메뉴">
   <a href="index.html" class="logo">Luami<span class="dot"></span></a>
   <a href="index.html#contact" class="btn-mini">렌탈 문의</a>
   <button class="navtoggle" id="navToggle2" aria-label="메뉴 열기" aria-controls="drawer"><span></span><span></span><span></span></button>
 </div>
-<main id="main">
+<main id="main" tabindex="-1">
 <section class="page-head"><div class="wrap">
   <span class="idxlabel fade">Portfolio</span>
   <h1><span class="lm"><span>루아미가 만든</span></span><span class="lm"><span>브랜드 <i>현장</i></span></span></h1>
@@ -234,7 +235,7 @@
     <div class="col"><b>루아미 (Luami)</b>무인 포토부스 렌탈 · 설치 · 운영<br>전국 상담 가능</div>
     <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="https://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
     <div class="col"><b>바로가기</b><a href="services.html">서비스</a> · <a href="products.html">제품군</a> · <a href="portfolio.html">설치 사례</a> · <a href="guide.html">렌탈 가이드</a> · <a href="blog.html">블로그</a><br><a href="index.html#faq">자주 묻는 질문</a></div>
-    <div class="col"><b>용도별 렌탈</b><a href="wedding-photobooth-rental.html">웨딩</a> · <a href="corporate-event-photobooth.html">기업행사</a> · <a href="popup-store-photobooth.html">팝업스토어</a> · <a href="store-photobooth-rental.html">매장 상설</a> · <a href="festival-outdoor-photobooth.html">축제·야외</a> · <a href="university-graduation-photobooth.html">졸업식</a> · <a href="brand-wrap-photobooth.html">브랜드 래핑</a> · <a href="theme-photobooth.html">테마 부스</a> · <a href="character-collab-photobooth.html">캐릭터 콜라보</a> · <a href="photo-kiosk-rental.html">포토키오스크</a></div>
+    <div class="col col-uses"><b>용도별 렌탈</b><a href="wedding-photobooth-rental.html">웨딩</a><a href="corporate-event-photobooth.html">기업행사</a><a href="popup-store-photobooth.html">팝업스토어</a><a href="store-photobooth-rental.html">매장 상설</a><a href="festival-outdoor-photobooth.html">축제·야외</a><a href="university-graduation-photobooth.html">졸업식</a><a href="brand-wrap-photobooth.html">브랜드 래핑</a><a href="theme-photobooth.html">테마 부스</a><a href="character-collab-photobooth.html">캐릭터 콜라보</a><a href="photo-kiosk-rental.html">포토키오스크</a></div>
   </div>
   <p class="note">© 2026 루아미(LUAMI). All rights reserved. · 무인 포토부스 렌탈 · 설치 · 운영</p>
 </div></footer>

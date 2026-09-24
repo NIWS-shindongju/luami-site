@@ -671,3 +671,7 @@ a[style*="color:var(--accent)"]{color:var(--accent-text)!important}
   .lgroup .lgrid>.lcard:not(.lcard-lead):nth-child(even):last-child{grid-column:1/-1}
   .lgroup .lgrid>.lcard:not(.lcard-lead):nth-child(even):last-child .lcard-im{aspect-ratio:16/9}
 }
+/* 푸터 '용도별 렌탈' — 줄 끝에 구분점이 남지 않게 간격으로 구분 */
+.foot-grid .col-uses{max-width:420px}
+.foot-grid .col-uses a{display:inline-block;margin-right:14px}
+main:focus{outline:none}
