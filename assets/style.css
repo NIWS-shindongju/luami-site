@@ -593,3 +593,7 @@ body.nav-open{overflow:hidden}
 .page-head p.rel-prod{margin-top:14px;font-size:14px;line-height:1.7;color:var(--muted)}
 .rel-prod a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;display:inline-block;padding:4px 0}
 @media(max-width:560px){.rel-prod a{padding:10px 0}}
+/* 현재 페이지 메뉴 표시 */
+.nav-links a[aria-current="page"]{color:var(--accent)}
+.nav-links a[aria-current="page"]::after{width:100%}
+.drawer-links a[aria-current="page"]{color:var(--accent)}
