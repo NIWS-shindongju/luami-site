@@ -9,13 +9,16 @@
  2) Pretendard 전체 폰트(2MB) → dynamic-subset(필요한 글자 조각만)
  3) GSAP·ScrollTrigger·Lenis는 index.html에만 — 다른 페이지에선 제거(main.js가 없을 때를 가드함)
  4) h2의 인라인 font-size 제거 → CSS 토큰(--h2)으로 통일
+ 6) Pretendard CDN → 자체 호스팅 서브셋(assets/fonts/luami-sans.woff2, tools/font_subset.py)
+    — dynamic-subset(조각 20~40개)도 전체(2MB)도 느린 회선에서 불리함을 A/B로 실측.
+      preload는 넣지 않는다: 447KB를 CSS와 동시에 받아 FCP가 0.3~0.5초 늦어짐(A/B 실측) — swap으로 충분
  5) 웹폰트 CSS(Pretendard·Noto Serif KR)를 렌더 차단 없이 로드(media=print→all 스왑 + noscript 폴백)
     — dynamic-subset CSS가 렌더를 막아 FCP가 ~1초 늦어진 것을 실측(검증 에이전트 A/B)해서 도입
 """
 import pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-VERSION = '20260925r'
+VERSION = '20260925s'
 HEAVY = re.compile(r'\n?<script src="https://(?:unpkg\.com/lenis[^"]*|cdn\.jsdelivr\.net/npm/gsap[^"]*)"[^>]*></script>')
 PRETENDARD_FULL = 'pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css'
 PRETENDARD_SUB = 'pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css'
@@ -48,6 +51,10 @@ def process(p):
     s = p.read_text(encoding='utf-8')
     o = re.sub(r'(assets/(?:style|home)\.css|assets/main\.js)\?v=[\w]+', r'\1?v=' + VERSION, s)
     o = o.replace(PRETENDARD_FULL, PRETENDARD_SUB)
+    # 6) Pretendard CDN 링크 제거 → 자체 서브셋 preload (style.css의 @font-face가 사용)
+    o = re.sub(r'<link rel="stylesheet" href="https://cdn\.jsdelivr\.net/gh/orioncactus/pretendard[^"]+"[^>]*>(?:<noscript><link rel="stylesheet" href="https://cdn\.jsdelivr\.net/gh/orioncactus/pretendard[^"]+"></noscript>)?\n?', '', o)
+    o = o.replace('<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n', '')
+    o = re.sub(r'<link rel="preload" href="(?:\.\./)?assets/fonts/luami-sans\.woff2"[^>]*>\n?', '', o)
     for rx in FONT_LINKS:
         o = rx.sub(async_font, o)
     if 'preconnect" href="https://cdn.jsdelivr.net"' not in o and 'cdn.jsdelivr.net/gh/orioncactus' in o:

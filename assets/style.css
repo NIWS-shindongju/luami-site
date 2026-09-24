@@ -1,7 +1,9 @@
+/* 본문 글꼴: Pretendard(SIL OFL 1.1)를 사이트 글자만 남긴 1파일 서브셋 — OFL 예약명 회피로 LuamiSans. 생성: tools/font_subset.py, 라이선스: assets/fonts/OFL.txt */
+@font-face{font-family:"LuamiSans";src:url("fonts/luami-sans.woff2") format("woff2-variations"),url("fonts/luami-sans.woff2") format("woff2");font-weight:45 930;font-style:normal;font-display:swap}
 :root{
   --ink:#1F2417; --ink2:#28331F; --paper:#F5F0DE; --paper2:#EAE0C4; --line:rgba(76,133,103,.35);
   --muted:#665f4a; --accent:#4C8567; --accent-dark:#2F5C43; --accent-l:#8FBC9E; --gold:#C9A45C; --cream:#F5F0DE;
-  --serif:"Noto Serif KR",Georgia,serif; --sans:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
+  --serif:"Noto Serif KR",Georgia,serif; --sans:"LuamiSans","Pretendard Variable",Pretendard,-apple-system,sans-serif;
   --maxw:1280px;
   /* 대비 토큰(2026-09-24 실측) — --accent(#4C8567)는 크림 위 글자 3.79:1·잉크 글자 얹은 버튼 3.67:1로 AA 미달.
      장식(선·점·면)은 --accent 유지, 글자는 --accent-text, 채움 버튼은 --btn-bg/--btn-fg 로만 쓴다. */
@@ -675,3 +677,6 @@ a[style*="color:var(--accent)"]{color:var(--accent-text)!important}
 .foot-grid .col-uses{max-width:420px}
 .foot-grid .col-uses a{display:inline-block;margin-right:14px}
 main:focus{outline:none}
+/* 첫 화면(페이지 머리) 문구는 JS를 기다리지 않고 바로 보이게 — 느린 회선에서 main.js가
+   이미지·폰트와 대역폭을 나눠 늦게 실행되면 LCP 문구가 수 초 숨어 있던 문제(실측 products LCP 6.2s) */
+.js .page-head .fade,.js .page-head .lm>span{opacity:1;transform:none;animation:none}
