@@ -1,0 +1,27 @@
+assets/images/lineup-gen-b05.webp
+assets/images/lineup-gen-b06.webp
+assets/images/lineup-gen-b07.webp
+assets/images/lineup-gen-b08.webp
+assets/images/lineup-gen-b09.webp
+assets/images/lineup-gen-b10.webp
+assets/images/lineup-gen-b11.webp
+assets/images/lineup-gen-b12.webp
+
+# 2026-09-24 — 위 8종(B05·B06·B07·B08·B09·B10·B11·B12)은 products.html 공개 화면에서 숨김.
+#   카드 마크업은 각 그룹 섹션 끝 <!-- HIDDEN-UNTIL-IMAGE ... --> 주석 안에 원본 그대로 보존(당시 번호 포함).
+#   JSON-LD ItemList·칩/그룹/전체 카운트(29→21)에서도 빠짐. 플레이스홀더 webp는 주석 마크업이 참조하므로 파일 유지.
+#   복원 = 실사 이미지로 webp 교체 → 주석 해제 후 lgrid 원위치 → .lcard-no 01..N 재번호 → 그룹·칩·전체 카운트·
+#          meta/og description·JSON-LD ItemList(position·numberOfItems)·그룹 설명문 재반영 → node tools/site-gate.js PASS 0.
+#   원래 순서: 부스형 B05(07) / 키오스크형 B06(10) B08(11) B09(12) B11(13) / 체험·출력형 B10(24) / 행사 운영형 B07(28) B12(29).
+#   B08 은 mini-kiosk.html 로 가는 유일한 링크였음(숨김 동안 제품군 페이지에서 mini-kiosk.html 유입 경로 없음).
+#
+# 3D 레퍼런스 렌더 + Canva 미디어 id 는 스크래치패드에 있음
+#   (/tmp/claude-0/-home-user-dongju-workspace/684378b7-dc29-509c-9e88-c8af735796c3/scratchpad/k3d/ 등 — 세션 스크래치, 영구 보존 아님):
+#   B05 MAHWEBhbJwY
+#   B06 MAHWEPlP6Pk
+#   B07 MAHWEM2WGGc
+#   B08 MAHWELvaIWk
+#   B09 MAHWEPikFhs
+#   B10 MAHWEBEL5h8
+#   B11 MAHWEHjeIuQ
+#   B12 MAHWEBSMbi8

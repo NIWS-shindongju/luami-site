@@ -206,7 +206,8 @@ footer{background:var(--ink);color:var(--cream);padding:70px 0 40px;border-top:1
 .foot-grid .col a:hover{color:var(--accent-l)}
 .note{margin-top:34px;font-size:11.5px;color:#97917b;letter-spacing:.04em}
 
-.stickybar{position:fixed;top:0;left:0;right:0;z-index:70;display:flex;justify-content:space-between;align-items:center;
+/* --navfg: 스티키바는 header.nav 밖이라 메뉴 점(.navtoggle span)이 변수를 못 받아 투명이었다 */
+.stickybar{--navfg:var(--ink);position:fixed;top:0;left:0;right:0;z-index:70;display:flex;justify-content:space-between;align-items:center;
   padding:13px 28px;background:rgba(245,240,222,.92);backdrop-filter:saturate(150%) blur(12px);border-bottom:1px solid var(--line);
   transform:translateY(-101%);transition:transform .45s cubic-bezier(.16,1,.3,1)}
 .stickybar.show{transform:none}
@@ -353,7 +354,8 @@ body.nav-open{overflow:hidden}
   .svc-list .btn-ghost{align-self:flex-start}
   .show-fig img{height:clamp(280px,44vh,400px)}
   .stats-sec{padding:clamp(24px,4.5vw,38px) 0}
-  .page-head{padding:112px 0 20px}
+  /* section:not(.hero)(0,1,1)가 .page-head(0,1,0)를 이겨 상단 36px로 무너지며 라벨이 절대배치 헤더(하단 108px)와 겹쳤다 — 같은 특이성+후순위로 되살림 */
+  section.page-head,.page-head{padding:112px 0 20px}
   .wallwrap{padding-top:8px}
   .kinetic{padding:14px 0}
   .band{padding:clamp(34px,6vw,54px)}
@@ -560,3 +562,34 @@ body.nav-open{overflow:hidden}
 .abox{background:var(--paper2);border:1px solid var(--line);border-radius:2px;padding:24px 26px;max-width:68ch}
 .abox b{display:block;font-family:var(--serif);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
 .abox p{color:var(--ink);font-size:15.5px;line-height:1.8;margin:0;max-width:none}
+
+/* ===== 모바일 UX 보정(2026-09-23 실측) — 본문 14px 하한 · 탭 영역 44px · 하단 CTA 안전영역 =====
+   2열 카드(증명·진행·용도별·자세히보기)는 소유자 결정대로 2열 유지, 글자만 14px 하한으로 올림 */
+@media(max-width:560px){
+  .wrow p,.step p,.svc.with-thumbs .srow p,.ec-body p{font-size:14px;line-height:1.5}
+  .svc.with-thumbs .srow h3{font-size:14.5px}
+  .foot-grid .col a{display:inline-block;padding:10px 0;line-height:24px}
+  .pf-rail-a{padding:12px 16px;font-size:13.5px}
+  .numlist a{padding:10px 0 8px}
+  header.nav .logo{min-height:44px}
+  summary{min-height:46px;align-items:center}
+  .stickybar .logo{padding:5px 0;margin:-5px 0}
+}
+/* 증명 카드 중 사진형(.wrow-img): ≤480 에서 .wrow 패딩이 .wrow-img{padding:0} 를 덮고, 본문 좌우 30px 이 남아
+   텍스트 칸이 한 글자씩 꺾였다(제목·번호 세로 붕괴) — 사진은 풀폭, 본문 패딩은 일반 카드와 같게 */
+@media(max-width:480px){
+  .wrow.wrow-img{padding:0}
+  .wrow-img>.n{padding:12px 14px 0;width:auto;height:auto}
+  .wrow-img>div{padding:0 14px 16px}
+  .wrow-img>img{height:140px}
+}
+@media(max-width:880px){
+  .mcta{padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+  body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
+  .drawer-contact{gap:0}
+  .drawer-contact a{display:inline-block;padding:12px 0}
+}
+/* 사례 → 제품군 연결 한 줄(cases/*.html 페이지헤드 끝) */
+.page-head p.rel-prod{margin-top:14px;font-size:14px;line-height:1.7;color:var(--muted)}
+.rel-prod a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;display:inline-block;padding:4px 0}
+@media(max-width:560px){.rel-prod a{padding:10px 0}}
