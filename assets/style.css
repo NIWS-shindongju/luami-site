@@ -1,5 +1,6 @@
+/* font-display:optional — swap이면 늦게 도착한 글꼴로 줄바꿈이 바뀌어 CLS 0.19(실측). optional은 첫 방문 느린 회선에선 시스템 한글 글꼴, 이후 방문은 캐시된 LuamiSans. */
 /* 본문 글꼴: Pretendard(SIL OFL 1.1)를 사이트 글자만 남긴 1파일 서브셋 — OFL 예약명 회피로 LuamiSans. 생성: tools/font_subset.py, 라이선스: assets/fonts/OFL.txt */
-@font-face{font-family:"LuamiSans";src:url("fonts/luami-sans.woff2") format("woff2-variations"),url("fonts/luami-sans.woff2") format("woff2");font-weight:45 930;font-style:normal;font-display:swap}
+@font-face{font-family:"LuamiSans";src:url("fonts/luami-sans.woff2") format("woff2-variations"),url("fonts/luami-sans.woff2") format("woff2");font-weight:45 930;font-style:normal;font-display:optional}
 :root{
   --ink:#1F2417; --ink2:#28331F; --paper:#F5F0DE; --paper2:#EAE0C4; --line:rgba(76,133,103,.35);
   --muted:#665f4a; --accent:#4C8567; --accent-dark:#2F5C43; --accent-l:#8FBC9E; --gold:#C9A45C; --cream:#F5F0DE;
@@ -680,3 +681,9 @@ main:focus{outline:none}
 /* 첫 화면(페이지 머리) 문구는 JS를 기다리지 않고 바로 보이게 — 느린 회선에서 main.js가
    이미지·폰트와 대역폭을 나눠 늦게 실행되면 LCP 문구가 수 초 숨어 있던 문제(실측 products LCP 6.2s) */
 .js .page-head .fade,.js .page-head .lm>span{opacity:1;transform:none;animation:none}
+/* 태블릿: 사례·카드 그리드에서 마지막 한 장이 홀로 남지 않게 */
+@media(min-width:561px) and (max-width:900px){
+  .explore-grid:has(>:nth-child(3):last-child),.cases:has(>:nth-child(3):last-child){grid-template-columns:repeat(3,1fr)}
+  .explore-grid:not(:has(>:nth-child(3):last-child))>:last-child:nth-child(odd),
+  .cases:not(:has(>:nth-child(3):last-child))>:last-child:nth-child(odd){grid-column:1/-1}
+}

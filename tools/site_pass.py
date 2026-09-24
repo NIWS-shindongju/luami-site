@@ -18,7 +18,7 @@
 import pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-VERSION = '20260925s'
+VERSION = '20260925t'
 HEAVY = re.compile(r'\n?<script src="https://(?:unpkg\.com/lenis[^"]*|cdn\.jsdelivr\.net/npm/gsap[^"]*)"[^>]*></script>')
 PRETENDARD_FULL = 'pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css'
 PRETENDARD_SUB = 'pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css'
@@ -57,9 +57,6 @@ def process(p):
     o = re.sub(r'<link rel="preload" href="(?:\.\./)?assets/fonts/luami-sans\.woff2"[^>]*>\n?', '', o)
     for rx in FONT_LINKS:
         o = rx.sub(async_font, o)
-    if 'preconnect" href="https://cdn.jsdelivr.net"' not in o and 'cdn.jsdelivr.net/gh/orioncactus' in o:
-        o = o.replace('<link rel="preconnect" href="https://fonts.googleapis.com">',
-                      '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n<link rel="preconnect" href="https://fonts.googleapis.com">', 1)
     if p.name != 'index.html' or p.parent != ROOT:
         o = HEAVY.sub('', o)
     o = re.sub(r'<h2\b[^>]*>', lambda m: fix_h2(m.group(0)), o)

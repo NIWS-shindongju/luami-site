@@ -155,3 +155,8 @@
   .h-band-l>.pbox{order:2;margin-top:28px}
   .h-band-l>.trust-mini{order:3}
 }
+/* 태블릿(561~880px): 카드가 3장이면 3열 유지, 그 외 홀수 개면 마지막 카드를 가로 전체로 — 한 장만 남는 줄 방지 */
+@media(min-width:561px) and (max-width:880px){
+  .h-uses:has(>:nth-child(3):last-child){grid-template-columns:repeat(3,1fr)}
+  .h-uses:not(:has(>:nth-child(3):last-child))>:last-child:nth-child(odd){grid-column:1/-1}
+}

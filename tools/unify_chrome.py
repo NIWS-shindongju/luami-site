@@ -100,6 +100,7 @@ def process(path):
         out = re.sub(r'(<div class="stickybar"[^>]*>.*?</div>\n)', r'\1<main id="main">\n', out, count=1, flags=re.S)
         out = out.replace('<footer>', '</main>\n<footer>', 1)
     out = out.replace('<main id="main">', '<main id="main" tabindex="-1">')
+    out = re.sub(r'<div class="mcta">(.*?)</div>', r'<aside class="mcta" aria-label="빠른 문의">\1</aside>', out, flags=re.S)
     out = out.replace('<div class="util">', '<div class="util" aria-hidden="true">')
     out = out.replace('<div class="stickybar" id="sbar">', '<div class="stickybar" id="sbar" role="navigation" aria-label="빠른 메뉴">')
     if out != src:

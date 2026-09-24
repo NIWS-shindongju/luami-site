@@ -88,7 +88,10 @@ def check():
     cmap = TTFont(str(OUT)).getBestCmap()
     missing = sorted(c for c in site_chars() if ord(c) not in cmap and ord(c) > 0x20)
     print('누락', len(missing), ''.join(missing[:80]))
-    return 1 if any('가' <= c <= '힣' for c in missing) else 0
+    ALLOW = set('✕')  # 원본 Pretendard에 없는 기호 — 시스템 글꼴 대체 확인(서랍 닫기 버튼)
+    bad = [c for c in missing if c not in ALLOW]
+    print('허용 예외', ''.join(c for c in missing if c in ALLOW), '/ 실패', ''.join(bad))
+    return 1 if bad else 0
 
 
 if __name__ == '__main__':
