@@ -18,7 +18,11 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const COMPETITORS = ['인생네컷', '포토이즘', '하루필름', '포토그레이', '셀픽스', '모노맨션', '인싸포토', '지금이순간', '모멘트컷', '심플큐브', '피키픽', '포토시그니처'];
+const COMPETITORS = [
+  '인생네컷', '포토이즘', '하루필름', '포토그레이', '셀픽스', '모노맨션', '인싸포토', '지금이순간', '모멘트컷', '심플큐브', '피키픽', '포토시그니처',
+  // 영문·로마자 표기 — 대소문자 무시로 비교한다 (한글 목록만 있을 땐 "Haru Film"을 놓쳤다)
+  'Haru Film', 'HARUFILM', 'harufilm', 'Photoism', 'PHOTOISM', 'Life4cut', 'Photogray', 'PHOTOGRAY', 'Photo Signature', 'photosignature',
+];
 const BANNED_COPY = [/최저가/, /지금\s*신청/, /초특가/, /파격\s*할인/];
 const BANNED_SERVICE = /포토부스\s*(를)?\s*제작|부스\s*판매|포토부스\s*판매/;
 const MONEY = [/[0-9][0-9,]*\s*원(?![가단장본격료칙상])/g, /₩\s*[0-9]/g, /[0-9][0-9,]*\s*만\s*원/g];
@@ -79,9 +83,16 @@ function bodyText(html) {
 // 검색결과에 노출되는 문구 (title·description 포함) — 금액·경쟁사는 여기까지 본다.
 function exposedText(html) {
   const metas = [];
-  const re = /<meta[^>]*name=["'](?:description|keywords)["'][^>]*content=["']([^"']*)["']/gi;
+  // name/property 속성 순서와 무관하게 description·keywords·og:*·twitter:* 제목/설명을 모은다.
+  const re = /<meta\b[^>]*>/gi;
+  const KEYS = /^(?:description|keywords|og:title|og:description|twitter:title|twitter:description)$/i;
   let m;
-  while ((m = re.exec(html))) metas.push(m[1]);
+  while ((m = re.exec(html))) {
+    const tag = m[0];
+    const k = tag.match(/\b(?:name|property)=["']([^"']+)["']/i);
+    const c = tag.match(/\bcontent=["']([^"']*)["']/i);
+    if (k && c && KEYS.test(k[1])) metas.push(c[1]);
+  }
   const t = html.match(/<title>([\s\S]*?)<\/title>/i);
   return bodyText(html) + ' ' + metas.join(' ') + ' ' + (t ? t[1] : '');
 }
@@ -101,9 +112,17 @@ function checkCopy(file, html) {
     const m = body.match(re);
     if (m) add(file, 'banned-copy', '금지 카피: "' + m[0] + '"');
   }
-  const sm = body.match(BANNED_SERVICE);
+  // 렌탈 아닌 서비스 표현은 본문뿐 아니라 title·meta·og(검색결과 노출)까지 본다.
+  const sm = exposed.match(BANNED_SERVICE);
   if (sm) add(file, 'service-wording', '렌탈 아닌 표현: "' + sm[0] + '"');
-  for (const c of COMPETITORS) if (exposed.includes(c)) add(file, 'competitor', '경쟁사 실명: "' + c + '"');
+  const exposedLower = exposed.toLowerCase();
+  const seenComp = new Set();
+  for (const c of COMPETITORS) {
+    const key = c.toLowerCase();
+    if (seenComp.has(key)) continue;
+    seenComp.add(key);
+    if (exposedLower.includes(key)) add(file, 'competitor', '경쟁사 실명: "' + c + '"');
+  }
 }
 
 function checkImages(file, html) {
@@ -212,6 +231,9 @@ if (process.argv.includes('--selftest')) {
     ['banned-copy', CLEAN.replace('렌탈 문의 주세요.', '업계 최저가 보장.')],
     ['service-wording', CLEAN.replace('렌탈 문의 주세요.', '포토부스 제작해 드립니다.')],
     ['competitor', CLEAN.replace('렌탈 문의 주세요.', '인생네컷보다 낫습니다.')],
+    ['competitor', CLEAN.replace('렌탈 문의 주세요.', '셀프포토 브랜드 haru film 과 함께.')],
+    ['service-wording', CLEAN.replace('<title>루아미</title>', '<title>포토부스 제작</title>')],
+    ['service-wording', CLEAN.replace('</head>', '<meta content="포토부스 판매" property="og:title"></head>')],
     ['tag-balance', CLEAN.replace('</section>', '')],
     ['json-ld', CLEAN.replace('{"@type":"Thing"}', '{"@type":,}')],
     ['missing-image', CLEAN.replace('assets/images/hero.webp', 'assets/images/__nope__.webp')],
@@ -277,7 +299,7 @@ if (process.argv.includes('--selftest')) {
     }
   }
   fs.unlinkSync(tmp);
-  console.log(bad ? '\n역검증 FAIL — ' + bad + '건' : '\n역검증 PASS — 10개 규칙 + 정상판 대조군 전부 정상');
+  console.log(bad ? '\n역검증 FAIL — ' + bad + '건' : '\n역검증 PASS — ' + (CASES.length + 3) + '개 대조 + 정상판 대조군 전부 정상');
   process.exit(bad ? 1 : 0);
 }
 

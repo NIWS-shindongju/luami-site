@@ -22,8 +22,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap"></noscript>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://luamiphoto.com/"}, {"@type": "ListItem", "position": 2, "name": "설치 사례", "item": "https://luamiphoto.com/portfolio.html"}, {"@type": "ListItem", "position": 3, "name": "콘서트 브랜드관 포토부스", "item": "https://luamiphoto.com/cases/concert-brand-booth.html"}]}
 </script>
@@ -31,15 +30,16 @@
 {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "공연장처럼 관람객이 몰리는 곳에도 대기열 관리가 되나요?", "acceptedAnswer": {"@type": "Answer", "text": "네. 무인 운영으로 촬영·인쇄·복귀가 자동으로 이어져 대기열을 안정적으로 처리합니다. 예상 관람객 수를 알려주시면 적정 대수도 함께 상담해 드립니다."}}, {"@type": "Question", "name": "브랜드관 콘셉트에 맞춘 부스 디자인도 가능한가요?", "acceptedAnswer": {"@type": "Answer", "text": "가능합니다. 부스 내부 톤·조명, 촬영 프레임까지 브랜드관 콘셉트에 맞춰 구성해 드립니다."}}, {"@type": "Question", "name": "공연 당일에만 짧게 설치하는 것도 가능한가요?", "acceptedAnswer": {"@type": "Answer", "text": "네. 공연 일정에 맞춰 설치부터 회수까지 하루 단위로도 진행합니다."}}]}
 </script>
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "Article", "headline": "콘서트 브랜드관 포토부스 설치 사례 · 팝업 굿즈존", "description": "높은 팬 밀집도 속에서도 대량 촬영과 QR 즉시공유를 안정적으로 처리한 루아미의 콘서트 브랜드관 포토부스 설치 사례.", "image": "https://luamiphoto.com/assets/images/promo-dynamicduo-concert-booth.webp", "datePublished": "2026-07-11", "dateModified": "2026-07-13", "author": {"@type": "Organization", "name": "루아미 (Luami)"}, "publisher": {"@type": "Organization", "name": "루아미 (Luami)", "logo": {"@type": "ImageObject", "url": "https://luamiphoto.com/apple-touch-icon.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://luamiphoto.com/cases/concert-brand-booth.html"}}
+{"@context": "https://schema.org", "@type": "Article", "headline": "콘서트 브랜드관 포토부스 설치 사례 · 팝업 굿즈존", "description": "높은 팬 밀집도 속에서도 대량 촬영과 QR 즉시공유를 안정적으로 처리한 루아미의 콘서트 브랜드관 포토부스 설치 사례.", "image": "https://luamiphoto.com/assets/images/promo-dynamicduo-concert-booth.webp", "datePublished": "2026-07-11", "dateModified": "2026-09-24", "author": {"@type": "Organization", "name": "루아미 (Luami)"}, "publisher": {"@id": "https://luamiphoto.com/#business"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://luamiphoto.com/cases/concert-brand-booth.html"}}
 </script>
-<link rel="stylesheet" href="../assets/style.css?v=20260923a">
+<link rel="stylesheet" href="../assets/style.css?v=20260925t">
 <script>document.documentElement.className += ' js';</script>
 </head>
 <body>
+<a class="skip-link" href="#main">본문 바로가기</a>
 <div class="grain"></div>
 <div class="progress" id="prog"></div>
-<div class="util"><div class="wrap"><span>Luami — 무인 포토부스 렌탈</span><span>Est. 2026 · Korea</span></div></div>
+<div class="util" aria-hidden="true"><div class="wrap"><span>Luami — 무인 포토부스 렌탈</span><span>Est. 2026 · Korea</span></div></div>
 <header class="nav"><div class="wrap nav-in">
   <a href="../index.html" class="logo">Luami<span class="dot"></span></a>
   <nav class="nav-links"><a href="../services.html">서비스</a><a href="../products.html">제품군</a><a href="../portfolio.html" aria-current="page">설치 사례</a><a href="../guide.html">렌탈 가이드</a><a href="../blog.html">블로그</a></nav>
@@ -48,7 +48,7 @@
 </div></header>
 
 <div class="drawer-scrim" id="drawerScrim" aria-hidden="true"></div>
-<div class="drawer" id="drawer" aria-hidden="true">
+<div class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="메뉴">
   <div class="drawer-grab" aria-hidden="true"></div>
   <div class="drawer-top">
     <a href="../index.html" class="logo dlogo">Luami<span class="dot"></span></a>
@@ -66,16 +66,17 @@
     <div class="drawer-contact">
       <a href="tel:01036297743">010-3629-7743</a>
       <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a>
-      <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
+      <a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
     </div>
   </div>
 </div>
 
-<div class="stickybar" id="sbar">
+<div class="stickybar" id="sbar" role="navigation" aria-label="빠른 메뉴">
   <a href="../index.html" class="logo">Luami<span class="dot"></span></a>
   <a href="../index.html#contact" class="btn-mini">렌탈 문의</a>
   <button class="navtoggle" id="navToggle2" aria-label="메뉴 열기" aria-controls="drawer"><span></span><span></span><span></span></button>
 </div>
+<main id="main" tabindex="-1">
 
 <section class="page-head"><div class="wrap">
   <span class="idxlabel fade">Case Study 16</span>
@@ -85,10 +86,10 @@
 </div></section>
 
 <section style="padding-top:clamp(30px,5vw,60px)"><div class="wrap feat-grid">
-  <figure class="feat-img fade"><img src="../assets/images/promo-dynamicduo-concert-booth.webp" width="1050" height="1400" alt="콘서트 브랜드 포토부스 내부" loading="lazy" decoding="async"></figure>
+  <figure class="feat-img fade"><img src="../assets/images/promo-dynamicduo-concert-booth.webp" width="1050" height="1400" alt="콘서트 브랜드 포토부스 내부" loading="lazy" decoding="async" srcset="../assets/images/promo-dynamicduo-concert-booth-480w.webp 480w, ../assets/images/promo-dynamicduo-concert-booth.webp 1050w" sizes="(max-width: 720px) 90vw, 440px"></figure>
   <div class="feat-txt">
     <span class="idxlabel fade">Concert Brand Zone</span>
-    <h2 class="fade" style="font-size:clamp(28px,3.6vw,44px)">굿즈존 동선에<br>맞춘 <i>포토 스팟</i>.</h2>
+    <h2 class="fade">굿즈존 동선에<br>맞춘 <i>포토 스팟</i>.</h2>
     <p class="fade">콘서트장 브랜드관·굿즈존 한편에 포토부스를 설치한 사례입니다. 공연 전후로 관람객이 한꺼번에 몰리는 구간이라, 짧은 시간 안에 많은 인원을 처리할 수 있는 구성과 배치가 관건이었습니다.</p>
     <p class="fade" style="margin-top:18px">부스 내부에는 공연 무드에 맞춘 톤과 조명을 적용해, 굿즈존을 찾은 팬들이 자연스럽게 머무는 포토 스팟으로 자리 잡도록 구성했습니다. 촬영한 사진과 영상은 QR로 바로 휴대폰에 저장되어, 팬들의 자발적인 SNS 확산으로 이어졌습니다.</p>
     <a href="../portfolio.html" class="btn-ghost fade">다른 설치 사례 보기</a>
@@ -97,7 +98,7 @@
 
 <section style="background:var(--paper2)"><div class="wrap why">
   <div class="head"><span class="idxlabel fade">Field Notes</span>
-    <h2 class="serif fade" style="font-weight:400;font-size:clamp(26px,3.6vw,44px);margin-top:10px">현장에서 본 것들</h2></div>
+    <h2 class="serif fade" style="font-weight:400;margin-top:10px">현장에서 본 것들</h2></div>
   <div>
     <div class="wrow fade"><div class="n">01</div><div><h3>높은 팬 밀집도</h3><p>공연 전후로 관람객이 짧은 시간에 몰리는 구간입니다. 대기열이 길어지지 않도록 처리 속도를 중심으로 구성을 짰습니다.</p></div></div>
     <div class="wrow fade"><div class="n">02</div><div><h3>대량 촬영 처리</h3><p>무인 운영 구조로 촬영·인쇄·복귀가 자동으로 이어져, 짧은 시간 안에 많은 인원을 순차적으로 처리했습니다.</p></div></div>
@@ -110,7 +111,7 @@
 
 <section style="padding-top:0"><div class="wrap">
   <span class="idxlabel fade">FAQ</span>
-  <h2 class="serif fade" style="font-weight:400;font-size:clamp(26px,3.6vw,44px);margin-top:10px">콘서트·팝업 포토부스, 자주 묻는 질문</h2>
+  <h2 class="serif fade" style="font-weight:400;margin-top:10px">콘서트·팝업 포토부스, 자주 묻는 질문</h2>
   <div class="faq">
     <details class="fade"><summary>공연장처럼 관람객이 몰리는 곳에도 대기열 관리가 되나요?</summary><p>네. 무인 운영으로 촬영·인쇄·복귀가 자동으로 이어져 대기열을 안정적으로 처리합니다. 예상 관람객 수를 알려주시면 적정 대수도 함께 상담해 드립니다.</p></details>
     <details class="fade"><summary>브랜드관 콘셉트에 맞춘 부스 디자인도 가능한가요?</summary><p>가능합니다. 부스 내부 톤·조명, 촬영 프레임까지 브랜드관 콘셉트에 맞춰 구성해 드립니다. 통로형 전시장에 단독으로 세운 <a href="exhibition-expo-booth.html">전시회 포토부스 설치 사례</a>도 함께 참고하실 수 있습니다.</p></details>
@@ -120,46 +121,46 @@
 
 <section><div class="wrap">
   <span class="idxlabel fade">(더 보기)</span>
-  <h2 class="serif fade" style="font-weight:400;font-size:clamp(26px,3.6vw,44px);margin-top:10px">다른 설치 사례</h2>
+  <h2 class="serif fade" style="font-weight:400;margin-top:10px">다른 설치 사례</h2>
   <div class="explore-grid">
     <a class="explore-card fade" href="../blog/concert-brand-photobooth-story.html">
-      <figure><img src="../assets/images/promo-dynamicduo-concert-booth.webp" width="1050" height="1400" alt="루아미 블로그 — 줄이 길어지지 않았던 이유" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/promo-dynamicduo-concert-booth.webp" width="1050" height="1400" alt="루아미 블로그 — 줄이 길어지지 않았던 이유" loading="lazy" decoding="async" srcset="../assets/images/promo-dynamicduo-concert-booth-480w.webp 480w, ../assets/images/promo-dynamicduo-concert-booth.webp 1050w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Blog</span><h3>블로그 · 줄이 길어지지 않았던 이유</h3><p>브랜드관 설치 뒷이야기 읽기.<span class="arrow">↗</span></p></div>
     </a>
     <a class="explore-card fade" href="drama-promotion-booth.html">
-      <figure><img src="../assets/images/promo-drama-knowingbros-booth.webp" width="1160" height="1225" alt="드라마 프로모션 포토부스" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/promo-drama-knowingbros-booth.webp" width="1160" height="1225" alt="드라마 프로모션 포토부스" loading="lazy" decoding="async" srcset="../assets/images/promo-drama-knowingbros-booth-480w.webp 480w, ../assets/images/promo-drama-knowingbros-booth-960w.webp 960w, ../assets/images/promo-drama-knowingbros-booth.webp 1160w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Case 12</span><h3>방송 프로모션 설치</h3><p>짧은 일정 안에서의 미디어 콜라보.<span class="arrow">↗</span></p></div>
     </a>
     <a class="explore-card fade" href="festival-multi-unit.html">
-      <figure><img src="../assets/images/event-led-trio.webp" width="800" height="1066" alt="LED 랩핑 포토부스 3대 동시 설치" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/event-led-trio.webp" width="800" height="1066" alt="LED 랩핑 포토부스 3대 동시 설치" loading="lazy" decoding="async" srcset="../assets/images/event-led-trio-480w.webp 480w, ../assets/images/event-led-trio.webp 800w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Case 10</span><h3>다대수 원격 관리</h3><p>대수를 늘려 대기열을 분산한 사례.<span class="arrow">↗</span></p></div>
     </a>
     <a class="explore-card fade" href="../portfolio.html">
-      <figure><img src="../assets/images/hero.webp" width="1501" height="1600" alt="루아미 설치 사례 전체 보기" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/hero.webp" width="1501" height="1600" alt="루아미 설치 사례 전체 보기" loading="lazy" decoding="async" srcset="../assets/images/hero-480w.webp 480w, ../assets/images/hero-960w.webp 960w, ../assets/images/hero.webp 1501w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Portfolio</span><h3>설치 사례 전체 보기</h3><p>테마존·행사·시즌·매장까지 모든 현장 기록.<span class="arrow">↗</span></p></div>
     </a>
   </div>
+  <p class="fade related-line" style="margin-top:22px;color:var(--muted);line-height:1.8">관련 글 · <a href="../blog/kcon-hechi-goods-booth-story.html" style="color:var(--accent);text-decoration:underline">KCON에 헤치가 걸어 들어왔습니다 — 캐릭터 콜라보 포토부스</a></p>
 </div></section>
 
 <section style="padding-bottom:clamp(90px,12vw,150px)"><div class="wrap"><div class="band fade">
   <h2>이런 부스,<br><i>우리 브랜드</i>에도.</h2><p>레퍼런스처럼 브랜드에 꼭 맞는 부스를 구성해 드립니다.</p>
   <div class="contacts">
-    <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener" class="kakao">카카오톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="mailto:luami@luamiphoto.com">이메일 문의</a>
+    <a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener" class="kakao">카카오톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="mailto:luami@luamiphoto.com">이메일 문의</a>
     <a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a>
   </div>
 </div></div></section>
+</main>
 <footer><div class="wrap">
   <div class="foot-grid">
     <div class="col"><b>루아미 (Luami)</b>무인 포토부스 렌탈 · 설치 · 운영<br>전국 상담 가능</div>
-    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="http://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
+    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="https://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
     <div class="col"><b>바로가기</b><a href="../services.html">서비스</a> · <a href="../products.html">제품군</a> · <a href="../portfolio.html">설치 사례</a> · <a href="../guide.html">렌탈 가이드</a> · <a href="../blog.html">블로그</a><br><a href="../index.html#faq">자주 묻는 질문</a></div>
+    <div class="col col-uses"><b>용도별 렌탈</b><a href="../wedding-photobooth-rental.html">웨딩</a><a href="../corporate-event-photobooth.html">기업행사</a><a href="../popup-store-photobooth.html">팝업스토어</a><a href="../store-photobooth-rental.html">매장 상설</a><a href="../festival-outdoor-photobooth.html">축제·야외</a><a href="../university-graduation-photobooth.html">졸업식</a><a href="../brand-wrap-photobooth.html">브랜드 래핑</a><a href="../theme-photobooth.html">테마 부스</a><a href="../character-collab-photobooth.html">캐릭터 콜라보</a><a href="../photo-kiosk-rental.html">포토키오스크</a></div>
   </div>
   <p class="note">© 2026 루아미(LUAMI). All rights reserved. · 무인 포토부스 렌탈 · 설치 · 운영</p>
 </div></footer>
-<div class="mcta"><a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="../index.html#contact" class="p">무료 견적</a></div>
-<script src="https://unpkg.com/lenis@1/dist/lenis.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-<script src="../assets/main.js?v=20260911b" defer></script>
+<aside class="mcta" aria-label="빠른 문의"><a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="../index.html#contact" class="p">무료 견적</a></aside>
+<script src="../assets/main.js?v=20260925t" defer></script>
 </body>
 </html>

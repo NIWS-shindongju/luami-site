@@ -17,6 +17,18 @@ MENU = [
     ("guide.html", "렌탈 가이드"),
     ("blog.html", "블로그"),
 ]
+USES = [
+    ("wedding-photobooth-rental.html", "웨딩"),
+    ("corporate-event-photobooth.html", "기업행사"),
+    ("popup-store-photobooth.html", "팝업스토어"),
+    ("store-photobooth-rental.html", "매장 상설"),
+    ("festival-outdoor-photobooth.html", "축제·야외"),
+    ("university-graduation-photobooth.html", "졸업식"),
+    ("brand-wrap-photobooth.html", "브랜드 래핑"),
+    ("theme-photobooth.html", "테마 부스"),
+    ("character-collab-photobooth.html", "캐릭터 콜라보"),
+    ("photo-kiosk-rental.html", "포토키오스크"),
+]
 SECTION_OF = {"blog": "blog.html", "cases": "portfolio.html"}
 
 
@@ -34,7 +46,7 @@ def chrome(prefix, current):
   <button class="navtoggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button>
 </div></header>'''
     drawer_html = f'''<div class="drawer-scrim" id="drawerScrim" aria-hidden="true"></div>
-<div class="drawer" id="drawer" aria-hidden="true">
+<div class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="메뉴">
   <div class="drawer-grab" aria-hidden="true"></div>
   <div class="drawer-top">
     <a href="{prefix}index.html" class="logo dlogo">Luami<span class="dot"></span></a>
@@ -48,18 +60,20 @@ def chrome(prefix, current):
     <div class="drawer-contact">
       <a href="tel:01036297743">010-3629-7743</a>
       <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a>
-      <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
+      <a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
     </div>
   </div>
 </div>
 
 '''
     quick = " · ".join(f'<a href="{prefix}{h}">{l}</a>' for h, l in MENU)
+    uses = "".join(f'<a href="{prefix}{h}">{l}</a>' for h, l in USES)
     footer = f'''<footer><div class="wrap">
   <div class="foot-grid">
     <div class="col"><b>루아미 (Luami)</b>무인 포토부스 렌탈 · 설치 · 운영<br>전국 상담 가능</div>
-    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="http://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
+    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="https://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
     <div class="col"><b>바로가기</b>{quick}<br><a href="{prefix}index.html#faq">자주 묻는 질문</a></div>
+    <div class="col col-uses"><b>용도별 렌탈</b>{uses}</div>
   </div>
   <p class="note">© 2026 루아미(LUAMI). All rights reserved. · 무인 포토부스 렌탈 · 설치 · 운영</p>
 </div></footer>'''
@@ -80,6 +94,15 @@ def process(path):
     out = re.sub(r'<footer>.*?</footer>', footer, out, count=1, flags=re.S)
     out = re.sub(r'\n?<div class="sprocket[^"]*"></div>', "", out)
     out = re.sub(r'\n?<div class="strip-sec"><div class="strip">.*?</div></div>\n', "\n", out, flags=re.S)
+    if 'class="skip-link"' not in out:
+        out = re.sub(r'(<body[^>]*>)', r'\1\n<a class="skip-link" href="#main">본문 바로가기</a>', out, count=1)
+    if '<main' not in out and '<div class="stickybar"' in out:
+        out = re.sub(r'(<div class="stickybar"[^>]*>.*?</div>\n)', r'\1<main id="main">\n', out, count=1, flags=re.S)
+        out = out.replace('<footer>', '</main>\n<footer>', 1)
+    out = out.replace('<main id="main">', '<main id="main" tabindex="-1">')
+    out = re.sub(r'<div class="mcta">(.*?)</div>', r'<aside class="mcta" aria-label="빠른 문의">\1</aside>', out, flags=re.S)
+    out = out.replace('<div class="util">', '<div class="util" aria-hidden="true">')
+    out = out.replace('<div class="stickybar" id="sbar">', '<div class="stickybar" id="sbar" role="navigation" aria-label="빠른 메뉴">')
     if out != src:
         path.write_text(out, encoding="utf-8")
         return True

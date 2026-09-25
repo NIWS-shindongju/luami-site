@@ -22,8 +22,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap"></noscript>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://luamiphoto.com/"}, {"@type": "ListItem", "position": 2, "name": "설치 사례", "item": "https://luamiphoto.com/portfolio.html"}, {"@type": "ListItem", "position": 3, "name": "매장형 리테일 설치", "item": "https://luamiphoto.com/cases/retail-store-install.html"}]}
 </script>
@@ -31,15 +30,16 @@
 {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "매장이 좁은데도 설치할 수 있나요?", "acceptedAnswer": {"@type": "Answer", "text": "현장 도면이나 사진을 보내주시면 배치 가능 여부와 필요한 최소 면적을 먼저 확인해 드립니다."}}, {"@type": "Question", "name": "전기 공사가 따로 필요한가요?", "acceptedAnswer": {"@type": "Answer", "text": "대부분 일반 220V 콘센트로 운영 가능합니다. 별도 배선이 필요한 경우 상담 시 안내해 드립니다."}}, {"@type": "Question", "name": "매출 정산은 어떻게 이루어지나요?", "acceptedAnswer": {"@type": "Answer", "text": "운영 방식(임대·수익 배분 등)에 따라 정산 구조가 달라집니다. 상담 시 매장에 맞는 방식을 함께 정합니다."}}, {"@type": "Question", "name": "설치 후 관리는 매장에서 해야 하나요?", "acceptedAnswer": {"@type": "Answer", "text": "아닙니다. 정기 점검과 소모품 보충은 루아미가 맡고, 오류 발생 시 원격으로 우선 대응합니다."}}, {"@type": "Question", "name": "계약 기간은 어떻게 되나요?", "acceptedAnswer": {"@type": "Answer", "text": "단기 시범 운영부터 장기 상설 계약까지 매장 상황에 맞춰 조정할 수 있습니다."}}]}
 </script>
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "Article", "headline": "매장형 리테일 포토부스 설치 사례", "description": "유휴 매장 공간을 상설 포토 스팟으로 만든 루아미의 매장형 설치 사례.", "image": "https://luamiphoto.com/assets/images/g3.webp", "datePublished": "2026-07-13", "dateModified": "2026-07-13", "author": {"@type": "Organization", "name": "루아미 (Luami)"}, "publisher": {"@type": "Organization", "name": "루아미 (Luami)", "logo": {"@type": "ImageObject", "url": "https://luamiphoto.com/apple-touch-icon.png"}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://luamiphoto.com/cases/retail-store-install.html"}}
+{"@context": "https://schema.org", "@type": "Article", "headline": "매장형 리테일 포토부스 설치 사례", "description": "유휴 매장 공간을 상설 포토 스팟으로 만든 루아미의 매장형 설치 사례.", "image": "https://luamiphoto.com/assets/images/g3.webp", "datePublished": "2026-07-13", "dateModified": "2026-09-24", "author": {"@type": "Organization", "name": "루아미 (Luami)"}, "publisher": {"@id": "https://luamiphoto.com/#business"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://luamiphoto.com/cases/retail-store-install.html"}}
 </script>
-<link rel="stylesheet" href="../assets/style.css?v=20260923a">
+<link rel="stylesheet" href="../assets/style.css?v=20260925t">
 <script>document.documentElement.className += ' js';</script>
 </head>
 <body>
+<a class="skip-link" href="#main">본문 바로가기</a>
 <div class="grain"></div>
 <div class="progress" id="prog"></div>
-<div class="util"><div class="wrap"><span>Luami — 무인 포토부스 렌탈</span><span>Est. 2026 · Korea</span></div></div>
+<div class="util" aria-hidden="true"><div class="wrap"><span>Luami — 무인 포토부스 렌탈</span><span>Est. 2026 · Korea</span></div></div>
 <header class="nav"><div class="wrap nav-in">
   <a href="../index.html" class="logo">Luami<span class="dot"></span></a>
   <nav class="nav-links"><a href="../services.html">서비스</a><a href="../products.html">제품군</a><a href="../portfolio.html" aria-current="page">설치 사례</a><a href="../guide.html">렌탈 가이드</a><a href="../blog.html">블로그</a></nav>
@@ -48,7 +48,7 @@
 </div></header>
 
 <div class="drawer-scrim" id="drawerScrim" aria-hidden="true"></div>
-<div class="drawer" id="drawer" aria-hidden="true">
+<div class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="메뉴">
   <div class="drawer-grab" aria-hidden="true"></div>
   <div class="drawer-top">
     <a href="../index.html" class="logo dlogo">Luami<span class="dot"></span></a>
@@ -66,16 +66,17 @@
     <div class="drawer-contact">
       <a href="tel:01036297743">010-3629-7743</a>
       <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a>
-      <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
+      <a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
     </div>
   </div>
 </div>
 
-<div class="stickybar" id="sbar">
+<div class="stickybar" id="sbar" role="navigation" aria-label="빠른 메뉴">
   <a href="../index.html" class="logo">Luami<span class="dot"></span></a>
   <a href="../index.html#contact" class="btn-mini">렌탈 문의</a>
   <button class="navtoggle" id="navToggle2" aria-label="메뉴 열기" aria-controls="drawer"><span></span><span></span><span></span></button>
 </div>
+<main id="main" tabindex="-1">
 
 <section class="page-head"><div class="wrap">
   <span class="idxlabel fade">Case Study 06</span>
@@ -86,8 +87,8 @@
 
 <section style="padding-top:clamp(30px,5vw,60px)"><div class="wrap">
   <div class="cases" style="grid-template-columns:repeat(2,1fr);max-width:760px;margin:0 auto">
-    <article class="case fade"><div class="im"><img src="../assets/images/g3.webp" width="901" height="1401" alt="매장형 포토부스 설치 사례" loading="lazy" decoding="async"></div><div class="cx"><b>매장 내 설치</b><span>Retail</span></div></article>
-    <article class="case fade"><div class="im"><img src="../assets/images/strip3.webp" width="700" height="840" alt="미니멀 블랙 포토부스 리테일 매장" loading="lazy" decoding="async"></div><div class="cx"><b>미니멀 블랙 마감</b><span>Interior</span></div></article>
+    <article class="case fade"><div class="im"><img src="../assets/images/g3.webp" width="901" height="1401" alt="매장형 포토부스 설치 사례" loading="lazy" decoding="async" srcset="../assets/images/g3-480w.webp 480w, ../assets/images/g3.webp 1024w" sizes="(max-width: 720px) 90vw, 440px"></div><div class="cx"><b>매장 내 설치</b><span>Retail</span></div></article>
+    <article class="case fade"><div class="im"><img src="../assets/images/strip3.webp" width="700" height="840" alt="미니멀 블랙 포토부스 리테일 매장" loading="lazy" decoding="async" srcset="../assets/images/strip3-480w.webp 480w, ../assets/images/strip3.webp 700w" sizes="(max-width: 720px) 90vw, 440px"></div><div class="cx"><b>미니멀 블랙 마감</b><span>Interior</span></div></article>
   </div>
 </div></section>
 
@@ -105,7 +106,7 @@
 
 <section style="background:var(--paper2)"><div class="wrap why">
   <div class="head"><span class="idxlabel fade">Field Notes</span>
-    <h2 class="serif fade" style="font-weight:400;font-size:clamp(26px,3.6vw,44px);margin-top:10px">현장에서 본 것들</h2></div>
+    <h2 class="serif fade" style="font-weight:400;margin-top:10px">현장에서 본 것들</h2></div>
   <div>
     <div class="wrow fade"><div class="n">01</div><div><h3>매장 톤 매칭</h3><p>외관 색과 마감을 매장 인테리어 톤에 맞춰 제작해, 매장 안에서 이질감이 없습니다. 포토부스 렌탈이라도 매장 분위기를 해치지 않는 것이 우선입니다.</p></div></div>
     <div class="wrow fade"><div class="n">02</div><div><h3>상설 무인 운영</h3><p>인건비 없이 24시간 자동 운영되며, 오류는 원격 모니터링으로 대응합니다. 매장 마감 후에도 부스는 계속 운영됩니다.</p></div></div>
@@ -118,7 +119,7 @@
 
 <section style="padding-top:0"><div class="wrap">
   <span class="idxlabel fade">FAQ</span>
-  <h2 class="serif fade" style="font-weight:400;font-size:clamp(26px,3.6vw,44px);margin-top:10px">매장형 포토부스 설치, 자주 묻는 질문</h2>
+  <h2 class="serif fade" style="font-weight:400;margin-top:10px">매장형 포토부스 설치, 자주 묻는 질문</h2>
   <div class="faq">
     <details class="fade"><summary>매장이 좁은데도 설치할 수 있나요?</summary><p>현장 도면이나 사진을 보내주시면 배치 가능 여부와 필요한 최소 면적을 먼저 확인해 드립니다.</p></details>
     <details class="fade"><summary>전기 공사가 따로 필요한가요?</summary><p>대부분 일반 220V 콘센트로 운영 가능합니다. 별도 배선이 필요한 경우 상담 시 안내해 드립니다.</p></details>
@@ -130,54 +131,54 @@
 
 <section><div class="wrap">
   <span class="idxlabel fade">(더 보기)</span>
-  <h2 class="serif fade" style="font-weight:400;font-size:clamp(26px,3.6vw,44px);margin-top:10px">다른 설치 사례</h2>
+  <h2 class="serif fade" style="font-weight:400;margin-top:10px">다른 설치 사례</h2>
   <div class="explore-grid">
     <a class="explore-card fade" href="../blog/retail-photobooth-story.html">
-      <figure><img src="../assets/images/g3.webp" width="901" height="1401" alt="루아미 블로그 — 제일 바빠진 자리가 됐다" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/g3.webp" width="901" height="1401" alt="루아미 블로그 — 제일 바빠진 자리가 됐다" loading="lazy" decoding="async" srcset="../assets/images/g3-480w.webp 480w, ../assets/images/g3.webp 1024w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Blog</span><h3>블로그 · 제일 바빠진 자리가 됐다</h3><p>매장 배치 이야기 읽기.<span class="arrow">↗</span></p></div>
     </a>
     <a class="explore-card fade" href="premium-self-studio.html">
-      <figure><img src="../assets/images/store-premium-02.webp" width="1200" height="1600" alt="프리미엄 셀프 스튜디오 매장 와이드 컷" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/store-premium-02.webp" width="1200" height="1600" alt="프리미엄 셀프 스튜디오 매장 와이드 컷" loading="lazy" decoding="async" srcset="../assets/images/store-premium-02-480w.webp 480w, ../assets/images/store-premium-02-960w.webp 960w, ../assets/images/store-premium-02.webp 1200w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Case 09</span><h3>프리미엄 셀프 스튜디오</h3><p>상설 매장에 설치한 프리미엄 톤 부스.<span class="arrow">↗</span></p></div>
     </a>
     <a class="explore-card fade" href="photo-kiosk-case.html">
-      <figure><img src="../assets/images/case-kiosk.webp" width="1080" height="1350" alt="컴팩트 무인 포토 키오스크" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/case-kiosk.webp" width="1080" height="1350" alt="컴팩트 무인 포토 키오스크" loading="lazy" decoding="async" srcset="../assets/images/case-kiosk-480w.webp 480w, ../assets/images/case-kiosk.webp 1080w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Case 08</span><h3>컴팩트 무인 키오스크</h3><p>좁은 매장 코너에도 들어가는 구성.<span class="arrow">↗</span></p></div>
     </a>
     <a class="explore-card fade" href="alley-night-install.html">
-      <figure><img src="../assets/images/alley-night-exterior-01.webp" width="1200" height="1951" alt="주택가 골목에 설치된 스테인리스 포토부스 야간 외관" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/alley-night-exterior-01.webp" width="1200" height="1951" alt="주택가 골목에 설치된 스테인리스 포토부스 야간 외관" loading="lazy" decoding="async" srcset="../assets/images/alley-night-exterior-01-480w.webp 480w, ../assets/images/alley-night-exterior-01.webp 896w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Case 11</span><h3>골목 상권 · 소형 설치</h3><p>좁은 이면도로 자투리 공간 설치.<span class="arrow">↗</span></p></div>
     </a>
     <a class="explore-card fade" href="beauty-travel-expo-booth.html">
-      <figure><img src="../assets/images/promo-seoul-beauty-travel-week.webp" width="1600" height="1600" alt="관광 프로모션 포토부스" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/promo-seoul-beauty-travel-week.webp" width="1600" height="1600" alt="관광 프로모션 포토부스" loading="lazy" decoding="async" srcset="../assets/images/promo-seoul-beauty-travel-week-480w.webp 480w, ../assets/images/promo-seoul-beauty-travel-week-960w.webp 960w, ../assets/images/promo-seoul-beauty-travel-week.webp 1600w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Case 18</span><h3>뷰티 행사 포토부스</h3><p>언어 장벽 없이 통하는 QR 공유.<span class="arrow">↗</span></p></div>
     </a>
     <a class="explore-card fade" href="../portfolio.html">
-      <figure><img src="../assets/images/hero.webp" width="1501" height="1600" alt="루아미 설치 사례 전체 보기" loading="lazy" decoding="async"></figure>
+      <figure><img src="../assets/images/hero.webp" width="1501" height="1600" alt="루아미 설치 사례 전체 보기" loading="lazy" decoding="async" srcset="../assets/images/hero-480w.webp 480w, ../assets/images/hero-960w.webp 960w, ../assets/images/hero.webp 1501w" sizes="(max-width: 720px) 90vw, 440px"></figure>
       <div class="ec-body"><span class="idxlabel">Portfolio</span><h3>설치 사례 전체 보기</h3><p>테마존·행사·시즌·매장까지 모든 현장 기록.<span class="arrow">↗</span></p></div>
     </a>
   </div>
+  <p class="fade related-line" style="margin-top:22px;color:var(--muted);line-height:1.8">관련 사례 · <a href="pink-selfphoto-brand.html" style="color:var(--accent);text-decoration:underline">셀프포토 브랜드 매장 포토부스 설치 사례 · 시그니처 컬러 매칭</a></p>
 </div></section>
 
 <section style="padding-bottom:clamp(90px,12vw,150px)"><div class="wrap"><div class="band fade">
   <h2>이런 부스,<br><i>우리 브랜드</i>에도.</h2><p>레퍼런스처럼 브랜드에 꼭 맞는 부스를 구성해 드립니다.</p>
   <div class="contacts">
-    <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener" class="kakao">카카오톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="mailto:luami@luamiphoto.com">이메일 문의</a>
+    <a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener" class="kakao">카카오톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="mailto:luami@luamiphoto.com">이메일 문의</a>
     <a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a>
   </div>
 </div></div></section>
+</main>
 <footer><div class="wrap">
   <div class="foot-grid">
     <div class="col"><b>루아미 (Luami)</b>무인 포토부스 렌탈 · 설치 · 운영<br>전국 상담 가능</div>
-    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="http://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
+    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="https://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
     <div class="col"><b>바로가기</b><a href="../services.html">서비스</a> · <a href="../products.html">제품군</a> · <a href="../portfolio.html">설치 사례</a> · <a href="../guide.html">렌탈 가이드</a> · <a href="../blog.html">블로그</a><br><a href="../index.html#faq">자주 묻는 질문</a></div>
+    <div class="col col-uses"><b>용도별 렌탈</b><a href="../wedding-photobooth-rental.html">웨딩</a><a href="../corporate-event-photobooth.html">기업행사</a><a href="../popup-store-photobooth.html">팝업스토어</a><a href="../store-photobooth-rental.html">매장 상설</a><a href="../festival-outdoor-photobooth.html">축제·야외</a><a href="../university-graduation-photobooth.html">졸업식</a><a href="../brand-wrap-photobooth.html">브랜드 래핑</a><a href="../theme-photobooth.html">테마 부스</a><a href="../character-collab-photobooth.html">캐릭터 콜라보</a><a href="../photo-kiosk-rental.html">포토키오스크</a></div>
   </div>
   <p class="note">© 2026 루아미(LUAMI). All rights reserved. · 무인 포토부스 렌탈 · 설치 · 운영</p>
 </div></footer>
-<div class="mcta"><a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="../index.html#contact" class="p">무료 견적</a></div>
-<script src="https://unpkg.com/lenis@1/dist/lenis.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-<script src="../assets/main.js?v=20260911b" defer></script>
+<aside class="mcta" aria-label="빠른 문의"><a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="../index.html#contact" class="p">무료 견적</a></aside>
+<script src="../assets/main.js?v=20260925t" defer></script>
 </body>
 </html>

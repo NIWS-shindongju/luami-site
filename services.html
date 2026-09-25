@@ -23,18 +23,21 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap"></noscript>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "홈", "item": "https://luamiphoto.com/"}, {"@type": "ListItem", "position": 2, "name": "서비스", "item": "https://luamiphoto.com/services.html"}]}
 </script>
-<link rel="stylesheet" href="assets/style.css?v=20260923a">
+<link rel="stylesheet" href="assets/style.css?v=20260925t">
 <script>document.documentElement.className += ' js';</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@graph": [{"@type": "Service", "name": "포토키오스크 렌탈", "serviceType": "포토키오스크", "description": "콤팩트한 무인 인쇄 키오스크. 좁은 매장·팝업에 최적.", "provider": {"@id": "https://luamiphoto.com/#business"}, "areaServed": "KR", "url": "https://luamiphoto.com/services.html"}, {"@type": "Service", "name": "브랜드 포토부스 렌탈", "serviceType": "브랜드 포토부스", "description": "외벽 래핑·화면 테마·인화 프레임을 브랜드에 맞춰 적용.", "provider": {"@id": "https://luamiphoto.com/#business"}, "areaServed": "KR", "url": "https://luamiphoto.com/services.html"}, {"@type": "Service", "name": "테마 부스 렌탈", "serviceType": "테마 부스", "description": "지하철·엘리베이터·빈티지 등 공간 자체가 경험이 되는 테마 부스 렌탈.", "provider": {"@id": "https://luamiphoto.com/#business"}, "areaServed": "KR", "url": "https://luamiphoto.com/services.html"}]}
+</script>
 </head>
 <body>
+<a class="skip-link" href="#main">본문 바로가기</a>
 <div class="grain"></div>
 <div class="progress" id="prog"></div>
-<div class="util"><div class="wrap"><span>Luami — 무인 포토부스 렌탈</span><span>Est. 2026 · Korea</span></div></div>
+<div class="util" aria-hidden="true"><div class="wrap"><span>Luami — 무인 포토부스 렌탈</span><span>Est. 2026 · Korea</span></div></div>
 <header class="nav"><div class="wrap nav-in">
   <a href="index.html" class="logo">Luami<span class="dot"></span></a>
   <nav class="nav-links"><a href="services.html" aria-current="page">서비스</a><a href="products.html">제품군</a><a href="portfolio.html">설치 사례</a><a href="guide.html">렌탈 가이드</a><a href="blog.html">블로그</a></nav>
@@ -43,7 +46,7 @@
 </div></header>
 
 <div class="drawer-scrim" id="drawerScrim" aria-hidden="true"></div>
-<div class="drawer" id="drawer" aria-hidden="true">
+<div class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="메뉴">
   <div class="drawer-grab" aria-hidden="true"></div>
   <div class="drawer-top">
     <a href="index.html" class="logo dlogo">Luami<span class="dot"></span></a>
@@ -61,16 +64,17 @@
     <div class="drawer-contact">
       <a href="tel:01036297743">010-3629-7743</a>
       <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a>
-      <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
+      <a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
     </div>
   </div>
 </div>
 
-<div class="stickybar" id="sbar">
+<div class="stickybar" id="sbar" role="navigation" aria-label="빠른 메뉴">
   <a href="index.html" class="logo">Luami<span class="dot"></span></a>
   <a href="index.html#contact" class="btn-mini">렌탈 문의</a>
   <button class="navtoggle" id="navToggle2" aria-label="메뉴 열기" aria-controls="drawer"><span></span><span></span><span></span></button>
 </div>
+<main id="main" tabindex="-1">
 <section class="page-head"><div class="wrap">
   <span class="idxlabel fade">Services</span>
   <h1><span class="lm"><span>브랜드에 꼭 맞는</span></span><span class="lm"><span>포토부스, 끝까지</span></span></h1>
@@ -79,45 +83,47 @@
 
 <section style="padding-top:clamp(40px,6vw,80px)"><div class="wrap">
   <span class="idxlabel fade">부스 종류</span>
+  <h2 class="sr-only">부스 종류</h2>
   <div class="svc">
     <div class="srow fade"><div class="idx">01</div><h3>포토키오스크</h3><p>콤팩트한 무인 인쇄 키오스크. 좁은 매장·팝업에 최적.</p></div>
     <div class="srow fade"><div class="idx">02</div><h3>브랜드 포토부스</h3><p>외벽 래핑·화면 테마·인화 프레임을 브랜드에 맞춰 적용.</p></div>
     <div class="srow fade"><div class="idx">03</div><h3>테마 부스</h3><p>지하철·엘리베이터·빈티지 등 공간 자체가 경험이 되는 테마 부스 렌탈.</p></div>
   </div>
   <div class="cases" style="margin-top:44px">
-    <a class="case fade" href="products.html#g-kiosk" style="text-decoration:none;color:inherit"><div class="im"><img src="assets/images/case-kiosk.webp" width="1080" height="1350" alt="컴팩트 무인 포토키오스크" loading="lazy" decoding="async"></div><div class="cx"><b>포토키오스크</b><span>컴팩트 · 이동 간편</span></div></a>
-    <a class="case fade" href="products.html#g-booth" style="text-decoration:none;color:inherit"><div class="im"><img src="assets/images/g1.webp" width="1300" height="732" alt="브랜드 래핑 포토부스" loading="lazy" decoding="async"></div><div class="cx"><b>브랜드 포토부스</b><span>래핑 · 전용 프레임</span></div></a>
-    <a class="case fade" href="products.html#g-theme" style="text-decoration:none;color:inherit"><div class="im"><img src="assets/images/theme-subway-front.webp" width="901" height="1600" alt="지하철 테마 부스 정면" loading="lazy" decoding="async"></div><div class="cx"><b>테마 부스</b><span>공간형 콘셉트</span></div></a>
+    <a class="case fade" href="products.html#g-kiosk" style="text-decoration:none;color:inherit"><div class="im"><img src="assets/images/case-kiosk.webp" width="1080" height="1350" alt="컴팩트 무인 포토키오스크" loading="lazy" decoding="async" srcset="assets/images/case-kiosk-480w.webp 480w, assets/images/case-kiosk.webp 1080w" sizes="(max-width: 720px) 90vw, 440px"></div><div class="cx"><b>포토키오스크</b><span>컴팩트 · 이동 간편</span></div></a>
+    <a class="case fade" href="products.html#g-booth" style="text-decoration:none;color:inherit"><div class="im"><img src="assets/images/g1.webp" width="1300" height="732" alt="브랜드 래핑 포토부스" loading="lazy" decoding="async" srcset="assets/images/g1-480w.webp 480w, assets/images/g1-960w.webp 960w, assets/images/g1.webp 1300w" sizes="(max-width: 720px) 90vw, 440px"></div><div class="cx"><b>브랜드 포토부스</b><span>래핑 · 전용 프레임</span></div></a>
+    <a class="case fade" href="products.html#g-theme" style="text-decoration:none;color:inherit"><div class="im"><img src="assets/images/theme-subway-front.webp" width="901" height="1600" alt="지하철 테마 부스 정면" loading="lazy" decoding="async" srcset="assets/images/theme-subway-front-480w.webp 480w, assets/images/theme-subway-front.webp 901w" sizes="(max-width: 720px) 90vw, 440px"></div><div class="cx"><b>테마 부스</b><span>공간형 콘셉트</span></div></a>
   </div>
   <p class="fade" style="margin-top:34px;color:var(--muted);max-width:64ch;line-height:1.85">세 갈래는 큰 틀이고, 실제로는 박스형·키오스크형·테마 세트·플립북·스티커·AI·360도까지 형태가 훨씬 다양합니다. <a href="products.html" style="color:var(--accent);text-decoration:underline">포토부스 · 포토키오스크 제품군 21종 한눈에 보기 ↗</a></p>
+  <p class="fade" style="margin-top:22px">용도별로 보기 — <a href="wedding-photobooth-rental.html">웨딩</a> · <a href="corporate-event-photobooth.html">기업행사</a> · <a href="popup-store-photobooth.html">팝업스토어</a> · <a href="store-photobooth-rental.html">매장 상설</a> · <a href="festival-outdoor-photobooth.html">축제·야외</a> · <a href="university-graduation-photobooth.html">졸업식</a> · <a href="brand-wrap-photobooth.html">브랜드 래핑</a> · <a href="theme-photobooth.html">테마 부스</a> · <a href="character-collab-photobooth.html">캐릭터 콜라보</a> · <a href="photo-kiosk-rental.html">포토키오스크</a></p>
 </div></section>
 
 <section style="background:var(--paper2)"><div class="wrap why">
   <div class="head"><span class="idxlabel fade">브랜드 맞춤</span>
-    <h2 class="serif fade" style="font-weight:400;font-size:clamp(30px,4.4vw,58px);margin-top:10px;letter-spacing:-.02em">우리 브랜드만의 <i style="font-style:normal;color:var(--accent)">한 대</i></h2></div>
+    <h2 class="serif fade" style="font-weight:400;margin-top:10px;letter-spacing:-.02em">우리 브랜드만의 <i style="font-style:normal;color:var(--accent)">한 대</i></h2></div>
   <div>
-    <div class="wrow fade"><div class="n">01</div><div><h3>외관 래핑</h3><p>부스 네 면을 실측해 면마다 전개도를 그리고, 브랜드 컬러·그래픽으로 감쌉니다.</p></div></div>
+    <div class="wrow fade"><div class="n">01</div><div><h3>외관 래핑</h3><p>부스 네 면을 실측해 면마다 전개도를 그리고, 브랜드 컬러·그래픽으로 감쌉니다. <a href="cases/custom-wrap-design.html" style="color:var(--accent);text-decoration:underline">커스텀 래핑 사례 ↗</a></p></div></div>
     <div class="wrow fade"><div class="n">02</div><div><h3>촬영 UI·프레임</h3><p>대기화면부터 인화 프레임·QR 랜딩까지, 손님이 마주하는 화면 전부를 브랜드 톤으로.</p></div></div>
   </div>
   <div>
-    <div class="wrow fade"><div class="n">03</div><div><h3>테마 세트</h3><p>공간 콘셉트 자체를 담은 테마 세트(지하철·엘리베이터 등).</p></div></div>
+    <div class="wrow fade"><div class="n">03</div><div><h3>테마 세트</h3><p>공간 콘셉트 자체를 담은 테마 세트(<a href="cases/subway-theme-booth.html" style="color:var(--accent);text-decoration:underline">지하철</a>·<a href="cases/vintage-elevator-booth.html" style="color:var(--accent);text-decoration:underline">빈티지 엘리베이터</a> 등).</p></div></div>
     <div class="wrow fade"><div class="n">04</div><div><h3>현장 맞춤 구성</h3><p>동선·전력·규격을 현장 조건에 맞게 구성합니다.</p></div></div>
-  </div>
+</div>
 </div></section>
 
 <section style="padding-top:0"><div class="wrap">
   <p class="fade" style="color:var(--muted);max-width:64ch;line-height:1.85">말로 하면 다 비슷해 보이니, 실제 고객 프로젝트에서 나온 설계 자료를 그대로 놓습니다. 겉면은 커뮤니티 행사 부스 랩핑에서, 화면·프레임·데코는 학위수여식 부스에서 가져왔습니다.</p>
   <div class="cases" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:26px">
-    <a class="case fade" href="cases/brand-booth-full-wrap.html" style="text-decoration:none;color:inherit"><div class="im" style="background:#fff;aspect-ratio:auto;display:flex;align-items:center;justify-content:center"><img src="assets/images/gujangjang-booth-wrap-mockup.webp" width="1600" height="653" alt="브랜드 랩핑이 적용된 무인 포토부스 4면 목업" loading="lazy" decoding="async" style="object-fit:contain;height:auto"></div><div class="cx"><b>① 외관 랩핑</b><span>커뮤니티 행사 · 4면 전개도<span class="arrow">↗</span></span></div></a>
-    <a class="case fade" href="cases/inu-graduation-ceremony.html" style="text-decoration:none;color:inherit"><div class="im" style="background:#fff;aspect-ratio:auto;display:flex;align-items:center;justify-content:center"><img src="assets/images/inu-custom-ui-wait.webp" width="1400" height="794" alt="학교 교표가 적용된 포토부스 대기화면" loading="lazy" decoding="async" style="object-fit:contain;height:auto"></div><div class="cx"><b>② 화면 UI</b><span>학위수여식 · 화면 전체 커스텀<span class="arrow">↗</span></span></div></a>
-    <a class="case fade" href="cases/inu-graduation-ceremony.html" style="text-decoration:none;color:inherit"><div class="im" style="background:#fff;aspect-ratio:auto;display:flex;align-items:center;justify-content:center"><img src="assets/images/inu-custom-frame-zigzag.webp" width="671" height="995" alt="행사 전용 지그재그 네컷 인화 프레임" loading="lazy" decoding="async" style="object-fit:contain;height:auto"></div><div class="cx"><b>③ 인화 프레임</b><span>컷 수·배치별 전용 프레임<span class="arrow">↗</span></span></div></a>
-    <a class="case fade" href="cases/inu-graduation-ceremony.html" style="text-decoration:none;color:inherit"><div class="im" style="background:#fff;aspect-ratio:auto;display:flex;align-items:center;justify-content:center"><img src="assets/images/inu-custom-ui-deco.webp" width="1400" height="794" alt="행사 테마 필터와 스티커 꾸미기 화면" loading="lazy" decoding="async" style="object-fit:contain;height:auto"></div><div class="cx"><b>④ 필터·스티커</b><span>행사 테마 데코 세트<span class="arrow">↗</span></span></div></a>
+    <a class="case fade" href="cases/brand-booth-full-wrap.html" style="text-decoration:none;color:inherit"><div class="im" style="background:#fff;aspect-ratio:auto;display:flex;align-items:center;justify-content:center"><img src="assets/images/gujangjang-booth-wrap-mockup.webp" width="1600" height="653" alt="브랜드 랩핑이 적용된 무인 포토부스 4면 목업" loading="lazy" decoding="async" style="object-fit:contain;height:auto" srcset="assets/images/gujangjang-booth-wrap-mockup-480w.webp 480w, assets/images/gujangjang-booth-wrap-mockup-960w.webp 960w, assets/images/gujangjang-booth-wrap-mockup.webp 1600w" sizes="(max-width: 720px) 90vw, 440px"></div><div class="cx"><b>① 외관 랩핑</b><span>커뮤니티 행사 · 4면 전개도<span class="arrow">↗</span></span></div></a>
+    <a class="case fade" href="cases/inu-graduation-ceremony.html" style="text-decoration:none;color:inherit"><div class="im" style="background:#fff;aspect-ratio:auto;display:flex;align-items:center;justify-content:center"><img src="assets/images/inu-custom-ui-wait.webp" width="1400" height="794" alt="학교 교표가 적용된 포토부스 대기화면" loading="lazy" decoding="async" style="object-fit:contain;height:auto" srcset="assets/images/inu-custom-ui-wait-480w.webp 480w, assets/images/inu-custom-ui-wait-960w.webp 960w, assets/images/inu-custom-ui-wait.webp 1400w" sizes="(max-width: 720px) 90vw, 440px"></div><div class="cx"><b>② 화면 UI</b><span>학위수여식 · 화면 전체 커스텀<span class="arrow">↗</span></span></div></a>
+    <a class="case fade" href="cases/inu-graduation-ceremony.html" style="text-decoration:none;color:inherit"><div class="im" style="background:#fff;aspect-ratio:auto;display:flex;align-items:center;justify-content:center"><img src="assets/images/inu-custom-frame-zigzag.webp" width="671" height="995" alt="행사 전용 지그재그 네컷 인화 프레임" loading="lazy" decoding="async" style="object-fit:contain;height:auto" srcset="assets/images/inu-custom-frame-zigzag-480w.webp 480w, assets/images/inu-custom-frame-zigzag.webp 671w" sizes="(max-width: 720px) 90vw, 440px"></div><div class="cx"><b>③ 인화 프레임</b><span>컷 수·배치별 전용 프레임<span class="arrow">↗</span></span></div></a>
+    <a class="case fade" href="cases/inu-graduation-ceremony.html" style="text-decoration:none;color:inherit"><div class="im" style="background:#fff;aspect-ratio:auto;display:flex;align-items:center;justify-content:center"><img src="assets/images/inu-custom-ui-deco.webp" width="1400" height="794" alt="행사 테마 필터와 스티커 꾸미기 화면" loading="lazy" decoding="async" style="object-fit:contain;height:auto" srcset="assets/images/inu-custom-ui-deco-480w.webp 480w, assets/images/inu-custom-ui-deco-960w.webp 960w, assets/images/inu-custom-ui-deco.webp 1400w" sizes="(max-width: 720px) 90vw, 440px"></div><div class="cx"><b>④ 필터·스티커</b><span>행사 테마 데코 세트<span class="arrow">↗</span></span></div></a>
   </div>
 </div></section>
 
 <section><div class="wrap">
   <span class="idxlabel fade">무인 운영</span>
-  <h2 class="serif fade" style="font-weight:400;font-size:clamp(30px,4.4vw,58px);margin-top:10px;letter-spacing:-.02em">사람 없이도 <i style="font-style:normal;color:var(--accent)">24시간</i></h2>
+  <h2 class="serif fade" style="font-weight:400;margin-top:10px;letter-spacing:-.02em">사람 없이도 <i style="font-style:normal;color:var(--accent)">24시간</i></h2>
   <div class="svc">
     <div class="srow fade"><div class="idx">01</div><h3>자동 인쇄·복귀</h3><p>촬영→인화→초기화까지 무인 자동. 오류 자동 복구.</p></div>
     <div class="srow fade"><div class="idx">02</div><h3>운영 서비스 계약</h3><p>원격 모니터링·소모품 보충·업데이트까지 포함. 설치 후에도 끝까지 책임집니다.</p></div>
@@ -128,7 +134,7 @@
 
 <section><div class="wrap why">
   <div class="head"><span class="idxlabel fade">용도별 렌탈</span>
-    <h2 class="serif fade" style="font-weight:400;font-size:clamp(30px,4.4vw,58px);margin-top:10px;letter-spacing:-.02em">목적에 맞는 <i style="font-style:normal;color:var(--accent)">구성</i></h2></div>
+    <h2 class="serif fade" style="font-weight:400;margin-top:10px;letter-spacing:-.02em">목적에 맞는 <i style="font-style:normal;color:var(--accent)">구성</i></h2></div>
   <div>
     <div class="wrow fade"><div class="n">01</div><div><h3>웨딩 · 예식장</h3><p>신랑·신부 전용 프레임 적용, 하객 QR 공유. 예식장 상설 운영 상담도 가능합니다.</p></div></div>
     <div class="wrow fade"><div class="n">02</div><div><h3>기업 행사 · 프로모션</h3><p>기업 행사 포토부스는 브랜드 래핑·전용 촬영 프레임·운영 데이터까지, 행사 목적에 맞춰 구성합니다.</p></div></div>
@@ -142,7 +148,7 @@
 
 <section style="background:var(--paper2)"><div class="wrap">
   <span class="idxlabel fade">진행 과정</span>
-  <h2 class="serif fade" style="font-weight:400;font-size:clamp(30px,4.4vw,58px);margin-top:10px;letter-spacing:-.02em">문의에서 회수까지</h2>
+  <h2 class="serif fade" style="font-weight:400;margin-top:10px;letter-spacing:-.02em">문의에서 회수까지</h2>
   <div class="steps">
     <div class="step fade"><div class="num">01</div><div><h3>문의 · 상담</h3><p>장소·기간·목적을 알려주시면 맞춤 견적을 드립니다.</p></div></div>
     <div class="step fade"><div class="num">02</div><div><h3>구성 제안</h3><p>제품·테마·브랜딩을 현장에 맞게 구성합니다.</p></div></div>
@@ -153,22 +159,21 @@
 <section style="padding-bottom:clamp(90px,12vw,150px)"><div class="wrap"><div class="band fade">
   <h2>프로젝트가 있으신가요?<br><i>구성부터 견적까지</i> 안내해 드립니다.</h2><p>장소·기간·목적만 알려주시면 맞춤 제안을 빠르게 드립니다.</p>
   <div class="contacts">
-    <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener" class="kakao">카카오톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="mailto:luami@luamiphoto.com" >이메일 문의</a>
+    <a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener" class="kakao">카카오톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="mailto:luami@luamiphoto.com" >이메일 문의</a>
     <a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a>
   </div>
 </div></div></section>
+</main>
 <footer><div class="wrap">
   <div class="foot-grid">
     <div class="col"><b>루아미 (Luami)</b>무인 포토부스 렌탈 · 설치 · 운영<br>전국 상담 가능</div>
-    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="http://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
+    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="https://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
     <div class="col"><b>바로가기</b><a href="services.html">서비스</a> · <a href="products.html">제품군</a> · <a href="portfolio.html">설치 사례</a> · <a href="guide.html">렌탈 가이드</a> · <a href="blog.html">블로그</a><br><a href="index.html#faq">자주 묻는 질문</a></div>
+    <div class="col col-uses"><b>용도별 렌탈</b><a href="wedding-photobooth-rental.html">웨딩</a><a href="corporate-event-photobooth.html">기업행사</a><a href="popup-store-photobooth.html">팝업스토어</a><a href="store-photobooth-rental.html">매장 상설</a><a href="festival-outdoor-photobooth.html">축제·야외</a><a href="university-graduation-photobooth.html">졸업식</a><a href="brand-wrap-photobooth.html">브랜드 래핑</a><a href="theme-photobooth.html">테마 부스</a><a href="character-collab-photobooth.html">캐릭터 콜라보</a><a href="photo-kiosk-rental.html">포토키오스크</a></div>
   </div>
   <p class="note">© 2026 루아미(LUAMI). All rights reserved. · 무인 포토부스 렌탈 · 설치 · 운영</p>
 </div></footer>
-<div class="mcta"><a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="index.html#contact" class="p">무료 견적</a></div>
-<script src="https://unpkg.com/lenis@1/dist/lenis.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-<script src="assets/main.js?v=20260911b" defer></script>
+<aside class="mcta" aria-label="빠른 문의"><a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카톡 상담</a><a href="tel:01036297743">전화 상담</a><a href="index.html#contact" class="p">무료 견적</a></aside>
+<script src="assets/main.js?v=20260925t" defer></script>
 </body>
 </html>
