@@ -205,6 +205,13 @@ footer{background:var(--ink);color:var(--cream);padding:70px 0 40px;border-top:1
 .foot-grid .col a{color:inherit;transition:color .2s}
 .foot-grid .col a:hover{color:var(--accent-l)}
 .note{margin-top:34px;font-size:11.5px;color:#97917b;letter-spacing:.04em}
+/* 사업자 정보 한 줄(모든 페이지 최하단) — tools/unify_chrome.py BIZ */
+.biz{margin-top:34px;font-size:12px;line-height:1.8;color:#b8b2a0;word-break:keep-all}
+.biz a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.biz a:hover{color:var(--accent-l)}
+.biz + .note{margin-top:8px}
+footer.foot-min{padding:28px 0 32px}
+footer.foot-min .biz{margin-top:0;text-align:center}
 
 /* --navfg: 스티키바는 header.nav 밖이라 메뉴 점(.navtoggle span)이 변수를 못 받아 투명이었다 */
 .stickybar{--navfg:var(--ink);position:fixed;top:0;left:0;right:0;z-index:70;display:flex;justify-content:space-between;align-items:center;

@@ -3,6 +3,7 @@
 
 - 메뉴 5개 고정: 서비스 · 제품군 · 설치 사례 · 렌탈 가이드 · 블로그 (+ 렌탈 문의 버튼)
 - 현재 페이지 메뉴에 aria-current="page"
+- 푸터 최하단 사업자 정보 한 줄(BIZ) — 메뉴 없는 단독 페이지(404·thanks)엔 얇은 푸터로
 - 장식 제거: 스프로킷 띠(.sprocket), 이미지 띠(.strip-sec), 푸터 대형 워드마크(.bigmark)
 재실행해도 결과가 같다(멱등). 사용: python3 tools/unify_chrome.py
 """
@@ -18,6 +19,11 @@ MENU = [
     ("blog.html", "블로그"),
 ]
 SECTION_OF = {"blog": "blog.html", "cases": "portfolio.html"}
+# 사업자 정보 — 모든 페이지 최하단 한 줄. 통신판매업 신고번호는 없으므로 넣지 않는다.
+BIZ = ('<p class="biz">주식회사 니우스 · 대표 신동주 · 사업자등록번호 805-81-04322 · '
+       '경기도 김포시 통진읍 가현로 201-56 (우성인더스 김포공장) · '
+       '문의 <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a></p>')
+MINI_FOOTER = f'<footer class="foot-min"><div class="wrap">\n  {BIZ}\n</div></footer>'
 
 
 def chrome(prefix, current):
@@ -61,6 +67,7 @@ def chrome(prefix, current):
     <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="http://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
     <div class="col"><b>바로가기</b>{quick}<br><a href="{prefix}index.html#faq">자주 묻는 질문</a></div>
   </div>
+  {BIZ}
   <p class="note">© 2026 루아미(LUAMI). All rights reserved. · 무인 포토부스 렌탈 · 설치 · 운영</p>
 </div></footer>'''
     return header, drawer_html, footer
@@ -73,6 +80,14 @@ def process(path):
     current = SECTION_OF.get(rel.parts[0], rel.name) if depth else rel.name
     src = path.read_text(encoding="utf-8")
     if '<header class="nav"' not in src:
+        # 404·thanks 처럼 메뉴가 없는 단독 페이지: 사업자 정보만 담은 얇은 푸터
+        if "</body>" not in src:
+            return False
+        out = re.sub(r'<footer class="foot-min">.*?</footer>\n', "", src, flags=re.S)
+        out = out.replace("</body>", MINI_FOOTER + "\n</body>", 1)
+        if out != src:
+            path.write_text(out, encoding="utf-8")
+            return True
         return False
     header, drawer, footer = chrome(prefix, current)
     out = re.sub(r'<header class="nav".*?</header>', header, src, count=1, flags=re.S)
