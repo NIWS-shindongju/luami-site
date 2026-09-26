@@ -21,7 +21,7 @@ MENU = [
 SECTION_OF = {"blog": "blog.html", "cases": "portfolio.html"}
 # 사업자 정보 — 모든 페이지 최하단 한 줄. 통신판매업 신고번호는 없으므로 넣지 않는다.
 BIZ = ('<p class="biz">주식회사 니우스 · 대표 신동주 · 사업자등록번호 805-81-04322 · '
-       '인천광역시 서해구 청라한울로 17, 381동 1904호(청라동, 청라 한라비발디) · '
+       '인천광역시 서해구 청라한울로 17 · '
        '문의 <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a></p>')
 MINI_FOOTER = f'<footer class="foot-min"><div class="wrap">\n  {BIZ}\n</div></footer>'
 
