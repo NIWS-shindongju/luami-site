@@ -604,3 +604,30 @@ body.nav-open{overflow:hidden}
 .nav-links a[aria-current="page"]{color:var(--accent)}
 .nav-links a[aria-current="page"]::after{width:100%}
 .drawer-links a[aria-current="page"]{color:var(--accent)}
+
+/* ===== 접근성 보정(2026-10-04 실측) =====
+   - <button>·<input> 은 글꼴을 상속하지 않아 Arial 로 렌더되던 결함(홈 '무료 견적 요청' 버튼)
+   - 글자 대비 4.5:1 미달: --accent(#4C8567) 글자는 밝은 바탕 3.79:1 · 어두운 바탕 3.67:1,
+     채움 버튼(.btn 등) 의 --accent 바탕 + 잉크 글자 3.67:1 → 밝은 바탕엔 --accent-dark(6.73:1),
+     어두운 바탕·버튼엔 --accent-l(7.45:1) 로 바꾼다. 큰 제목(24px+)의 강조색은 3:1 기준이라 그대로 둔다. */
+button,input,select,textarea{font-family:inherit}
+.hero .eyebrow{color:var(--accent-l)}
+.page-head .idxlabel{color:var(--accent-dark)}
+.post-meta .tag,.abox b,.step .badge{color:var(--accent-dark)}
+.rel-prod a{color:var(--accent-dark)}
+.nav-links a[aria-current="page"]{color:var(--accent-dark)}
+body.home .nav-links a[aria-current="page"]{color:var(--accent-l)}
+.drawer-links a i{color:var(--accent-l)}
+.btn,.mcta a.p,.stickybar .btn-mini,.drawer-cta{background:var(--accent-l);border-color:var(--accent-l);color:var(--ink)}
+.btn:hover,.stickybar .btn-mini:hover{background:#a9ceb6}
+
+/* 가이드 '루아미 실제 가격은?' 상자 (tools/build_products.py GEN:guide-prices) */
+.g-price{grid-column:1/-1;margin-top:clamp(24px,3vw,36px);padding:22px 24px;border:1px solid var(--line);border-left:3px solid var(--accent-dark);border-radius:4px;background:rgba(245,240,222,.7)}
+.g-price-t{display:block;font-family:var(--serif);font-weight:600;font-size:20px;margin-bottom:10px}
+.g-price ul{list-style:none;display:grid;gap:8px}
+.g-price li{font-size:15px;line-height:1.7;color:var(--ink2);padding-left:16px;position:relative}
+.g-price li::before{content:"";position:absolute;left:0;top:.72em;width:6px;height:6px;border-radius:50%;background:var(--accent-dark)}
+.g-price strong{color:var(--ink);font-weight:700;white-space:nowrap}
+.h-link-g{display:inline-flex;align-items:center;min-height:44px;margin-top:8px;font-weight:700;font-size:15px;color:var(--accent-dark);border-bottom:1px solid currentColor}
+/* 모바일에서 12px 로 줄어드는 순번(.wrow .n) 대비 3.8:1 → 6.7:1 */
+@media(max-width:880px){.wrow .n{color:var(--accent-dark);opacity:1}}
