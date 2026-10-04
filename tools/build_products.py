@@ -441,7 +441,7 @@ def asset_ver(rel):
     return hashlib.md5((ROOT / rel).read_bytes()).hexdigest()[:8]
 
 
-STYLE_V = "20261004b"
+STYLE_V = "20261004c"
 
 
 def ld(obj):
@@ -989,8 +989,11 @@ def featured_card(prod):
         hl_title = "이런 점이 좋습니다"
         hl_attr = ""
     rows = "".join(f'<div class="pb-row"><span class="pb-k">{a}</span><span class="pb-v">{b}</span></div>' for a, b, _ in price_of(prod["slug"]))
+    is_r = img and img.get("kind") == "render"
+    fc_cls = "is-render" if is_r else ""
+    fc_bg = f' style="--fc-bg:{edge_color(img["src"])}"' if is_r else ""  # 좁은 화면에서 렌더를 통째로 보일 때 여백 색
     return f"""    <article class="fc">
-      <a class="fc-im" href="products/{prod['slug']}.html" tabindex="-1" aria-hidden="true">{img_tag(img, 0, cover_alt(prod, img))}{render_tag(img, large=True)}</a>
+      <a class="fc-im" href="products/{prod['slug']}.html" tabindex="-1" aria-hidden="true"{fc_bg}>{img_tag(img, 0, cover_alt(prod, img), cls=fc_cls)}{render_tag(img, large=True)}</a>
       <div class="fc-body">
         <div class="pc-chips"><span class="badge badge-{prod.get('badge_kind', 'main')}">{esc(prod['badge'])}</span><span class="fc-no">{prod['order']:02d} / {len(LINEUP):02d}</span></div>
         <h3><a href="products/{prod['slug']}.html">{esc(prod['name'])}</a></h3>

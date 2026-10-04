@@ -352,13 +352,15 @@ html.lb-open,html.lb-open body{overflow:hidden}
   .pc-grid{grid-template-columns:repeat(3,1fr)}
   .cc-grid{grid-template-columns:repeat(2,1fr)}
   .fc{grid-template-columns:1fr}
-  .fc-im{aspect-ratio:16/10;min-height:0}
+  .fc-im{aspect-ratio:4/3;min-height:0;background:var(--fc-bg,var(--tile))}
+  .fc-im img.is-render{object-fit:contain}  /* 16:10 cover 는 세로로 긴 렌더의 머리·발을 잘랐다(V1 #6) — 통째로 + 렌더 가장자리 색 바탕 */
   .st-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:880px){
   .prp section:not(.hero){padding:clamp(44px,10vw,64px) 0}
   .prp section.page-head{padding:112px 0 28px}
-  section.pd-hero{padding:104px 0 40px}
+  /* .prp section:not(.hero)(0,2,1) 가 section.pd-hero(0,1,1)를 덮어 44px 이 되며 로고와 경로가 겹쳤다(390 실측 1,400px²) — 특이도를 올림 */
+  body.prp section.pd-hero{padding:72px 0 40px}
   .ps-head{flex-direction:column;align-items:flex-start;gap:8px}
   .fc-grid,.pd-grid,.ha-grid,.fit-grid,.price-grid,.cu-grid,.wrap-grid,.notes-grid{grid-template-columns:1fr}
   .pc-grid{grid-template-columns:repeat(2,1fr);gap:14px}
