@@ -171,6 +171,8 @@ def package_card(slug):
     it = PR["items"][base]
     inc = "".join(inc_li(x) for x in it.get("includes", []))
     sep = "".join(sep_li(s) for s in m.get("separate", []))
+    # 포함인지 별도(추가 비용)인지 사양서에 없는 조건은 어느 목록에도 넣지 않고 '상담 때 안내' 한 줄로(R11: 확인 안 된 표현 금지)
+    ask = "".join(f'<p class="pkg-ask"><b>상담 때 안내</b> {esc(a["label"])} — {esc(a["note"])}</p>' for a in m.get("ask", []))
     calc = ""
     if base == PR["rules"]["std_total"][0]:
         a, b, c = (PR["items"][k]["amount"] for k in PR["rules"]["std_total"])
@@ -184,7 +186,7 @@ def package_card(slug):
         <div class="ie ie-in"><b class="ie-t">가격에 포함</b><ul class="ie-list" data-list="included">{inc}</ul></div>
         <div class="ie ie-out"><b class="ie-t">별도</b><ul class="ie-list" data-list="separate">{sep}</ul></div>
       </div>
-      {calc}
+      {ask}{calc}
     </div>"""
 
 
@@ -198,7 +200,8 @@ def hero_ie(slug):
     lis = "".join(f'<li data-item="{esc(x)}">{esc(x)}</li>' for x in inc)
     sep = m.get("hero_separate", "")
     return (f'<div class="pb-ie"><span class="pb-k">포함</span><ul class="pb-inc" data-list="included">{lis}</ul></div>'
-            + (f'<div class="pb-ie"><span class="pb-k">별도</span><span class="pb-sep">{esc(sep)}</span></div>' if sep else ""))
+            + (f'<div class="pb-ie"><span class="pb-k">별도</span><span class="pb-sep">{esc(sep)}</span></div>' if sep else "")
+            + (f'<div class="pb-ie"><span class="pb-k">상담</span><span class="pb-sep">{esc(m["hero_ask"])}</span></div>' if m.get("hero_ask") else ""))
 
 
 def factor_cards():
@@ -961,6 +964,8 @@ def featured_card(prod):
         hl_attr = ' data-list="included"'
         if pk.get("hero_separate"):
             sep_line = f'<p class="fc-sep"><b>별도</b> {esc(pk["hero_separate"])}</p>'
+        if pk.get("hero_ask"):
+            sep_line += f'<p class="fc-sep"><b>상담</b> {esc(pk["hero_ask"])}</p>'
     else:
         hl_html = "".join(f"<li>{esc(a['title'])}</li>" for a in c["appeal"][:4])
         hl_title = "이런 점이 좋습니다"
@@ -1327,7 +1332,7 @@ def home_lineup():
       <div class="lu-gh"><h3>정가로 바로 진행</h3><span>{esc(v) if v else ""}</span></div>
       <ul class="lu-grid lu-grid-2">{''.join(lineup_tile(x) for x in fixed)}</ul>
       <ul class="lu-notes">{notes}</ul>
-      <p class="lu-foot">설치·회수 포함, 운송비 별도 · <a href="pricing.html">전체 가격표 보기 →</a></p>
+      <p class="lu-foot">스탠다드 부스 렌탈은 설치·회수 포함, 운송비 별도 · 포토키오스크 운송·설치 조건은 상담 때 안내 · <a href="pricing.html">전체 가격표 보기 →</a></p>
     </div>
     <div class="lu-group lu-g-neg">
       <div class="lu-gh"><h3>기간·가격 협의</h3><span>{len(neg) - 1}종 + 커스텀 제작</span></div>

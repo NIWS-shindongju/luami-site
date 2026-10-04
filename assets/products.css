@@ -448,6 +448,7 @@ html.lb-open,html.lb-open body{overflow:hidden}
 .ie-r .amt{font-size:16px}
 .ie-r .vat{display:block}
 .ie-ask{font-size:14px;color:var(--ink2);font-weight:500;max-width:11em;display:inline-block}
+.pkg-ask{margin-top:14px;font-size:14.5px;line-height:1.6;color:var(--ink2)}.pkg-ask b{color:var(--ink);margin-right:8px}
 .pkg-calc{margin-top:16px;padding:14px 16px;border-radius:8px;background:var(--paper2);font-size:15px;line-height:1.7;color:var(--ink2)}
 .pt-buy{margin-top:16px}
 /* 상세 첫 화면 가격 상자 — 포함 / 별도 두 줄 */
