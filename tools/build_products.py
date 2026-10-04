@@ -335,7 +335,7 @@ def asset_ver(rel):
     return hashlib.md5((ROOT / rel).read_bytes()).hexdigest()[:8]
 
 
-STYLE_V = "20261004a"
+STYLE_V = "20261004b"
 
 
 def ld(obj):
