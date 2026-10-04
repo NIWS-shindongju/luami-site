@@ -246,8 +246,14 @@ def dims(rel, hint=None):
     return _dim_cache[rel]
 
 
+def cover_hidden(slug, variant):
+    return variant in (SITE["covers"].get("hide", {}).get(slug) or [])
+
+
 def cover_path(slug, variant):
     c = SITE["covers"]
+    if cover_hidden(slug, variant):
+        return None
     rel = f"{c['dir']}/{c['pattern'].format(slug=slug, variant=variant)}"
     return rel if (ROOT / rel).exists() else None
 
@@ -346,12 +352,12 @@ def gallery(slug):
     첫 화면 표지가 이미 3D 렌더라 갤러리는 실제 현장 사진으로 시작한다(실사가 없는 제품은 렌더가 맨 앞)."""
     hide = set(SITE.get("gallery_hide_scenes") or [])
     items = []
-    for v in ("angle1", "angle2", "angle3"):
+    for v, vname in (("angle1", "정면"), ("angle2", "다른 방향"), ("angle3", "높은 시점")):
         rel = cover_path(slug, v)
         if rel:
             w, h = dims(rel)
             items.append({"src": rel, "thumb": rel, "w": w, "h": h, "kind": "render", "scene": "render", "is_cover": True,
-                          "alt": f"{BYSLUG[slug]['name']} CAD 3D 렌더 — 다른 각도", "caption": "CAD 3D 렌더"})
+                          "alt": f"{BYSLUG[slug]['name']} CAD 3D 렌더 — {vname}", "caption": f"CAD 3D 렌더 · {vname}"})
     for ex in SITE["covers"].get("extra", {}).get(slug, []):
         rel = cover_path(slug, ex["variant"])
         if rel:
@@ -361,6 +367,13 @@ def gallery(slug):
     items += [x for x in G.get(slug, []) if x.get("scene") not in hide]
     ranked = sorted(enumerate(items), key=lambda t: (SCENE_RANK.get(t[1].get("scene"), 1), not t[1].get("is_cover"), t[0]))
     return [x for _, x in ranked]
+
+
+def visible_caption(it, tagged):
+    cap = it.get("caption", "")
+    if tagged:
+        cap = re.sub(r"^\s*(CAD 3D 렌더|디자인 목업)\s*(·\s*)?", "", cap)
+    return cap
 
 
 def contain_style(it):
@@ -382,7 +395,9 @@ def page_meta(rel):
         return None
     s = f.read_text(encoding="utf-8")
     h1 = re.search(r"<h1[^>]*>(.*?)</h1>", s, re.S)
-    title = re.sub(r"<[^>]+>", " ", h1.group(1)) if h1 else ""
+    # 줄 단위 마스크(<span class="lm">)·<br> 경계만 띄어 쓰고, 강조(<i>) 같은 나머지 태그는 그냥 지운다
+    # (예전: 모든 태그 → 공백 → '바로 위<i>에서</i>' 가 '바로 위 에서' 로 갈라졌다, V2 M6)
+    title = re.sub(r"<[^>]+>", "", re.sub(r'<br\s*/?>|<span class="lm">', " ", h1.group(1))) if h1 else ""
     title = re.sub(r"\s+", " ", html.unescape(title)).strip()
     title = re.sub(r"\s+([.,!?·])", r"\1", title)
     if not title:
@@ -645,7 +660,7 @@ def detail_page(prod, idx):
            body_open(depth, "pd")]
 
     # 히어로
-    num = "Custom" if is_custom else f"{prod['order']:02d} / {len(LINEUP):02d}"
+    num = "맞춤 제작" if is_custom else f"제품 {prod['order']:02d} / {len(LINEUP):02d}"
     chips = chips_for(prod)
     count_chips = []
     if n_photo:
@@ -656,8 +671,9 @@ def detail_page(prod, idx):
     price_rows = "".join(f'<div class="pb-row"><span class="pb-k">{a}</span><span class="pb-v">{b}</span></div>' for a, b, _ in prows)
     ship = PR.get("shipping_note", "")
     jl = []
+    gword = "사진" if n_photo else "이미지"
     if gal:
-        jl.append(f'<a href="#gallery">사진 {len(gal)}장</a>')
+        jl.append(f'<a href="#gallery">{gword} {len(gal)}장</a>')
     if prod.get("highangle"):
         jl.append('<a href="#angle">촬영 구도</a>')
     if st:
@@ -670,7 +686,7 @@ def detail_page(prod, idx):
   <div class="pd-grid">
     <figure class="pd-cover">{img_tag(cov, depth, cover_alt(prod, cov), priority=True)}{render_tag(cov, large=True)}</figure>
     <div class="pd-info">
-      <span class="idxlabel">{num} · {esc(prod['name_en'])}</span>
+      <span class="idxlabel">{num}</span>
       <h1>{esc(prod['name'])}</h1>
       <p class="pd-tagline">{esc(c['tagline'])}</p>
       <div class="pd-chips">{chips}{''.join(count_chips)}</div>
@@ -720,18 +736,20 @@ def detail_page(prod, idx):
         for i, it in enumerate(gal):
             tw, th = thumb_dims(it)
             cap = it.get("caption", "")
+            tag = render_tag(it)
+            vcap = visible_caption(it, bool(tag))
             span = " pg-wide" if i == 0 else (" pg-w2" if i >= len(gal) - k else "")
             cells.append(
                 f'    <a class="pg-item{span}" href="{u(it["src"], depth)}" data-w="{it["w"]}" data-h="{it["h"]}" data-caption="{esc(cap)}">'
                 f'<img src="{u(it["src"] if i == 0 else (it.get("thumb") or it["src"]), depth)}" width="{it["w"] if i == 0 else tw}" height="{it["h"] if i == 0 else th}" alt="{esc(it["alt"])}" loading="lazy" decoding="async"{contain_style(it)}>'
-                f'{render_tag(it)}<span class="pg-cap">{esc(cap)}</span></a>')
-        note = "사진을 누르면 크게 볼 수 있습니다."
+                f'{tag}' + (f'<span class="pg-cap">{esc(vcap)}</span>' if vcap else '') + '</a>')
+        note = f"{gword}을 누르면 크게 볼 수 있습니다." if n_photo else "이미지를 누르면 크게 볼 수 있습니다."
         if n_render and not n_photo:
             note += " 아직 실물 사진이 없어 설계 3D 이미지(CAD 3D 렌더)로 보여 드립니다."
         elif n_render:
             note += " 실제 사진이 아닌 설계 3D 이미지에는 ‘CAD 3D 렌더’라고 표시했습니다."
         out.append(f"""<section class="pd-gallery" id="gallery"><div class="wrap">
-{sec_head(f'사진 {len(gal)}장', '사진으로 보기', note)}
+{sec_head(f'{gword} {len(gal)}장', f'{gword}으로 보기' if n_photo else '3D 이미지로 보기', note)}
   <div class="pg-grid" data-gallery="{slug}">
 {chr(10).join(cells)}
   </div>
@@ -1259,7 +1277,7 @@ def services_stub():
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>루아미 서비스 안내가 가격 페이지로 옮겨졌어요</title>
+<title>루아미 서비스 안내가 가격 페이지로 옮겨졌습니다</title>
 <meta name="robots" content="noindex, follow">
 <link rel="canonical" href="{BASE}/pricing.html">
 <script>/* 옛 서비스 페이지 → 새 주소. 앵커가 있으면 대응 페이지로, 없으면 가격 페이지로 */
@@ -1269,7 +1287,7 @@ def services_stub():
 <style>body{{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;background:#F5F0DE;color:#1F2417;margin:0;padding:48px 24px;line-height:1.7}}a{{color:#2F5C43}}</style>
 </head>
 <body>
-<p>서비스 안내는 <a href="pricing.html">가격 페이지</a>와 <a href="products.html">제품 페이지</a>로 옮겨졌어요. 잠시 후 자동으로 이동해요.</p>
+<p>서비스 안내는 <a href="pricing.html">가격 페이지</a>와 <a href="products.html">제품 페이지</a>로 옮겨졌습니다. 잠시 후 자동으로 이동합니다.</p>
 </body>
 </html>
 """
@@ -1520,6 +1538,8 @@ def main():
                 vs += [ex["variant"] for ex in extra.get(prod["slug"], [])]
             for v in vs:
                 f = src / SITE["covers"]["pattern"].format(slug=prod["slug"], variant=v)
+                if cover_hidden(prod["slug"], v):  # products.json site.covers.hide — 쓰지 않는 각도는 들이지 않는다
+                    continue
                 if f.exists():
                     dst.mkdir(parents=True, exist_ok=True)
                     shutil.copy2(f, dst / f.name)
