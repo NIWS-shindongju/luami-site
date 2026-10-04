@@ -23,6 +23,12 @@
  *  6) 금지 카피(최저가·지금신청·초특가·파격할인) · 경쟁사 실명
  *  7) 이미지 참조 실물 존재 + index 이미지 중복 · 깨진 내부 링크
  *  8) sitemap ↔ 실제 파일 정합 + lastmod 정책(stale-lastmod, 아래)
+ *  9) 사각지대 메우기(2026-10-04 r4 V2 M7):
+ *     a. 속성 글자 — alt·title·aria-label·data-caption·placeholder 값도 금액·부가세·경쟁사 규칙(검색·라이트박스·화면낭독기에 노출)
+ *     b. '원' 없는 'N만'(예: '800만') 도 금액으로 본다. 단 명·장·매·개·회·건·번·대·곳 같은 셈 단위가 바로 뒤면 금액 아님
+ *     c. 한글 수사 금액('팔백만원'·'백팔십오만 원')도 숫자로 바꿔 같은 규칙
+ *     d. 공개 경로의 PDF(pdf-unchecked / price-mismatch): pdftotext 로 글자를 뽑아 금액 규칙 — 뽑을 수 없으면 FAIL
+ *        (사람이 확인 못 한 PDF 가 공개 URL 로 나가지 않게. 이미지 속 글자는 여전히 못 읽는다)
  *
  * lastmod 정책(2026-10-04 r4): lastmod = 그 페이지 '본문'이 마지막으로 바뀐 날.
  *   본문 = title · meta description · og/twitter 메타 · JSON-LD · <body> 글자 · 본문 이미지(src·alt) · 본문 링크(href).
@@ -102,7 +108,22 @@ function productNames(PJ) {
 
 // 텍스트에서 금액 표기를 뽑아 원 단위 정수로: 185만원 / 1,850,000원 / ₩1,850,000
 // 공백은 [ \t]* 만 허용(줄바꿈을 넘어 '…04\n원형' 같은 오탐 방지). 원가·원본·원형·원목 등 낱말은 제외.
-const MONEY_RE = /₩[ \t]*([0-9][0-9,]*)|([0-9][0-9,]*)[ \t]*만[ \t]*원|([0-9][0-9,]*)[ \t]*원(?![가단장본격료칙상형목통래작리인])/g;
+const MONEY_RE = /₩[ \t]*([0-9][0-9,]*)|([0-9][0-9,]*)[ \t]*만[ \t]*원|([0-9][0-9,]*)[ \t]*원(?![가단장본격료칙상형목통래작리인])|([0-9][0-9,]*)[ \t]*만(?![ \t]*원)(?![ \t]*(?:명|장|매|개|회|건|번|부|권|곳|뷰|대|평|여|가지|팔로워|시간|분|초|년|km|㎡))|([일이삼사오육칠팔구십백천]+)[ \t]*만[ \t]*원/g;
+// 한글 수사(만 아래 자리) → 정수: '팔백' 800, '백팔십오' 185, '천이백팔십오' 1285
+function hangulNum(s) {
+  const D = { 일: 1, 이: 2, 삼: 3, 사: 4, 오: 5, 육: 6, 칠: 7, 팔: 8, 구: 9 };
+  const U = { 십: 10, 백: 100, 천: 1000 };
+  let total = 0;
+  let d = 0;
+  for (const ch of s) {
+    if (D[ch]) d = D[ch];
+    else if (U[ch]) {
+      total += (d || 1) * U[ch];
+      d = 0;
+    }
+  }
+  return total + d;
+}
 function moneyHits(text) {
   const out = [];
   let m;
@@ -112,7 +133,9 @@ function moneyHits(text) {
     let won;
     if (m[1] !== undefined) won = Number(m[1].replace(/,/g, ''));
     else if (m[2] !== undefined) won = Number(m[2].replace(/,/g, '')) * 10000;
-    else won = Number(m[3].replace(/,/g, ''));
+    else if (m[3] !== undefined) won = Number(m[3].replace(/,/g, ''));
+    else if (m[4] !== undefined) won = Number(m[4].replace(/,/g, '')) * 10000;
+    else won = hangulNum(m[5]) * 10000;
     if (!won) continue; // 0원
     out.push({ raw, won, index: m.index });
   }
@@ -235,10 +258,20 @@ function bodyText(html) {
   return decodeEntities(stripCode(m ? m[0] : html).replace(/<[^>]*>/g, ' '));
 }
 
-// 검색결과·공유 미리보기에 노출되는 문구 (본문 + title + 메타 + JSON-LD 문자열) — 금액·경쟁사는 여기까지 본다.
+// 본문 속성 글자: 이미지 대체글·툴팁·화면낭독기 이름·라이트박스 캡션·입력칸 안내 (화면·검색·낭독기에 노출된다)
+function attrStrings(html) {
+  const body = stripCode((html.match(/<body[\s\S]*<\/body>/i) || [html])[0]);
+  const out = [];
+  const re = /\s(?:alt|title|aria-label|data-caption|placeholder)="([^"]*)"/gi;
+  let m;
+  while ((m = re.exec(body))) if (m[1].trim()) out.push(decodeEntities(m[1]));
+  return out;
+}
+
+// 검색결과·공유 미리보기에 노출되는 문구 (본문 + 속성 글자 + title + 메타 + JSON-LD 문자열) — 금액·경쟁사는 여기까지 본다.
 function exposedText(html) {
   const t = html.match(/<title>([\s\S]*?)<\/title>/i);
-  return [bodyText(html), metaStrings(html).join('\n'), t ? decodeEntities(t[1]) : '', ldStrings(html).join('\n')].join('\n');
+  return [bodyText(html), attrStrings(html).join('\n'), metaStrings(html).join('\n'), t ? decodeEntities(t[1]) : '', ldStrings(html).join('\n')].join('\n');
 }
 
 function checkMoneyText(file, text, where) {
@@ -330,7 +363,7 @@ function textSegments(html) {
   const body = (html.match(/<body[\s\S]*<\/body>/i) || [html])[0];
   const segs = stripCode(body).split(BLOCK_END).map(tagText).filter(Boolean);
   const t = html.match(/<title>([\s\S]*?)<\/title>/i);
-  return segs.concat(metaStrings(html), t ? [decodeEntities(t[1])] : [], ldStrings(html));
+  return segs.concat(attrStrings(html), metaStrings(html), t ? [decodeEntities(t[1])] : [], ldStrings(html));
 }
 function proximityViolations(text) {
   const out = [];
@@ -463,6 +496,33 @@ function checkTextFiles() {
       const p = path.join(d, e.name);
       if (e.isDirectory()) w(p);
       else if (exts.test(e.name) && p !== __filename) checkMoneyText(p, fs.readFileSync(p, 'utf8'), ' (파일)');
+    }
+  })(ROOT);
+}
+
+// 9d) 공개 경로의 PDF — 글자를 뽑아 금액·경쟁사 규칙. 뽑지 못하면 FAIL(확인 안 된 문서는 공개하지 않는다).
+function pdftotextExtract(f) {
+  const r = cp.spawnSync('pdftotext', ['-layout', '-q', f, '-'], { encoding: 'utf8' });
+  if (r.error || r.status !== 0) return null;
+  return r.stdout;
+}
+function checkPdf(file, extract) {
+  const text = (extract || pdftotextExtract)(file);
+  if (text === null || text === undefined) {
+    add(file, 'pdf-unchecked', 'PDF 글자를 뽑지 못함(pdftotext 없음·실패) — 공개 URL 로 나가는 문서라 사람이 금액·제품을 확인한 뒤 올리거나 저장소에서 빼야 함');
+    return;
+  }
+  checkMoneyText(file, text, ' (PDF)');
+  checkVat(file, text);
+  for (const c of COMPETITORS) if (text.includes(c)) add(file, 'competitor', '경쟁사 실명(PDF): "' + c + '"');
+}
+function checkPdfs() {
+  (function w(d) {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      if (e.name.startsWith('.') || e.name === 'node_modules') continue;
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) w(p);
+      else if (/\.pdf$/i.test(e.name)) checkPdf(p);
     }
   })(ROOT);
 }
@@ -686,8 +746,11 @@ if (process.argv.includes('--selftest')) {
   const INCL = '<ul data-list="included">' + STD_INC.map((x) => '<li data-item="' + x + '">' + x + '</li>').join('') + '</ul><ul data-list="separate"><li>운송비 별도</li></ul>' +
     '<table data-table="install"><tbody><tr><th scope="row">차지 면적</th><td>1,860 × 1,860mm</td></tr></tbody></table>';
   const OG = '<meta property="og:description" content="스탠다드 부스 ' + man(a0) + '">';
+  const KOR = { 1: '일', 2: '이', 3: '삼', 4: '사', 5: '오', 6: '육', 7: '칠', 8: '팔', 9: '구' };
+  const hangul = (n) => [[1000, '천'], [100, '백'], [10, '십']].reduce((acc, [u, c]) => { const q = Math.floor(acc[1] / u); return q ? [acc[0] + (q > 1 ? KOR[q] : '') + c, acc[1] % u] : acc; }, ['', n]).reduce((s, r) => s + (r ? KOR[r] : ''));
+  const NOTMONEY = '<p>스탠다드 부스는 ' + hangul(a0) + '만원부터, 지금까지 사진 1만 장 넘게 뽑았습니다. <img src="assets/images/hero.webp" alt="스탠다드 부스 ' + man(a0) + ' 설치 모습"></p>';
   const CLEAN_P = CLEAN.replace('렌탈 문의 주세요.', REAL).replace('</head>', OG + '</head>')
-    .replace('</section>', BOUND + INCL + '</section>')
+    .replace('</section>', BOUND + INCL + NOTMONEY + '</section>')
     .replace('</body>', offer(a0 * 10000) + faq('2대면 ' + man(a0 + b0) + '(' + VAT + ')입니다.') + '</body>');
   const CASES = [
     ['price-mismatch', CLEAN_P.replace(REAL, REAL + ' 대여료 150,000원입니다.')],
@@ -696,6 +759,9 @@ if (process.argv.includes('--selftest')) {
     ['price-mismatch', CLEAN_P.replace('"price":' + a0 * 10000, '"price":' + (a0 + 5) * 10000)],
     ['price-mismatch', CLEAN_P.replace('2대면 ' + man(a0 + b0) + '(', '2대면 ' + man(a0 + b0 + 20) + '(')], // FAQ JSON-LD 답변에만 틀린 금액
     ['price-mismatch', CLEAN_P.replace(OG, OG.replace(man(a0), WRONG))], // og:description 에만 틀린 금액
+    ['price-mismatch', CLEAN_P.replace('alt="스탠다드 부스 ' + man(a0) + ' 설치 모습"', 'alt="스탠다드 부스 23만원 설치 모습"')], // 이미지 대체글(alt)에만 틀린 금액
+    ['price-mismatch', CLEAN_P.replace(REAL, REAL + ' 일반 키오스크 800만.')], // '원' 없는 N만
+    ['price-mismatch', CLEAN_P.replace(REAL, REAL + ' 일반 키오스크 팔백만원.')], // 한글 수사 금액
     ['price-binding', CLEAN_P.replace('data-price-key="wood_buy">' + man(it0.wood_buy.amount), 'data-price-key="wood_buy">' + man(it0.std_buy.amount))],
     ['price-binding', CLEAN_P.replace('data-price-total="2:1">' + man(a0 + b0), 'data-price-total="2:1">' + man(a0 + 2 * b0))],
     ['price-binding', CLEAN_P.replace('data-price-key="wood_buy">' + man(it0.wood_buy.amount), 'data-price-key="std_buy">' + man(it0.std_buy.amount))], // 포토키오스크 행에 스탠다드 구매가 항목
@@ -773,6 +839,17 @@ if (process.argv.includes('--selftest')) {
     ok(okD.length === 0, 'data JSON 정상판 통과');
     ok(badD.includes('price-mismatch'), 'data JSON — 틀린 금액을 물었다');
   }
+  // 9d PDF: 글자를 뽑는 함수를 바꿔 끼워 양방향(실제 pdftotext 유무와 무관하게 규칙만 시험)
+  {
+    const runPdf = (ex) => {
+      viol.length = 0;
+      checkPdf(path.join(ROOT, 'x.pdf'), ex);
+      return viol.map((v) => v.rule);
+    };
+    ok(runPdf(() => '스탠다드 부스 ' + man(a0) + ' · 인화지 700매').length === 0, 'PDF 정상판 통과(가격표 금액만)');
+    ok(runPdf(() => '공급 단가: 박스당 230,000원').includes('price-mismatch'), 'PDF — 가격표에 없는 금액을 물었다');
+    ok(runPdf(() => null).includes('pdf-unchecked'), 'PDF — 글자를 못 뽑으면 FAIL(확인 안 된 문서)');
+  }
   for (const [rule, html] of CASES) {
     const got = run(html);
     ok(got.includes(rule), rule + ' — 합성 결함을 물었다' + (got.includes(rule) ? '' : ' (잡힌 것: ' + (got.join(',') || '없음') + ')'));
@@ -822,6 +899,7 @@ if (!argv.length) {
   checkSitemap(files);
   checkDataJson(path.join(ROOT, 'data'));
   checkTextFiles();
+  checkPdfs();
   checkPriceCoverage();
 }
 
