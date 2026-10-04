@@ -1,0 +1,190 @@
+{
+  "_doc": "루아미 제품 정의(2026-10-04 라인업). tools/build_products.py 가 이 파일 + data/prices.json + data/copy/<slug>.json + data/gallery.json + data/content_map.json 으로 products.html · products/<slug>.html · pricing.html 을 만든다. 공개 저장소이므로 내부 메모를 넣지 않는다.",
+  "updated": "2026-10-04",
+  "site": {
+    "base_url": "https://luamiphoto.com",
+    "covers": {
+      "_doc": "3D 표지. assets/images/covers/<slug>_<variant>.jpg 가 있으면 그 파일을, 없으면 각 제품의 fallback 을 쓴다. 파일을 넣고 python3 tools/build_products.py 를 다시 돌리면 바뀐다.",
+      "dir": "assets/images/covers",
+      "pattern": "{slug}_{variant}.jpg",
+      "variants": ["4x5", "1x1", "angle1", "angle2", "angle3", "thumb"],
+      "kind": "render",
+      "label": "CAD 3D 렌더"
+    },
+    "gallery_hide_scenes": [],
+    "kakao": "http://pf.kakao.com/_YRxoPX/chat",
+    "contact": "index.html#contact"
+  },
+  "lineup": [
+    {
+      "slug": "photo-kiosk",
+      "order": 1,
+      "name": "포토키오스크",
+      "name_en": "Photo Kiosk",
+      "type": "kiosk",
+      "badge": null,
+      "highangle": null,
+      "fallback": {"4x5": "assets/images/products/photo-kiosk/02-render-hero.webp", "thumb": "assets/images/products/photo-kiosk/thumb/02-render-hero.webp", "kind": "render", "position": "50% 55%"},
+      "legacy_anchors": ["p-a02"],
+      "seo": {
+        "title": "포토키오스크 렌탈·구매 | 스탠드형 무인 포토키오스크 — 루아미",
+        "description": "카메라·프린터·터치 화면을 몸체 하나에 담은 스탠드형 포토키오스크. 부스 자리가 없는 매장 입구·카페·팝업 코너에 맞아요. 구매가 {price:kiosk_buy}, 렌탈은 문의.",
+        "keywords": "포토키오스크,포토키오스크 렌탈,포토키오스크 구매,무인 포토키오스크,스탠드형 포토키오스크,루아미"
+      }
+    },
+    {
+      "slug": "wood-kiosk",
+      "order": 2,
+      "name": "포토키오스크 목재형",
+      "name_en": "Oak Wood Photo Kiosk",
+      "type": "kiosk",
+      "badge": "추천",
+      "badge_kind": "recommend",
+      "highangle": null,
+      "fallback": {"4x5": "assets/images/products/wood-kiosk/01-render-24p-hero.webp", "thumb": "assets/images/products/wood-kiosk/thumb/01-render-24p-hero.webp", "kind": "render", "position": "50% 50%"},
+      "legacy_anchors": [],
+      "seo": {
+        "title": "포토키오스크 목재형(오크우드) 렌탈·구매 | 루아미",
+        "description": "화이트오크 앞판의 탁상형 셀프 포토키오스크. 카페·웨딩홀·팝업 매대에 가구처럼 놓고 써요. 키오스크만 렌탈 월 {price:wood_monthly}, 구매가 {price:wood_buy}.",
+        "keywords": "목재 포토키오스크,우드 포토키오스크,오크 포토키오스크,포토키오스크 렌탈,탁상형 포토키오스크,루아미"
+      }
+    },
+    {
+      "slug": "mirror-booth",
+      "order": 3,
+      "name": "미러포토부스",
+      "name_en": "Mirror Photo Booth",
+      "type": "booth",
+      "badge": null,
+      "highangle": "corner",
+      "fallback": {"4x5": "assets/images/products/mirror-booth/01-hotel-front.webp", "thumb": "assets/images/products/mirror-booth/thumb/01-hotel-front.webp", "kind": "photo", "position": "45% 40%", "position_thumb": "45% 45%"},
+      "legacy_anchors": ["p-a17"],
+      "seo": {
+        "title": "미러포토부스 렌탈 | 거울 내벽 하이앵글 포토부스 — 루아미",
+        "description": "안쪽 벽을 거울로 두르고 모서리 위쪽 카메라가 내려다보며 찍는 미러포토부스. 웨딩·호텔 연회·브랜드 행사 렌탈은 기간·가격 협의로 진행해요.",
+        "keywords": "미러포토부스,미러 포토부스,거울 포토부스,하이앵글 포토부스,웨딩 포토부스,포토부스 렌탈,루아미"
+      }
+    },
+    {
+      "slug": "vintage-elevator",
+      "order": 4,
+      "name": "빈티지 엘리베이터 부스",
+      "name_en": "Vintage Elevator Booth",
+      "type": "booth",
+      "badge": null,
+      "highangle": "corner",
+      "fallback": {"4x5": "assets/images/products/vintage-elevator/01-front-curtain.webp", "thumb": "assets/images/products/vintage-elevator/thumb/01-front-curtain.webp", "kind": "photo", "position": "35% 50%", "position_thumb": "22% 45%"},
+      "legacy_anchors": ["p-a04"],
+      "seo": {
+        "title": "빈티지 엘리베이터 포토부스 렌탈 | 하이앵글 테마 부스 — 루아미",
+        "description": "원목 문과 철창 게이트, 흑백 체크 바닥으로 옛 엘리베이터 한 칸을 옮긴 테마 부스. 모서리 위 카메라가 내려다보며 찍어요. 렌탈은 기간·가격 협의.",
+        "keywords": "빈티지 엘리베이터 포토부스,엘리베이터 포토부스,테마 포토부스,하이앵글 포토부스,포토부스 렌탈,루아미"
+      }
+    },
+    {
+      "slug": "steel-elevator",
+      "order": 5,
+      "name": "스텐 엘리베이터 부스",
+      "name_en": "Stainless Elevator Booth",
+      "type": "booth",
+      "badge": null,
+      "highangle": "corner",
+      "fallback": {"4x5": "assets/images/products/steel-elevator/01-front.webp", "thumb": "assets/images/products/steel-elevator/thumb/01-front.webp", "kind": "photo", "position": "12% 50%", "position_thumb": "18% 55%"},
+      "legacy_anchors": [],
+      "seo": {
+        "title": "스텐 엘리베이터 포토부스 렌탈 | 하이앵글 테마 부스 — 루아미",
+        "description": "스테인리스 외벽과 금속 내벽, 무늬 철판 바닥으로 요즘 엘리베이터 한 칸을 재현한 테마 부스. 모서리 위 카메라가 CCTV처럼 내려다보며 찍어요.",
+        "keywords": "스텐 엘리베이터 포토부스,스테인리스 엘리베이터 포토부스,엘리베이터 포토부스,하이앵글 포토부스,테마 포토부스,루아미"
+      }
+    },
+    {
+      "slug": "subway-booth",
+      "order": 6,
+      "name": "지하철부스",
+      "name_en": "Subway Booth",
+      "type": "booth",
+      "badge": null,
+      "highangle": "corner",
+      "fallback": {"4x5": "assets/images/products/subway-booth/01-front-sign.webp", "thumb": "assets/images/products/subway-booth/thumb/01-front-sign.webp", "kind": "photo", "position": "60% 45%", "position_thumb": "62% 50%"},
+      "legacy_anchors": ["p-a03"],
+      "seo": {
+        "title": "지하철 포토부스 렌탈 | 하이앵글 테마 부스 — 루아미",
+        "description": "손잡이봉·좌석·여닫이 도어까지 실제 전동차를 참고해 만든 지하철 한 칸. 모서리 위 카메라가 내려다보며 객차 풍경까지 담아요. 렌탈은 기간·가격 협의.",
+        "keywords": "지하철 포토부스,지하철부스,지하철 테마 부스,테마 포토부스,하이앵글 포토부스,포토부스 렌탈,루아미"
+      }
+    },
+    {
+      "slug": "standard-booth",
+      "order": 7,
+      "name": "스탠다드 부스",
+      "name_en": "Standard Booth",
+      "type": "booth",
+      "badge": "주력",
+      "badge_kind": "main",
+      "highangle": null,
+      "fallback": {"4x5": "assets/images/products/standard-booth/05-winter-front.webp", "thumb": "assets/images/products/standard-booth/thumb/05-winter-front.webp", "kind": "photo", "position": "50% 50%"},
+      "legacy_anchors": ["p-a01", "p-a11", "p-a12"],
+      "seo": {
+        "title": "스탠다드 포토부스 렌탈·구매 | 4면 랩핑 포함 — 루아미",
+        "description": "루아미 주력 모델. 1개월 미만 렌탈 {price:std_short}에 촬영 키오스크·4면 랩핑·인화지 1,400매 포함(운임 별도). 구매가 {price:std_buy}.",
+        "keywords": "스탠다드 포토부스,포토부스 렌탈,포토부스 대여,포토부스 랩핑,포토부스 구매,행사 포토부스,루아미"
+      }
+    },
+    {
+      "slug": "round-highangle",
+      "order": 8,
+      "name": "원형 하이앵글부스",
+      "name_en": "Round High-angle Booth",
+      "type": "booth",
+      "badge": null,
+      "highangle": "ceiling",
+      "fallback": {"4x5": "assets/images/products/round-highangle/01-open-front.webp", "thumb": "assets/images/products/round-highangle/thumb/01-open-front.webp", "kind": "photo", "position": "50% 50%"},
+      "legacy_anchors": ["p-a06", "p-b04"],
+      "seo": {
+        "title": "원형 하이앵글 포토부스 렌탈 | 천장 탑뷰 부스 — 루아미",
+        "description": "원통 모양 부스 안, 천장 가운데 카메라가 아래를 향해 찍는 탑뷰 부스. 사람과 바닥 그래픽이 한 장에 담겨요. 렌탈은 기간·가격 협의.",
+        "keywords": "원형 하이앵글 포토부스,하이앵글 포토부스,탑뷰 포토부스,원통형 포토부스,포토부스 렌탈,루아미"
+      }
+    }
+  ],
+  "custom": {
+    "slug": "custom",
+    "order": 9,
+    "name": "커스텀 제작",
+    "name_en": "Custom Build",
+    "type": "custom",
+    "badge": null,
+    "highangle": null,
+    "fallback": {"4x5": "assets/images/products/custom/01-curve-night.webp", "thumb": "assets/images/products/custom/thumb/01-curve-night.webp", "kind": "photo", "position": "62% 50%", "position_thumb": "70% 55%"},
+    "legacy_anchors": ["p-a08", "p-a09", "p-a10", "p-a15"],
+    "seo": {
+      "title": "포토부스 커스텀 제작 | 원하는 디자인으로 — 루아미",
+      "description": "제품군에 없는 모습이 필요할 때. 겉면 랩핑, 화면·인화 프레임, 공간을 통째로 재현하는 테마 부스까지 원하는 디자인으로 제작해요. 기간·가격 협의.",
+      "keywords": "포토부스 커스텀,포토부스 제작,맞춤 포토부스,브랜드 포토부스,랩핑 포토부스,테마 포토부스,루아미"
+    }
+  },
+  "concepts": [
+    {"slug": "phone-booth", "name": "공중전화 부스", "name_en": "Phone Booth", "highangle": null},
+    {"slug": "paparazzi-booth", "name": "파파라치 플래시 부스", "name_en": "Paparazzi Flash Booth", "highangle": null},
+    {"slug": "overhead-bed-booth", "name": "누워서 찍는 부감 부스", "name_en": "Overhead Bed Booth", "highangle": "ceiling"},
+    {"slug": "karaoke-booth", "name": "K-노래방 부스", "name_en": "K-Karaoke Booth", "highangle": null}
+  ],
+  "unmapped_anchors": ["p-a05", "p-a07", "p-a13", "p-a14", "p-a16", "p-b01", "p-b02", "p-b03", "p-b05", "p-b06", "p-b07", "p-b08", "p-b09", "p-b10", "p-b11", "p-b12"],
+  "legacy_sections": {"g-booth": "#lineup", "g-kiosk": "#lineup", "g-theme": "#lineup", "g-experience": "#custom", "g-event": "#custom", "find": "#lineup", "use-all": "#lineup", "use-event": "#lineup", "use-store": "#lineup", "use-wedding": "#lineup", "use-school": "#lineup", "use-outdoor": "#lineup"},
+  "highangle_text": {
+    "corner": {"chip": "하이앵글", "title": "모서리 위에서 내려다보는 구도", "body": "카메라가 눈높이가 아니라 부스 안쪽 모서리 위에 달려 있어요. 위에서 아래로 비스듬히 내려다보며 찍어서, 사람과 부스 안 공간이 함께 한 장에 담겨요."},
+    "ceiling": {"chip": "하이앵글 · 천장", "title": "천장에서 바로 아래로 찍는 구도", "body": "카메라가 천장 가운데에서 아래를 향해 있어요. 고개를 들어 위를 보면 사람과 바닥이 위에서 내려다본 한 장에 담겨요."}
+  },
+  "hub": {
+    "title": "포토부스 · 포토키오스크 제품 8종 | 렌탈·구매 가격 — 루아미",
+    "description": "포토키오스크, 목재형 키오스크, 미러·빈티지 엘리베이터·스텐 엘리베이터·지하철·원형 하이앵글 부스, 주력 스탠다드 부스까지 루아미 제품 8종과 커스텀 제작. 제품별 사례 사진과 렌탈·구매 가격.",
+    "keywords": "포토부스 종류,포토부스 제품,포토부스 렌탈,포토부스 구매,포토키오스크,하이앵글 포토부스,테마 포토부스,스탠다드 포토부스,루아미",
+    "lead": "루아미 제품은 8종이에요. 주력은 스탠다드 부스, 그다음은 포토키오스크 목재형이고, 제품군에 없는 모습은 커스텀으로 만들어 드려요.",
+    "faq": [
+      {"q": "제품은 몇 가지인가요?", "a": "8종이에요. 포토키오스크, 포토키오스크 목재형, 미러포토부스, 빈티지 엘리베이터 부스, 스텐 엘리베이터 부스, 지하철부스, 스탠다드 부스, 원형 하이앵글부스가 있고, 원하는 디자인은 커스텀으로 제작해 드려요."},
+      {"q": "하이앵글 부스는 무엇이 다른가요?", "a": "카메라가 눈높이가 아니라 위에서 내려다보며 찍어요. 미러포토부스·엘리베이터 2종·지하철부스는 부스 안쪽 모서리 위에서 아래를 향해 찍고, 원형 하이앵글부스는 천장 가운데에서 바로 아래로 찍어요."},
+      {"q": "가격이 정해진 제품은 어떤 건가요?", "a": "스탠다드 부스는 1개월 미만 렌탈 {price:std_short}, 포토키오스크 목재형은 키오스크만 렌탈 월 {price:wood_monthly}이에요. 구매가는 스탠다드 부스 {price:std_buy}, 포토키오스크 {price:kiosk_buy}, 포토키오스크 목재형 {price:wood_buy}이고, 나머지 제품은 기간과 구성에 따라 협의해요."},
+      {"q": "원하는 디자인으로 만들 수 있나요?", "a": "네. 겉면 랩핑과 화면·인화 프레임부터 부스 모양까지 커스텀으로 제작해요. 원하는 모습과 일정, 장소를 알려주시면 상담 때 가능한 구성을 함께 정해요."}
+    ]
+  }
+}
