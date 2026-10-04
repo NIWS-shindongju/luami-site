@@ -18,7 +18,7 @@ MENU = [
     ("portfolio.html", "사례"),
     ("blog.html", "블로그"),
 ]
-CONTACT = ("index.html#contact", "문의")
+CONTACT = ("index.html#contact", "무료 견적")
 # 푸터 바로가기 — 메뉴 + 렌탈 가이드(상단 메뉴에서 빠진 순위 페이지로 가는 전역 링크)
 QUICK = MENU + [("guide.html", "렌탈 가이드"), CONTACT]
 SECTION_OF = {"blog": "blog.html", "cases": "portfolio.html", "products": "products.html"}
@@ -53,11 +53,11 @@ def chrome(prefix, current):
 {drawer}
   </nav>
   <div class="drawer-foot">
-    <a href="{prefix}index.html#contact" class="btn drawer-cta">무료 견적 문의</a>
+    <a href="{prefix}index.html#contact" class="btn drawer-cta">무료 견적 받기</a>
     <div class="drawer-contact">
       <a href="tel:01036297743">010-3629-7743</a>
       <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a>
-      <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카카오톡 채널 상담</a>
+      <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카톡으로 바로 상담</a>
     </div>
   </div>
 </div>

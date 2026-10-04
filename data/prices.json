@@ -12,7 +12,7 @@
       "none": ""
     }
   },
-  "shipping_note": "운임 별도",
+  "shipping_note": "운송비 별도",
   "items": {
     "std_short": {
       "amount": 185,
@@ -22,22 +22,27 @@
       "includes": [
         "부스 + 촬영 키오스크",
         "4면 랩핑",
-        "인화지 1,400매"
+        "인화지 1,400매",
+        "설치·회수"
       ],
-      "note": "운임 별도"
+      "note": "운송비 별도"
     },
     "std_extra_unit": {
       "amount": 90,
       "prefix": "+",
       "label": "스탠다드 부스 · 2대째부터",
       "unit": "1대 추가마다",
-      "kind": "rental"
+      "kind": "rental",
+      "includes": [
+        "4면 랩핑"
+      ],
+      "note": "인화지는 별도(700매 단위 추가)"
     },
     "std_monthly": {
       "amount": 100,
       "per": "월",
       "label": "스탠다드 부스 · 1개월 이상",
-      "unit": "부스당, 2개월차부터",
+      "unit": "부스당, 두 번째 달부터",
       "kind": "rental"
     },
     "paper_700": {

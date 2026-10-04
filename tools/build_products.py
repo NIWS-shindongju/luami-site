@@ -389,13 +389,13 @@ def body_open(depth, body_class):
     return f"""<body class="prp {body_class}">
 <div class="grain"></div>
 <div class="progress" id="prog"></div>
-<div class="util"><div class="wrap"><span>Luami — 무인 포토부스 렌탈</span><span>Est. 2026 · Korea</span></div></div>
+<div class="util"><div class="wrap"><span>포토부스 렌탈 · 전국 설치</span><span>상담 010-3629-7743</span></div></div>
 <header class="nav"></header>
 
 <div class="drawer-scrim" id="drawerScrim" aria-hidden="true"></div>
 <div class="stickybar" id="sbar">
   <a href="{pre}index.html" class="logo">Luami<span class="dot"></span></a>
-  <a href="{pre}index.html#contact" class="btn-mini">렌탈 문의</a>
+  <a href="{pre}index.html#contact" class="btn-mini">무료 견적</a>
   <button class="navtoggle" id="navToggle2" aria-label="메뉴 열기" aria-controls="drawer"><span></span><span></span><span></span></button>
 </div>
 """
@@ -433,7 +433,7 @@ def cta_band(depth, h2, p):
     return f"""<section class="ps-cta"><div class="wrap"><div class="band">
   <h2>{h2}</h2><p>{p}</p>
   <div class="contacts">
-    <a href="{KAKAO}" target="_blank" rel="noopener" class="kakao">카카오톡 상담</a><a href="{TEL}">전화 상담</a><a href="{pre}index.html#contact">무료 견적 요청</a>
+    <a href="{KAKAO}" target="_blank" rel="noopener" class="kakao">카톡으로 바로 상담</a><a href="{TEL}">전화 010-3629-7743</a><a href="{pre}index.html#contact">무료 견적 받기</a>
   </div>
 </div></div></section>
 """
@@ -559,7 +559,7 @@ def detail_page(prod, idx):
     ship = PR.get("shipping_note", "")
     jl = []
     if gal:
-        jl.append(f'<a href="#gallery">사례 사진 {len(gal)}장</a>')
+        jl.append(f'<a href="#gallery">사진 {len(gal)}장</a>')
     if prod.get("highangle"):
         jl.append('<a href="#angle">촬영 구도</a>')
     if st:
@@ -582,7 +582,7 @@ def detail_page(prod, idx):
         <p class="pb-note">{esc(ship + ' · ' if has_fixed_price(slug) and slug != 'photo-kiosk' else '')}<a href="#price">가격 조건 보기</a> · <a href="{pre}pricing.html">전체 가격표</a></p>
       </div>
       {hero_jump}
-      <div class="pd-cta"><a class="btn" href="{pre}index.html#contact">견적 문의 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn-ghost" href="{KAKAO}" target="_blank" rel="noopener">카톡 상담</a></div>
+      <div class="pd-cta"><a class="btn" href="{pre}index.html#contact">무료 견적 받기 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn-ghost" href="{KAKAO}" target="_blank" rel="noopener">카톡으로 바로 상담</a></div>
     </div>
   </div>
 </div></section>
@@ -591,7 +591,7 @@ def detail_page(prod, idx):
     # 끌리는 포인트
     pts = "\n".join(f'    <li><b>{esc(a["title"])}</b><span>{esc(a["body"])}</span></li>' for a in c["appeal"])
     out.append(f"""<section class="pd-points"><div class="wrap">
-{sec_head('Why', '끌리는 포인트')}
+{sec_head('장점', '이런 점이 좋습니다')}
   <ol class="pts">
 {pts}
   </ol>
@@ -603,10 +603,10 @@ def detail_page(prod, idx):
         ht = P["highangle_text"][prod["highangle"]]
         out.append(f"""<section class="pd-angle" id="angle"><div class="wrap ha-grid">
   <div>
-    <span class="idxlabel">High Angle</span>
+    <span class="idxlabel">촬영 구도</span>
     <h2>{esc(ht['title'])}</h2>
     <p>{esc(ht['body'])}</p>
-    <p class="ha-note">구조 개념도예요. 실제 크기·각도는 부스마다 달라요.</p>
+    <p class="ha-note">구조를 설명하는 그림입니다. 실제 크기와 각도는 부스마다 다릅니다.</p>
   </div>
   <figure class="ha-fig">{svg_highangle(prod['highangle'])}</figure>
 </div></section>
@@ -626,13 +626,13 @@ def detail_page(prod, idx):
                 f'    <a class="pg-item{span}" href="{u(it["src"], depth)}" data-w="{it["w"]}" data-h="{it["h"]}" data-caption="{esc(cap)}">'
                 f'<img src="{u(it["src"] if i == 0 else (it.get("thumb") or it["src"]), depth)}" width="{it["w"] if i == 0 else tw}" height="{it["h"] if i == 0 else th}" alt="{esc(it["alt"])}" loading="lazy" decoding="async"{contain_style(it)}>'
                 f'{render_tag(it)}<span class="pg-cap">{esc(cap)}</span></a>')
-        note = "사진을 누르면 크게 볼 수 있어요."
+        note = "사진을 누르면 크게 볼 수 있습니다."
         if n_render and not n_photo:
-            note += " 아직 실물 사진이 없어 CAD 3D 렌더로 보여드려요."
+            note += " 아직 실물 사진이 없어 설계 3D 이미지(CAD 3D 렌더)로 보여 드립니다."
         elif n_render:
-            note += " 렌더 이미지에는 ‘CAD 3D 렌더’라고 표시했어요."
+            note += " 실제 사진이 아닌 설계 3D 이미지에는 ‘CAD 3D 렌더’라고 표시했습니다."
         out.append(f"""<section class="pd-gallery" id="gallery"><div class="wrap">
-{sec_head(f'Gallery · {len(gal)}', '사례 사진', note)}
+{sec_head(f'사진 {len(gal)}장', '사진으로 보기', note)}
   <div class="pg-grid" data-gallery="{slug}">
 {chr(10).join(cells)}
   </div>
@@ -651,14 +651,14 @@ def detail_page(prod, idx):
         steps.append(f"<li><b>{esc(k.strip())}</b><span>{esc(v.strip())}</span></li>" if v else f"<li><span>{esc(s_)}</span></li>")
     out.append(f"""<section class="pd-fit"><div class="wrap fit-grid">
   <div>
-    <span class="idxlabel">Fit</span>
-    <h2>이런 곳에 잘 맞아요</h2>
+    <span class="idxlabel">추천 용도</span>
+    <h2>이런 곳에 잘 맞습니다</h2>
     <ul class="fit-list">{fit}</ul>
-    <div class="spec-note"><b>사양 메모</b><p>{esc(c['specs_note'])}</p></div>
+    <div class="spec-note"><b>크기·구조</b><p>{esc(c['specs_note'])}</p></div>
   </div>
   <div>
-    <span class="idxlabel">Process</span>
-    <h2>진행은 이렇게</h2>
+    <span class="idxlabel">진행 순서</span>
+    <h2>이렇게 진행됩니다</h2>
     <ol class="how">{''.join(steps)}</ol>
   </div>
 </div></section>
@@ -677,7 +677,7 @@ def detail_page(prod, idx):
         n_case = sum(1 for x in st if x["type"] == "사례")
         n_blog = len(st) - n_case
         out.append(f"""<section class="pd-stories" id="stories"><div class="wrap">
-{sec_head('Stories', '이 제품이 쓰인 사례·이야기', ' · '.join(x for x in [f'사례 {n_case}개' if n_case else '', f'블로그 {n_blog}편' if n_blog else ''] if x) + '을 모았어요.')}
+{sec_head('사례', '이 제품이 쓰인 사례·이야기', ' · '.join(x for x in [f'사례 {n_case}개' if n_case else '', f'블로그 {n_blog}편' if n_blog else ''] if x) + '을 모았습니다.')}
   <div class="st-grid">{''.join(card(x) for x in first)}</div>
   {more}
 </div></section>
@@ -696,7 +696,7 @@ def detail_page(prod, idx):
 """)
 
     out.append(cta_band(depth, f"{esc(prod['name'])}, <i>견적부터 받아 보세요.</i>",
-                        "장소·기간·대수를 알려주시면 구성과 견적을 안내해 드려요. 상담만으로 비용이 생기지 않아요."))
+                        "장소·날짜·대수를 알려 주시면 24시간 안에 구성과 견적을 보내 드립니다. 상담·견적은 무료입니다."))
 
     # 이전·다음
     prv = DETAIL[idx - 1]
@@ -737,16 +737,16 @@ def detail_price_section(slug, depth):
     if slug == "standard-booth":
         ex = "".join(f'<li><span>{esc(e["label"])}</span><span>{amt_html_val(std_total(e["units"], e["months"]))}</span></li>'
                      for e in PR["examples"])
-        extra = f'<div class="ex-box"><b>계산 예시</b><ul class="ex-list">{ex}</ul><p>1년 가까이 쓰실 계획이라면 구매를 권해 드려요. <a href="{pre}pricing.html#examples">계산 기준 보기</a></p></div>'
+        extra = f'<div class="ex-box"><b>계산 예시</b><ul class="ex-list">{ex}</ul><p>1년 가까이 쓰실 계획이라면 구매를 권해 드립니다. <a href="{pre}pricing.html#examples">계산 기준 보기</a></p></div>'
     if not has_fixed_price(slug) or slug == "photo-kiosk":
         ask = "".join(f"<li>{esc(x)}</li>" for x in PC["negotiable"]["ask_for"])
-        extra += f'<div class="ex-box"><b>문의할 때 알려주시면 빨라요</b><ul class="ask-list">{ask}</ul></div>'
+        extra += f'<div class="ex-box"><b>이 4가지를 알려 주시면 견적이 빨라집니다</b><ul class="ask-list">{ask}</ul></div>'
     notes = []
     if PR["products"].get(slug, {}).get("rental"):
         notes.append(PR.get("shipping_note", ""))
     notes.append(vat_sentence())
     return f"""<section class="pd-price" id="price"><div class="wrap">
-{sec_head('Price', '가격', ' · '.join(x for x in notes if x), f'<a class="ps-link" href="{pre}pricing.html">전체 가격표 →</a>')}
+{sec_head('렌탈·구매', '가격', ' · '.join(x for x in notes if x), f'<a class="ps-link" href="{pre}pricing.html">전체 가격표 →</a>')}
   <div class="price-grid">
     <div>{body}</div>
     <div>{extra}</div>
@@ -758,10 +758,10 @@ def detail_price_section(slug, depth):
 def vat_sentence():
     mode = PR["vat"]["mode"]
     if mode == "excluded":
-        return "표시한 금액은 모두 부가세 별도예요"
+        return "표시한 금액은 모두 부가세 별도입니다"
     if mode == "included":
-        return "표시한 금액은 모두 부가세 포함이에요"
-    return "부가세는 상담 때 안내해 드려요"
+        return "표시한 금액은 모두 부가세 포함입니다"
+    return "부가세는 상담 때 안내해 드립니다"
 
 
 # ───────────────────────── 4면 랩핑(가격·스탠다드 상세 공용) ─────────────────────────
@@ -784,7 +784,7 @@ def wrap_section(depth, compact=False):
     if compact:
         sets = sets[:1]
         return f"""<section class="pd-wrap"><div class="wrap">
-{sec_head('Wrapping', esc(w['title']) + ' — <i>렌탈에 포함</i>', esc(w['lead']), f'<a class="ps-link" href="{pre}pricing.html#wrap">랩핑 자세히 →</a>')}
+{sec_head('4면 랩핑', esc(w['title']) + ' — <i>렌탈에 포함</i>', esc(w['lead']), f'<a class="ps-link" href="{pre}pricing.html#wrap">랩핑 자세히 →</a>')}
 {chr(10).join(sets)}
 </div></section>
 """
@@ -797,7 +797,7 @@ def wrap_section(depth, compact=False):
                    f'<span class="pg-cap">{esc(it["caption"])}</span></a>')
     links = "".join(f'<li><a href="{pre}{x["href"]}">{esc(x["title"])}</a></li>' for x in w["examples"])
     return f"""<section class="pp-wrap" id="wrap"><div class="wrap">
-{sec_head('Wrapping', esc(w['title']) + ' — <i>스탠다드 부스 렌탈에 포함</i>', esc(w['lead']))}
+{sec_head('4면 랩핑', esc(w['title']) + ' — <i>스탠다드 부스 렌탈에 포함</i>', esc(w['lead']))}
 {chr(10).join(sets)}
   <div class="wrap-grid">
     <div class="wrap-txt">
@@ -858,12 +858,12 @@ def featured_card(prod):
     img = cover(prod, "4x5")
     pk = PR["products"][prod["slug"]]
     if pk.get("rental_summary") and PR["items"][pk["rental_summary"]].get("includes"):
-        hl = PR["items"][pk["rental_summary"]]["includes"] + ([PR["items"][pk["rental_summary"]]["note"]] if PR["items"][pk["rental_summary"]].get("note") else [])
+        hl = PR["items"][pk["rental_summary"]]["includes"] + (["별도: " + PR["items"][pk["rental_summary"]]["note"].replace(" 별도", "")] if PR["items"][pk["rental_summary"]].get("note") else [])
         hl_html = "".join(f"<li>{esc(x)}</li>" for x in hl)
-        hl_title = "렌탈에 들어 있는 것"
+        hl_title = "렌탈 가격에 포함"
     else:
         hl_html = "".join(f"<li>{esc(a['title'])}</li>" for a in c["appeal"][:4])
-        hl_title = "이런 점이 좋아요"
+        hl_title = "이런 점이 좋습니다"
     rows = "".join(f'<div class="pb-row"><span class="pb-k">{a}</span><span class="pb-v">{b}</span></div>' for a, b, _ in price_of(prod["slug"]))
     return f"""    <article class="fc">
       <a class="fc-im" href="products/{prod['slug']}.html" tabindex="-1" aria-hidden="true">{img_tag(img, 0, cover_alt(prod, img))}{render_tag(img, large=True)}</a>
@@ -874,7 +874,7 @@ def featured_card(prod):
         <b class="fc-hl-t">{hl_title}</b>
         <ul class="fc-hl">{hl_html}</ul>
         <div class="pricebox fc-price">{rows}</div>
-        <div class="fc-cta"><a class="btn" href="products/{prod['slug']}.html">자세히 보기</a><a class="btn-ghost" href="index.html#contact">견적 문의</a></div>
+        <div class="fc-cta"><a class="btn" href="products/{prod['slug']}.html">자세히 보기</a><a class="btn-ghost" href="index.html#contact">무료 견적 받기</a></div>
       </div>
     </article>"""
 
@@ -894,7 +894,7 @@ def concept_card(cp):
     return f"""    <article class="cc">
       {fig}
       <div class="cc-body">
-        <div class="pc-chips"><span class="badge badge-line">신규 컨셉 · 실물 미제작</span>{ha}</div>
+        <div class="pc-chips"><span class="badge badge-line">신규 컨셉 · 아직 실물 없음</span>{ha}</div>
         <h3>{esc(cp['name'])}</h3>
         <p class="pc-tag">{esc(tag)}</p>
         <ul class="cc-pts">{pts}</ul>
@@ -928,25 +928,25 @@ def hub_page():
     anchors += "".join(f'<span id="{a}" class="legacy-anchor" aria-hidden="true"></span>' for a in P["unmapped_anchors"])
     out.append(f"""
 <section class="page-head ph-head"><div class="wrap">
-  <span class="idxlabel">Products · {len(LINEUP)} + Custom</span>
-  <h1>포토부스 · 포토키오스크 제품군</h1>
+  <span class="idxlabel">제품 {len(LINEUP)}종 + 커스텀</span>
+  <h1>포토부스·포토키오스크 전체 제품</h1>
   <p>{esc(h['lead'])}</p>
-  <p class="legacy-note" role="status">찾으신 형태는 지금 라인업에서 빠졌어요. 비슷한 구성은 <a href="products/custom.html">커스텀 제작</a>으로 상담해 드려요.</p>
+  <p class="legacy-note" role="status">찾으신 제품은 현재 목록에서 빠졌습니다. 비슷한 구성은 <a href="products/custom.html">커스텀 제작</a>으로 상담해 드립니다.</p>
   <nav class="jump" aria-label="이 페이지 바로가기"><a href="#featured">주력 모델</a><a href="#lineup">제품 {len(LINEUP)}종</a><a href="#custom">커스텀 제작</a><a href="#concepts">신규 컨셉</a><a href="pricing.html">가격표</a></nav>
 </div></section>
 {anchors}
 <section class="ph-featured" id="featured"><div class="wrap">
-{sec_head('Featured', '주력 모델', '스탠다드 부스가 주력이고, 그다음은 포토키오스크 목재형이에요.')}
+{sec_head('주력', '주력 제품', '스탠다드 부스와 포토키오스크 목재형은 표의 가격 그대로 바로 진행할 수 있습니다.')}
   <div class="fc-grid">
 {chr(10).join(featured_card(x) for x in feat)}
   </div>
 </div></section>
 
 <section class="ph-lineup" id="lineup"><div class="wrap">
-{sec_head(f'Lineup · {len(LINEUP)}', f'제품 {len(LINEUP)}종', '번호는 제품 순서예요. ‘하이앵글’은 카메라가 위에서 내려다보며 찍는 부스예요.')}
-  <div class="filters" role="group" aria-label="제품 거르기">
+{sec_head(f'전체 {len(LINEUP)}종', f'제품 {len(LINEUP)}종', '‘하이앵글’은 카메라가 위에서 내려다보며 찍는 부스입니다. 정해진 가격이 있는 제품만 보려면 ‘정가 제품’을 누르세요.')}
+  <div class="filters" role="group" aria-label="제품 골라 보기">
     <button type="button" class="fchip" data-filter="" aria-pressed="true">전체 <b>{counts['all']}</b></button>
-    <button type="button" class="fchip" data-filter="price" aria-pressed="false">가격 공개 <b>{counts['price']}</b></button>
+    <button type="button" class="fchip" data-filter="price" aria-pressed="false">정가 제품 <b>{counts['price']}</b></button>
     <button type="button" class="fchip" data-filter="highangle" aria-pressed="false">하이앵글 <b>{counts['highangle']}</b></button>
     <button type="button" class="fchip" data-filter="kiosk" aria-pressed="false">키오스크 <b>{counts['kiosk']}</b></button>
     <button type="button" class="fchip" data-filter="booth" aria-pressed="false">부스 <b>{counts['booth']}</b></button>
@@ -967,18 +967,18 @@ def hub_page():
     scopes = "".join(f"<li><b>{esc(a['title'])}</b><span>{esc(a['body'])}</span></li>" for a in cc["appeal"][:3])
     out.append(f"""<section class="ph-custom" id="custom"><div class="wrap cu-grid">
   <div class="cu-txt">
-    <span class="idxlabel">Custom</span>
-    <h2>원하는 디자인, <i>제작해 드려요</i></h2>
+    <span class="idxlabel">커스텀</span>
+    <h2>목록에 없는 모양도 <i>만들어 드립니다</i></h2>
     <p>{esc(cc['hero'])}</p>
     <ul class="cu-list">{scopes}</ul>
     <p class="cu-price"><span class="pb-k">가격</span> <span class="ask">{esc(PR['products']['custom']['rental_text'])}</span></p>
-    <div class="fc-cta"><a class="btn" href="products/custom.html">커스텀 제작 자세히</a><a class="btn-ghost on-dark" href="index.html#contact">제작 문의</a></div>
+    <div class="fc-cta"><a class="btn" href="products/custom.html">커스텀 제작 자세히 보기</a><a class="btn-ghost on-dark" href="index.html#contact">제작 상담 받기</a></div>
   </div>
   <div class="cu-mosaic" data-gallery="custom-hub">{mos_html}</div>
 </div></section>
 """)
     out.append(f"""<section class="ph-concepts" id="concepts"><div class="wrap">
-{sec_head('New Concepts', f'새로 제안하는 컨셉 {len(CONCEPTS)}종', '만들 수 있지만 아직 실물로 만든 적은 없는 컨셉이에요. 이미지는 ‘CAD 3D 렌더’로만 보여드리고, 크기·구성·기간·가격은 상담 때 함께 정해요.', '<a class="ps-link" href="blog/new-concepts-story.html">컨셉 이야기 읽기 →</a>')}
+{sec_head('신규 컨셉', f'새로 제안하는 부스 {len(CONCEPTS)}종', '아직 실물로 만든 적은 없는 새 부스입니다. 그림은 설계 3D 이미지(CAD 3D 렌더)이고, 크기·구성·기간·가격은 상담 때 함께 정합니다.', '<a class="ps-link" href="blog/new-concepts-story.html">컨셉 이야기 읽기 →</a>')}
   <div class="cc-grid">
 {chr(10).join(concept_card(x) for x in CONCEPTS)}
   </div>
@@ -992,7 +992,7 @@ def hub_page():
 </div></section>
 """)
     out.append(cta_band(0, "어떤 제품이 맞을지 고민이라면, <i>장소·기간·인원만 알려주세요.</i>",
-                        "현장 조건에 맞는 제품과 대수를 골라 견적과 함께 안내해 드려요."))
+                        "현장에 맞는 제품과 대수를 골라 24시간 안에 견적과 함께 보내 드립니다."))
     out.append(body_close(0))
     return "".join(out)
 
@@ -1002,8 +1002,8 @@ def pricing_page():
     pg = PC["page"]
     depth = 0
     lds = [breadcrumb([("홈", ""), ("가격", "pricing.html")]), faq_ld(PC["faq"])]
-    desc = tmpl("스탠다드 부스 1개월 미만 렌탈 {price:std_short} — 촬영 키오스크·4면 랩핑·인화지 1,400매 포함(운임 별도). "
-                "목재 키오스크 렌탈 월 {price:wood_monthly}, 구매 {price:std_buy}부터. 루아미 렌탈·구매 가격표.")
+    desc = tmpl("스탠다드 부스 1개월 미만 렌탈 {price:std_short} — 촬영 키오스크·4면 랩핑·인화지 1,400매·설치·회수 포함(운송비 별도). "
+                "목재 키오스크만 렌탈 {price:wood_monthly}, 구매 {price:std_buy}부터. 루아미 렌탈·구매 가격표.")
     og = cover(BYSLUG["standard-booth"], "1x1") or {"src": WRAP["hero"]["src"]}
     out = [head("포토부스 렌탈·구매 가격 | 스탠다드 부스 · 포토키오스크 — 루아미", desc,
                 "포토부스 렌탈 가격,포토부스 렌탈 비용,포토부스 대여 비용,포토부스 구매,포토키오스크 가격,포토부스 랩핑,루아미",
@@ -1015,15 +1015,15 @@ def pricing_page():
     buy_min_key = [k for k in it if it[k]["kind"] == "purchase" and it[k]["amount"] == buy_min][0]
     out.append(f"""
 <section class="page-head pp-head"><div class="wrap">
-  <span class="idxlabel">Pricing</span>
+  <span class="idxlabel">가격</span>
   <h1>{esc(pg['h1'])}</h1>
   <p>{esc(pg['lead'])}</p>
   <div class="sum-grid">
-    <a class="sum" href="#rental"><span class="sum-k">스탠다드 부스 렌탈 · 1개월 미만</span><span class="sum-v">{amt_html('std_short')}</span><span class="sum-d">4면 랩핑 · 인화지 1,400매 포함 · 운임 별도</span></a>
-    <a class="sum" href="#kiosk"><span class="sum-k">포토키오스크 목재형 · 키오스크만</span><span class="sum-v">{amt_html('wood_monthly')}</span><span class="sum-d">인화지 700매 제공</span></a>
-    <a class="sum" href="#purchase"><span class="sum-k">구매</span><span class="sum-v"><span class="amt">{esc(man(buy_min))}부터</span>{vat_html()}</span><span class="sum-d">{esc(it[buy_min_key]['label'])} 기준 · 포토키오스크·목재형 별도 가격</span></a>
+    <a class="sum" href="#rental"><span class="sum-k">스탠다드 부스 렌탈 · 1개월 미만</span><span class="sum-v">{amt_html('std_short')}</span><span class="sum-d">4면 랩핑·인화지 1,400매·설치·회수 포함 · 운송비 별도</span></a>
+    <a class="sum" href="#kiosk"><span class="sum-k">포토키오스크 목재형 · 키오스크만</span><span class="sum-v">{amt_html('wood_monthly')}</span><span class="sum-d">인화지 700매 포함 · 한 달 단위</span></a>
+    <a class="sum" href="#purchase"><span class="sum-k">구매</span><span class="sum-v"><span class="amt">{esc(man(buy_min))}부터</span>{vat_html()}</span><span class="sum-d">{esc(it[buy_min_key]['label'])} 기준 · 제품별 구매가는 아래 표</span></a>
   </div>
-  <nav class="jump" aria-label="이 페이지 바로가기"><a href="#rental">렌탈</a><a href="#examples">계산 예시</a><a href="#wrap">4면 랩핑</a><a href="#kiosk">키오스크만</a><a href="#negotiable">협의 제품</a><a href="#purchase">구매</a><a href="#notes">운임·부가세</a><a href="#faq">FAQ</a></nav>
+  <nav class="jump" aria-label="이 페이지 바로가기"><a href="#rental">렌탈</a><a href="#examples">계산 예시</a><a href="#wrap">4면 랩핑</a><a href="#kiosk">키오스크만</a><a href="#negotiable">협의 제품</a><a href="#purchase">구매</a><a href="#notes">운송비·부가세</a><a href="#faq">FAQ</a></nav>
 </div></section>
 """)
     # 렌탈 표
@@ -1039,10 +1039,10 @@ def pricing_page():
         note = f'<span class="pt-note">{esc(tmpl(row["note"]))}</span>' if row.get("note") else ""
         rows.append(f'<tr><th scope="row">{esc(x["label"])}<span class="pt-unit">{esc(x.get("unit", ""))}</span>{inc}{note}</th><td>{amt_html(k)}</td></tr>')
     out.append(f"""<section class="pp-rental" id="rental"><div class="wrap">
-{sec_head('Rental', '스탠다드 부스 렌탈', esc(r['desc']), f'<a class="ps-link" href="products/standard-booth.html">스탠다드 부스 보기 →</a>')}
+{sec_head('렌탈', '스탠다드 부스 렌탈', esc(r['desc']), f'<a class="ps-link" href="products/standard-booth.html">스탠다드 부스 보기 →</a>')}
   <div class="price-grid">
     <div><table class="ptable"><tbody>{''.join(rows)}</tbody></table></div>
-    <figure class="pp-fig"><a href="products/standard-booth.html">{img_tag(cover(std, '4x5'), 0, '스탠다드 부스')}{render_tag(cover(std, '4x5'), large=True)}</a><figcaption>스탠다드 부스 · 1860 × 1860 × 2100mm</figcaption></figure>
+    <figure class="pp-fig"><a href="products/standard-booth.html">{img_tag(cover(std, '4x5'), 0, '스탠다드 부스')}{render_tag(cover(std, '4x5'), large=True)}</a><figcaption>스탠다드 부스 · 가로·세로 1.86m, 높이 2.1m</figcaption></figure>
   </div>
 </div></section>
 """)
@@ -1061,10 +1061,10 @@ def pricing_page():
     yc = PC["year_compare"]
     buy = it[PR["rules"]["year_buy"]]["amount"]
     out.append(f"""<section class="pp-examples" id="examples"><div class="wrap">
-{sec_head('Examples', '대수·기간 계산 예시', f'스탠다드 부스 합계 = {man(a)} + {man(b)} × (대수 − 1) + {man(c)} × 대수 × (개월 − 1)')}
+{sec_head('계산 예시', '대수·기간별 금액', f'첫 1대 {man(a)} · 2대째부터 1대마다 +{man(b)} · 두 번째 달부터 부스마다 매달 +{man(c)}')}
   <div class="price-grid">
     <div><table class="ptable ex-table"><thead><tr><th scope="col">구성</th><th scope="col">계산</th><th scope="col">합계</th></tr></thead><tbody>{''.join(exrows)}</tbody></table>
-    <p class="muted">운임은 설치 장소에 따라 따로 안내해 드려요.</p></div>
+    <p class="muted">운송비는 설치 장소에 따라 따로 안내해 드립니다.</p></div>
     <div class="year">
       <b class="year-t">{esc(yc['title'])}</b>
       <p>{esc(yc['lead'])}</p>
@@ -1082,7 +1082,7 @@ def pricing_page():
     # 키오스크만
     wimg = cover(wood, "4x5")
     out.append(f"""<section class="pp-kiosk" id="kiosk"><div class="wrap">
-{sec_head('Kiosk only', '포토키오스크 목재형 · 키오스크만 렌탈', '부스 없이 키오스크만 빌리고 싶다면 포토키오스크 목재형을 월 단위로 빌릴 수 있어요.', '<a class="ps-link" href="products/wood-kiosk.html">목재형 보기 →</a>')}
+{sec_head('키오스크만', '포토키오스크 목재형 · 키오스크만 렌탈', '부스 없이 키오스크만 필요하면 포토키오스크 목재형을 한 달 단위로 빌릴 수 있습니다.', '<a class="ps-link" href="products/wood-kiosk.html">목재형 보기 →</a>')}
   <div class="price-grid">
     <div><table class="ptable"><tbody>
       <tr><th scope="row">{esc(it['wood_monthly']['label'])}<span class="pt-unit">{esc(it['wood_monthly']['unit'])}</span><ul class="inc">{''.join(f'<li>{esc(v)}</li>' for v in it['wood_monthly'].get('includes', []))}</ul></th><td>{amt_html('wood_monthly')}</td></tr>
@@ -1099,10 +1099,10 @@ def pricing_page():
     neg_links += '<li><a href="products.html#concepts">신규 컨셉 4종</a></li>'
     ask = "".join(f"<li>{esc(v)}</li>" for v in neg["ask_for"])
     out.append(f"""<section class="pp-neg" id="negotiable"><div class="wrap">
-{sec_head('By quote', esc(neg['title']), esc(neg['body']))}
+{sec_head('협의', esc(neg['title']), esc(neg['body']))}
   <div class="price-grid">
     <div><ul class="neg-list">{neg_links}</ul><p class="muted">포토키오스크(일반) 단독 렌탈도 문의로 안내해 드려요.</p></div>
-    <div class="ex-box"><b>문의할 때 알려주시면 빨라요</b><ul class="ask-list">{ask}</ul></div>
+    <div class="ex-box"><b>이 4가지를 알려 주시면 견적이 빨라집니다</b><ul class="ask-list">{ask}</ul></div>
   </div>
 </div></section>
 """)
@@ -1117,19 +1117,19 @@ def pricing_page():
         else:
             prow.append(f'<tr><th scope="row">{esc(row["item"])}</th><td><span class="ask">{esc(row["price"])}</span></td></tr>')
     out.append(f"""<section class="pp-purchase" id="purchase"><div class="wrap">
-{sec_head('Purchase', '구매', esc(pu['desc']))}
+{sec_head('구매가', '구매', esc(pu['desc']))}
   <div class="price-grid">
     <div><table class="ptable"><tbody>{''.join(prow)}</tbody></table><p class="muted">{esc(pu['note'])}</p></div>
-    <div class="ex-box"><b>렌탈과 구매, 언제 무엇이 나을까</b><p>한두 달 행사라면 렌탈, 1년 가까이 두고 쓸 곳이라면 구매가 나아요. <a href="#examples">1년 비교 보기</a></p></div>
+    <div class="ex-box"><b>렌탈과 구매, 어느 쪽이 나을까요</b><p>한두 달 행사라면 렌탈, 1년 가까이 두고 쓸 곳이라면 구매를 권해 드립니다. <a href="#examples">1년 비교 보기</a></p></div>
   </div>
 </div></section>
 """)
     sh = PC["shipping"]
     out.append(f"""<section class="pp-notes" id="notes"><div class="wrap">
-{sec_head('Notes', '운임 · 부가세')}
+{sec_head('참고', '운송비 · 부가세')}
   <div class="notes-grid">
     <div class="ex-box"><b>{esc(sh['title'])}</b><p>{esc(sh['body'])}</p></div>
-    <div class="ex-box"><b>부가세</b><p>{esc(vat_sentence())}. 견적서에는 공급가와 부가세를 나눠 적어 드려요.</p></div>
+    <div class="ex-box"><b>부가세</b><p>{esc(vat_sentence())}. 견적서에는 공급가와 부가세를 나눠 적어 드립니다.</p></div>
   </div>
 </div></section>
 
@@ -1140,8 +1140,8 @@ def pricing_page():
   </div>
 </div></section>
 """)
-    out.append(cta_band(depth, "구성이 정해지지 않았어도 괜찮아요. <i>견적부터 받아 보세요.</i>",
-                        "장소·기간·대수를 알려주시면 24시간 안에 구성과 견적을 회신해 드려요."))
+    out.append(cta_band(depth, "구성을 아직 못 정하셨어도 <i>견적부터 받아 보세요.</i>",
+                        "장소·날짜·대수를 알려 주시면 24시간 안에 구성과 견적을 보내 드립니다."))
     out.append(body_close(depth))
     return "".join(out)
 
@@ -1205,26 +1205,26 @@ def home_prices():
     it = PR["items"]
     return f"""<section class="h-prices" id="prices" aria-labelledby="hpTitle"><div class="wrap">
   <div class="hp-in">
-    <div class="hp-head"><span class="idxlabel">가격 한눈에</span><h2 id="hpTitle">정해진 가격, <i>바로 확인하세요</i></h2></div>
+    <div class="hp-head"><span class="idxlabel">가격 한눈에</span><h2 id="hpTitle">스탠다드 부스·목재 키오스크는 <i>정가로 바로 진행</i></h2></div>
     <ul class="hp-list">
-      <li><span class="hp-k">스탠다드 부스 렌탈 · 1개월 미만</span><span class="hp-v">{amt_html('std_short')}</span><span class="hp-d">4면 랩핑 · 인화지 1,400매 포함</span></li>
-      <li><span class="hp-k">대수·기간 추가</span><span class="hp-v"><span class="amt">{esc(amt('std_extra_unit'))}</span><span class="hp-unit">/대</span>{vat_html()}</span><span class="hp-d">2개월차부터 부스당 {esc(amt_text('std_monthly'))}</span></li>
-      <li><span class="hp-k">목재 키오스크만 렌탈</span><span class="hp-v">{amt_html('wood_monthly')}</span><span class="hp-d">인화지 700매 제공</span></li>
+      <li><span class="hp-k">스탠다드 부스 렌탈 · 1개월 미만</span><span class="hp-v">{amt_html('std_short')}</span><span class="hp-d">4면 랩핑·인화지 1,400매·설치·회수 포함 · 운송비 별도</span></li>
+      <li><span class="hp-k">2대째부터 · 1대 추가마다</span><span class="hp-v"><span class="amt">{esc(amt('std_extra_unit'))}</span><span class="hp-unit">/대</span>{vat_html()}</span><span class="hp-d">한 달을 넘기면 두 번째 달부터 부스당 {esc(amt_text('std_monthly'))}</span></li>
+      <li><span class="hp-k">목재 키오스크만 빌리기</span><span class="hp-v">{amt_html('wood_monthly')}</span><span class="hp-d">인화지 700매 포함 · 한 달 단위</span></li>
       <li><span class="hp-k">구매</span><span class="hp-v"><span class="amt">{esc(man(it['std_buy']['amount']))}부터</span>{vat_html()}</span><span class="hp-d">스탠다드 {esc(man(it['std_buy']['amount']))} · 목재형 {esc(man(it['wood_buy']['amount']))} · 포토키오스크 {esc(man(it['kiosk_buy']['amount']))}</span></li>
     </ul>
-    <p class="hp-foot">미러·엘리베이터·지하철·원형 하이앵글 부스와 커스텀 제작은 기간·가격 협의 · 운임 별도 <a href="pricing.html">가격 자세히 →</a></p>
+    <p class="hp-foot">미러·엘리베이터·지하철·원형 하이앵글 부스와 커스텀 제작은 기간·가격 협의 · 운송비 별도 <a href="pricing.html">전체 가격표 보기 →</a></p>
   </div>
 </div></section>"""
 
 
 def home_pbox():
     return f"""<h3>가격 한눈에</h3>
-        <p>스탠다드 부스 1개월 미만 렌탈은 {esc(amt_text('std_short'))}이고, 촬영 키오스크·4면 랩핑·인화지 1,400매가 들어 있습니다. 대수와 기간이 늘면 정해진 기준으로 더해지고, 테마 부스와 커스텀 제작은 기간·가격을 협의합니다. 운임은 별도이며 상담만으로 비용이 발생하지 않습니다. <a href="pricing.html">가격 자세히 보기</a></p>"""
+        <p>스탠다드 부스 1대를 1개월 미만으로 빌리면 {esc(amt_text('std_short'))}이고, 촬영 키오스크·4면 랩핑·인화지 1,400매와 설치·회수가 포함됩니다. 2대째부터는 1대마다 {esc(man_text(PR['items']['std_extra_unit']['amount']))}, 두 번째 달부터는 부스당 {esc(amt_text('std_monthly'))}씩 더해집니다. 테마 부스와 커스텀 제작은 기간·가격을 협의하고, 운송비는 별도입니다. 상담·견적은 무료입니다. <a href="pricing.html">가격 자세히 보기</a></p>"""
 
 
 def home_faq_cost():
     return (f"스탠다드 부스는 1개월 미만 렌탈 {esc(amt_text('std_short'))}, 포토키오스크 목재형은 키오스크만 렌탈 월 "
-            f"{esc(man_text(PR['items']['wood_monthly']['amount']))}입니다. 미러·엘리베이터·지하철·원형 하이앵글 부스는 기간과 구성에 따라 협의하며, "
+            f"{esc(man_text(PR['items']['wood_monthly']['amount']))}입니다. 미러·엘리베이터·지하철·원형 하이앵글 부스는 기간과 구성을 듣고 가격을 정합니다. "
             f"자세한 기준은 <a href=\"pricing.html\">가격 페이지</a>에 정리했습니다.")
 
 
@@ -1233,7 +1233,7 @@ def guide_prices():
     return f"""<aside class="g-price fade" aria-label="루아미 실제 가격 요약">
     <b class="g-price-t">루아미 실제 가격은?</b>
     <ul>
-      <li>스탠다드 부스 1개월 미만 렌탈 <strong>{esc(amt_text('std_short'))}</strong> — 촬영 키오스크·4면 랩핑·인화지 1,400매 포함, 운임 별도</li>
+      <li>스탠다드 부스 1개월 미만 렌탈 <strong>{esc(amt_text('std_short'))}</strong> — 촬영 키오스크·4면 랩핑·인화지 1,400매·설치·회수 포함, 운송비 별도</li>
       <li>2대째부터 1대마다 <strong>{esc(amt_text('std_extra_unit'))}</strong> · 2개월차부터 부스당 <strong>{esc(amt_text('std_monthly'))}</strong></li>
       <li>목재 키오스크만 렌탈 <strong>{esc(amt_text('wood_monthly'))}</strong> · 구매 <strong>{esc(man_text(it['std_buy']['amount']).replace('만원', '만원부터', 1))}</strong></li>
     </ul>
