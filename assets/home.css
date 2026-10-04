@@ -269,7 +269,7 @@
 .qf-etc input:checked+span{color:var(--accent-l);font-weight:700}
 .qf-f{display:flex;flex-direction:column;gap:6px;font-size:14px;color:#C8CCC6;text-align:left}
 .qf-f em{font-style:normal;font-size:12.5px;color:var(--accent-l);margin-left:4px}
-.qf-more{border:1px solid rgba(134,140,135,.6);border-radius:10px;padding:0 14px}
+.qf-more{border:1px solid var(--field);border-radius:10px;padding:0 14px}
 .qf-more summary{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--cream);min-height:48px;display:flex;align-items:center;justify-content:flex-start;gap:8px}
 .qf-more summary small{font-size:13px;font-weight:500;color:#C8CCC6}
 .qf-more summary::after{content:"+";margin-left:auto;color:var(--accent-l);font-size:20px}
