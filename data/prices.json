@@ -1,5 +1,5 @@
 {
-  "_doc": "루아미 가격 단일 출처(2026-10-04 확정). 금액은 만원 단위 정수. 화면 표기는 tools/build_products.py 가 이 파일로 만들고, tools/site-gate.js 가 사이트 HTML·data JSON 의 모든 금액을 이 파일과 대조한다(여기 없는 금액이 보이면 FAIL).",
+  "_doc": "루아미 가격 단일 출처(2026-10-04 확정). 금액은 만원 단위 정수. 화면 표기는 tools/build_products.py 가 이 파일로 만들고, tools/site-gate.js 가 사이트 HTML·data JSON 의 모든 금액을 이 파일과 대조한다(여기 없는 금액이 보이면 FAIL). 포토키오스크(진한 월넛 원목 박스형)의 렌탈·구매 키는 wood_monthly·wood_buy 다.",
   "updated": "2026-10-04",
   "currency": "KRW",
   "vat": {
@@ -54,7 +54,7 @@
     "wood_monthly": {
       "amount": 50,
       "per": "월",
-      "label": "포토키오스크 목재형 · 키오스크만",
+      "label": "포토키오스크 · 키오스크만",
       "unit": "1대",
       "kind": "rental",
       "includes": [
@@ -66,14 +66,9 @@
       "label": "스탠다드 부스",
       "kind": "purchase"
     },
-    "kiosk_buy": {
-      "amount": 800,
-      "label": "포토키오스크",
-      "kind": "purchase"
-    },
     "wood_buy": {
       "amount": 600,
-      "label": "포토키오스크 목재형",
+      "label": "포토키오스크",
       "kind": "purchase"
     }
   },
@@ -122,11 +117,6 @@
       "purchase": "std_buy"
     },
     "photo-kiosk": {
-      "rental": [],
-      "rental_text": "렌탈 문의",
-      "purchase": "kiosk_buy"
-    },
-    "wood-kiosk": {
       "rental": [
         "wood_monthly",
         "paper_700"

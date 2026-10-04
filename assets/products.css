@@ -83,7 +83,7 @@
 .pb-note{font-size:14px;color:var(--muted);padding:2px 0 10px;border-top:1px solid var(--line);padding-top:10px}
 .pb-note a{color:var(--accent-dark);text-decoration:underline;text-underline-offset:3px}
 
-/* ── 허브: 8종 그리드 ── */
+/* ── 허브: 제품 그리드 ── */
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin:-8px 0 0}
 .fchip{font:inherit;display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 16px;border-radius:24px;border:1px solid var(--line);background:transparent;color:var(--ink2);font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
 .fchip b{font-family:var(--serif);font-weight:600;color:var(--accent-dark)}

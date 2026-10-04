@@ -1,17 +1,7 @@
 {
   "photo-kiosk": {
     "blog": [
-      "blog/compact-kiosk-photobooth-story.html",
       "blog/photo-kiosk-story.html"
-    ],
-    "cases": [
-      "cases/photo-kiosk-case.html",
-      "cases/pre-shipment-lineup.html"
-    ]
-  },
-  "wood-kiosk": {
-    "blog": [
-      "blog/wood-kiosk-story.html"
     ],
     "cases": []
   },

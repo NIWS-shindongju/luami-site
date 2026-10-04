@@ -22,36 +22,20 @@
       "name": "포토키오스크",
       "name_en": "Photo Kiosk",
       "type": "kiosk",
-      "badge": null,
-      "highangle": null,
-      "fallback": {"4x5": "assets/images/products/photo-kiosk/02-render-hero.webp", "thumb": "assets/images/products/photo-kiosk/thumb/02-render-hero.webp", "kind": "render", "position": "50% 55%"},
-      "legacy_anchors": ["p-a02"],
-      "seo": {
-        "title": "포토키오스크 렌탈·구매 | 스탠드형 무인 포토키오스크 — 루아미",
-        "description": "카메라·프린터·터치 화면을 몸체 하나에 담은 스탠드형 포토키오스크. 부스 자리가 없는 매장 입구·카페·팝업 코너에 맞아요. 구매가 {price:kiosk_buy}, 렌탈은 문의.",
-        "keywords": "포토키오스크,포토키오스크 렌탈,포토키오스크 구매,무인 포토키오스크,스탠드형 포토키오스크,루아미"
-      }
-    },
-    {
-      "slug": "wood-kiosk",
-      "order": 2,
-      "name": "포토키오스크 목재형",
-      "name_en": "Oak Wood Photo Kiosk",
-      "type": "kiosk",
       "badge": "추천",
       "badge_kind": "recommend",
       "highangle": null,
-      "fallback": {"4x5": "assets/images/products/wood-kiosk/01-render-24p-hero.webp", "thumb": "assets/images/products/wood-kiosk/thumb/01-render-24p-hero.webp", "kind": "render", "position": "50% 50%"},
-      "legacy_anchors": [],
+      "fallback": {"4x5": "assets/images/products/photo-kiosk/l53-cad-3q.jpg", "kind": "render", "baked_label": false, "position": "50% 50%"},
+      "legacy_anchors": ["p-a02"],
       "seo": {
-        "title": "포토키오스크 목재형(오크우드) 렌탈·구매 | 루아미",
-        "description": "화이트오크 앞판의 탁상형 셀프 포토키오스크. 카페·웨딩홀·팝업 매대에 가구처럼 놓고 써요. 키오스크만 렌탈 {price:wood_monthly}, 구매가 {price:wood_buy}.",
-        "keywords": "목재 포토키오스크,우드 포토키오스크,오크 포토키오스크,포토키오스크 렌탈,탁상형 포토키오스크,루아미"
+        "title": "포토키오스크 렌탈·구매 | 월넛 원목 삼각대형 — 루아미",
+        "description": "진한 월넛 원목 박스 헤드를 접이식 원목 삼각대에 올린 포토키오스크. 부스 자리가 없는 매장 입구·카페·로비에도 섭니다. 키오스크만 렌탈 {price:wood_monthly}·인화지 700매 포함, 구매가 {price:wood_buy}.",
+        "keywords": "포토키오스크,포토키오스크 렌탈,포토키오스크 구매,원목 포토키오스크,월넛 포토키오스크,삼각대 포토키오스크,무인 포토키오스크,루아미"
       }
     },
     {
       "slug": "mirror-booth",
-      "order": 3,
+      "order": 2,
       "name": "미러포토부스",
       "name_en": "Mirror Photo Booth",
       "type": "booth",
@@ -67,7 +51,7 @@
     },
     {
       "slug": "vintage-elevator",
-      "order": 4,
+      "order": 3,
       "name": "빈티지 엘리베이터 부스",
       "name_en": "Vintage Elevator Booth",
       "type": "booth",
@@ -83,7 +67,7 @@
     },
     {
       "slug": "steel-elevator",
-      "order": 5,
+      "order": 4,
       "name": "스텐 엘리베이터 부스",
       "name_en": "Stainless Elevator Booth",
       "type": "booth",
@@ -99,7 +83,7 @@
     },
     {
       "slug": "subway-booth",
-      "order": 6,
+      "order": 5,
       "name": "지하철부스",
       "name_en": "Subway Booth",
       "type": "booth",
@@ -115,7 +99,7 @@
     },
     {
       "slug": "standard-booth",
-      "order": 7,
+      "order": 6,
       "name": "스탠다드 부스",
       "name_en": "Standard Booth",
       "type": "booth",
@@ -132,7 +116,7 @@
     },
     {
       "slug": "round-highangle",
-      "order": 8,
+      "order": 7,
       "name": "원형 하이앵글부스",
       "name_en": "Round High-angle Booth",
       "type": "booth",
@@ -149,7 +133,7 @@
   ],
   "custom": {
     "slug": "custom",
-    "order": 9,
+    "order": 8,
     "name": "커스텀 제작",
     "name_en": "Custom Build",
     "type": "custom",
@@ -176,14 +160,14 @@
     "ceiling": {"chip": "하이앵글 · 천장", "title": "천장에서 바로 아래로 찍는 구도", "body": "카메라가 천장 한가운데에서 바로 아래를 향합니다. 고개를 들어 위를 보면 사람과 바닥이 위에서 내려다본 한 장에 담깁니다."}
   },
   "hub": {
-    "title": "포토부스 · 포토키오스크 제품 8종 | 렌탈·구매 가격 — 루아미",
-    "description": "포토키오스크, 목재형 키오스크, 미러·빈티지 엘리베이터·스텐 엘리베이터·지하철·원형 하이앵글 부스, 주력 스탠다드 부스까지 루아미 제품 8종과 커스텀 제작. 제품별 사례 사진과 렌탈·구매 가격.",
+    "title": "포토부스 · 포토키오스크 제품군 | 렌탈·대여·설치 — 루아미",
+    "description": "월넛 원목 포토키오스크, 미러·빈티지 엘리베이터·스텐 엘리베이터·지하철·원형 하이앵글 부스, 주력 스탠다드 부스까지 루아미 제품 7종과 커스텀 제작. 제품별 사례 사진과 렌탈·구매 가격.",
     "keywords": "포토부스 종류,포토부스 제품,포토부스 렌탈,포토부스 구매,포토키오스크,하이앵글 포토부스,테마 포토부스,스탠다드 포토부스,루아미",
-    "lead": "루아미의 포토부스·포토키오스크 전체 제품입니다. 주력은 스탠다드 부스, 그다음은 포토키오스크 목재형이고, 목록에 없는 모양은 커스텀으로 만들어 드립니다.",
+    "lead": "루아미의 포토부스·포토키오스크 전체 제품입니다. 주력은 스탠다드 부스, 그다음은 포토키오스크이고, 목록에 없는 모양은 커스텀으로 만들어 드립니다.",
     "faq": [
-      {"q": "제품은 몇 가지인가요?", "a": "8종이에요. 포토키오스크, 포토키오스크 목재형, 미러포토부스, 빈티지 엘리베이터 부스, 스텐 엘리베이터 부스, 지하철부스, 스탠다드 부스, 원형 하이앵글부스가 있고, 원하는 디자인은 커스텀으로 제작해 드려요."},
+      {"q": "제품은 몇 가지인가요?", "a": "7종입니다. 포토키오스크, 미러포토부스, 빈티지 엘리베이터 부스, 스텐 엘리베이터 부스, 지하철부스, 스탠다드 부스, 원형 하이앵글부스가 있고, 목록에 없는 모양은 커스텀으로 제작해 드립니다."},
       {"q": "하이앵글 부스는 무엇이 다른가요?", "a": "카메라가 눈높이가 아니라 위에서 내려다보며 찍습니다. 미러포토부스·엘리베이터 2종·지하철부스는 부스 안쪽 모서리 위에서 비스듬히, 원형 하이앵글부스는 천장 한가운데에서 바로 아래로 찍습니다."},
-      {"q": "가격이 정해진 제품은 어떤 건가요?", "a": "스탠다드 부스는 1개월 미만 렌탈 {price:std_short}, 포토키오스크 목재형은 키오스크만 렌탈 {price:wood_monthly}입니다. 구매가는 스탠다드 부스 {price:std_buy}, 포토키오스크 {price:kiosk_buy}, 포토키오스크 목재형 {price:wood_buy}이고, 나머지 제품은 기간과 구성에 따라 협의합니다."},
+      {"q": "가격이 정해진 제품은 어떤 건가요?", "a": "스탠다드 부스는 1개월 미만 렌탈 {price:std_short}, 포토키오스크는 키오스크만 렌탈 {price:wood_monthly}입니다. 구매가는 스탠다드 부스 {price:std_buy}, 포토키오스크 {price:wood_buy}이고, 나머지 제품은 기간과 구성에 따라 협의합니다."},
       {"q": "원하는 디자인으로 만들 수 있나요?", "a": "네. 겉면 랩핑과 촬영 화면·사진 테두리부터 부스 모양까지 커스텀으로 제작합니다. 원하는 모습과 일정, 장소를 알려 주시면 상담 때 가능한 구성을 함께 정합니다."}
     ]
   }
