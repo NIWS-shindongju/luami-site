@@ -219,3 +219,5 @@
 /* 접근성: 진행 단계 번호 대비(3.3:1 → 6.7:1) */
 .h-num,.h-points li::before{color:var(--accent-dark)}
 @media(min-width:881px){.hl-im{aspect-ratio:3/2}}
+/* 본문 14px 이상(실측 13~13.5px 이던 줄) */
+.home .hero-trust,.h-band .trust-mini,.h-band .pbox p{font-size:14.5px}
