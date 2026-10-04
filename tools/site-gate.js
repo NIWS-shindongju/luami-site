@@ -7,8 +7,11 @@
  * 잰다:
  *  1) 태그 균형(section/div/details/a/article)
  *  2) JSON-LD 파싱 유효성
- *  3) 금액 노출(브랜드 가드레일 — 숫자+원 / ₩ / 만원)
- *  4) 금지 카피(최저가·지금신청·하루만) + 렌탈 아닌 서비스 표현
+ *  3) 금액 = data/prices.json 대조(2026-10-04~). 가격표에 없는 금액(price-mismatch),
+ *     폐기된 옛 금액(price-retired), JSON-LD Offer 가격, 부가세 표기 불일치(vat-label),
+ *     가격표 금액이 pricing.html 에 빠짐(price-missing). data/*.json 문자열도 같은 규칙으로 본다.
+ *     (예전 '금액 노출 금지'·'제작/판매 표현 금지'는 구매가·커스텀 제작 공개로 폐지)
+ *  4) 금지 카피(최저가·지금신청·초특가·파격할인)
  *  5) 경쟁사 실명
  *  6) 이미지 참조 실물 존재 + index 이미지 중복
  *  7) sitemap ↔ 실제 파일 정합
@@ -20,9 +23,66 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const COMPETITORS = ['인생네컷', '포토이즘', '하루필름', '포토그레이', '셀픽스', '모노맨션', '인싸포토', '지금이순간', '모멘트컷', '심플큐브', '피키픽', '포토시그니처'];
 const BANNED_COPY = [/최저가/, /지금\s*신청/, /초특가/, /파격\s*할인/];
-const BANNED_SERVICE = /포토부스\s*(를)?\s*제작|부스\s*판매|포토부스\s*판매/;
-const MONEY = [/[0-9][0-9,]*\s*원(?![가단장본격료칙상])/g, /₩\s*[0-9]/g, /[0-9][0-9,]*\s*만\s*원/g];
-const MONEY_OK = [/^0\s*원$/, /무료/];
+const crypto = require('crypto');
+
+// ── 가격 단일 출처: data/prices.json ─────────────────────────────────────────
+// 허용 금액 = 항목 금액 + 규칙(rules.std_total)으로 계산되는 예시 합계 + 1년 비교값.
+// 순수 함수로 둔 이유: 셀프테스트에서 합성 가격표로 양방향 시험을 하려고.
+function loadPrices(p) {
+  return JSON.parse(fs.readFileSync(p || path.join(ROOT, 'data', 'prices.json'), 'utf8'));
+}
+function allowedWon(P) {
+  const it = P.items;
+  const s = new Set();
+  for (const k of Object.keys(it)) s.add(it[k].amount * 10000);
+  const [a, b, c] = P.rules.std_total.map((k) => it[k].amount);
+  const total = (u, m) => a + b * (u - 1) + c * u * (m - 1);
+  for (const e of P.examples || []) s.add(total(e.units, e.months) * 10000);
+  const Y = P.rules.year_months;
+  if (Y) {
+    s.add(total(1, Y) * 10000);
+    s.add(c * (Y - 1) * 10000);
+  }
+  return s;
+}
+const sha = (x) => crypto.createHash('sha256').update(String(x)).digest('hex');
+// 텍스트에서 금액 표기를 뽑아 원 단위 정수로: 185만원 / 1,850,000원 / ₩1,850,000
+// 공백은 [ \t]* 만 허용(줄바꿈을 넘어 '…04\n원형' 같은 오탐 방지). 원가·원본·원형·원목 등 낱말은 제외.
+const MONEY_RE = /₩[ \t]*([0-9][0-9,]*)|([0-9][0-9,]*)[ \t]*만[ \t]*원|([0-9][0-9,]*)[ \t]*원(?![가단장본격료칙상형목통래작리인])/g;
+function moneyHits(text) {
+  const out = [];
+  let m;
+  MONEY_RE.lastIndex = 0;
+  while ((m = MONEY_RE.exec(text))) {
+    const raw = m[0].trim();
+    let won;
+    if (m[1] !== undefined) won = Number(m[1].replace(/,/g, ''));
+    else if (m[2] !== undefined) won = Number(m[2].replace(/,/g, '')) * 10000;
+    else won = Number(m[3].replace(/,/g, ''));
+    if (!won) continue; // 0원
+    out.push({ raw, won });
+  }
+  return out;
+}
+let PRICES = null;
+let ALLOWED = new Set();
+let RETIRED = new Set();
+function usePrices(P) {
+  PRICES = P;
+  ALLOWED = allowedWon(P);
+  RETIRED = new Set(((P.retired_sha256 || {}).hashes) || []);
+}
+try {
+  usePrices(loadPrices());
+} catch (e) {
+  PRICES = null;
+}
+function vatLabels(P) {
+  const L = P.vat.labels;
+  const cur = L[P.vat.mode] || '';
+  const others = Object.keys(L).filter((k) => k !== P.vat.mode && L[k] && L[k] !== cur).map((k) => L[k]);
+  return { cur, others };
+}
 
 const SKIP_DIRS = new Set(['assets', 'tools', 'node_modules']);
 
@@ -86,24 +146,126 @@ function exposedText(html) {
   return bodyText(html) + ' ' + metas.join(' ') + ' ' + (t ? t[1] : '');
 }
 
+function checkMoneyText(file, text, where) {
+  if (!PRICES) {
+    add(file, 'price-mismatch', 'data/prices.json 을 읽지 못함 — 금액 대조 불가');
+    return;
+  }
+  for (const h of moneyHits(text)) {
+    if (RETIRED.has(sha(h.won))) add(file, 'price-retired', '폐기된 옛 금액' + (where || '') + ': "' + h.raw + '"');
+    else if (!ALLOWED.has(h.won)) add(file, 'price-mismatch', '가격표(data/prices.json)에 없는 금액' + (where || '') + ': "' + h.raw + '"');
+  }
+}
+
+// JSON-LD 안의 Offer·PriceSpecification 가격도 가격표와 같아야 한다.
+function checkOffers(file, html) {
+  if (!PRICES) return;
+  const re = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/g;
+  let m;
+  while ((m = re.exec(html))) {
+    let j;
+    try {
+      j = JSON.parse(m[1]);
+    } catch (e) {
+      continue;
+    }
+    (function walk(o) {
+      if (Array.isArray(o)) return o.forEach(walk);
+      if (!o || typeof o !== 'object') return;
+      const t = [].concat(o['@type'] || []);
+      if (o.price !== undefined && t.some((x) => /Offer|PriceSpecification/.test(x))) {
+        const won = Number(o.price);
+        if (RETIRED.has(sha(won))) add(file, 'price-retired', 'JSON-LD 폐기 금액: ' + o.price);
+        else if (!ALLOWED.has(won)) add(file, 'price-mismatch', 'JSON-LD 가격이 가격표에 없음: ' + o.price);
+        if (o.priceCurrency && o.priceCurrency !== PRICES.currency) add(file, 'price-mismatch', 'JSON-LD 통화 ' + o.priceCurrency);
+      }
+      Object.keys(o).forEach((k) => walk(o[k]));
+    })(j);
+  }
+}
+
+function checkVat(file, text) {
+  if (!PRICES) return;
+  const { others } = vatLabels(PRICES);
+  for (const o of others) if (text.includes(o)) add(file, 'vat-label', '부가세 표기 불일치: "' + o + '" (현재 설정: ' + PRICES.vat.mode + ')');
+}
+
 function checkCopy(file, html) {
   const body = bodyText(html);
   const exposed = exposedText(html);
-  for (const re of MONEY) {
-    const hits = exposed.match(re) || [];
-    for (const hit of hits) {
-      const h = hit.trim();
-      if (MONEY_OK.some((ok) => ok.test(h))) continue;
-      add(file, 'money', '금액 노출: "' + h + '"');
-    }
-  }
+  checkMoneyText(file, exposed);
+  checkOffers(file, html);
+  checkVat(file, exposed);
   for (const re of BANNED_COPY) {
     const m = body.match(re);
     if (m) add(file, 'banned-copy', '금지 카피: "' + m[0] + '"');
   }
-  const sm = body.match(BANNED_SERVICE);
-  if (sm) add(file, 'service-wording', '렌탈 아닌 표현: "' + sm[0] + '"');
   for (const c of COMPETITORS) if (exposed.includes(c)) add(file, 'competitor', '경쟁사 실명: "' + c + '"');
+}
+
+// data/**/*.json 의 문자열 값(카피·가격 문구)도 같은 금액 규칙으로 본다. prices.json 자체는 숫자라 해당 없음.
+function checkDataJson(dir) {
+  const out = [];
+  (function w(d) {
+    if (!fs.existsSync(d)) return;
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) w(p);
+      else if (e.name.endsWith('.json')) out.push(p);
+    }
+  })(dir);
+  for (const f of out) {
+    let j;
+    try {
+      j = JSON.parse(fs.readFileSync(f, 'utf8'));
+    } catch (e) {
+      add(f, 'json-ld', 'data JSON 파싱 실패');
+      continue;
+    }
+    const strs = [];
+    (function walk(o) {
+      if (typeof o === 'string') strs.push(o);
+      else if (Array.isArray(o)) o.forEach(walk);
+      else if (o && typeof o === 'object') Object.keys(o).forEach((k) => walk(o[k]));
+    })(j);
+    checkMoneyText(f, strs.join('\n'), ' (data)');
+    if (path.basename(f) !== 'prices.json') checkVat(f, strs.join('\n')); // prices.json 은 표기 후보 목록 자체를 담는다
+  }
+}
+
+// 폐기 금액은 HTML·data 밖(문서·메모 .md/.txt 등)에 남아도 공개 URL로 나간다 → 저장소 전체 텍스트를 본다.
+function checkRetiredEverywhere() {
+  if (!PRICES) return;
+  const exts = /\.(md|txt|xml|csv|js|css)$/;
+  (function w(d) {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      if (e.name.startsWith('.') || e.name === 'node_modules') continue;
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) w(p);
+      else if (exts.test(e.name) && p !== __filename) {
+        const t = fs.readFileSync(p, 'utf8');
+        for (const h of moneyHits(t)) if (RETIRED.has(sha(h.won))) add(p, 'price-retired', '폐기된 옛 금액(파일): "' + h.raw + '"');
+      }
+    }
+  })(ROOT);
+}
+
+// 가격표의 모든 항목 금액이 pricing.html 에 실제로 보이는지(가격 페이지가 빠뜨리지 않았는지).
+function checkPriceCoverage() {
+  if (!PRICES) return;
+  const pf = path.join(ROOT, 'pricing.html');
+  if (!fs.existsSync(pf)) {
+    add(pf, 'price-missing', 'pricing.html 없음');
+    return;
+  }
+  const html = fs.readFileSync(pf, 'utf8');
+  const seen = new Set(moneyHits(exposedText(html)).map((h) => h.won));
+  for (const k of Object.keys(PRICES.items)) {
+    const won = PRICES.items[k].amount * 10000;
+    if (!seen.has(won)) add(pf, 'price-missing', '가격표 항목이 pricing.html 에 안 보임: ' + k + ' ' + PRICES.items[k].amount + '만원');
+  }
+  const { cur } = vatLabels(PRICES);
+  if (cur && !bodyText(html).includes(cur)) add(pf, 'vat-label', 'pricing.html 에 현재 부가세 표기("' + cur + '")가 없음');
 }
 
 function checkImages(file, html) {
@@ -206,11 +368,28 @@ if (process.argv.includes('--selftest')) {
     '<a href="assets/images/hero.webp">사진</a></div></section>',
     '<script type="application/ld+json">{"@type":"Thing"}</script></body></html>',
   ].join('');
+  // 가격 대조 규칙의 대조군: 실제 data/prices.json 값으로 만든 '정상 금액' 문장(정상판에 포함 → 걸리면 오탐).
+  const P0 = loadPrices();
+  const it0 = P0.items;
+  const man = (n) => n.toLocaleString('en-US') + '만원';
+  const [a0, b0, c0] = P0.rules.std_total.map((k) => it0[k].amount);
+  const REAL = '1개월 미만 ' + man(a0) + ', 2대면 ' + man(a0 + b0) + ', 1대 3개월 ' + man(a0 + 2 * c0) +
+    ', 구매 ' + man(it0.std_buy.amount) + ' ' + (vatLabels(P0).cur || '') + '. 포토부스 제작·판매도 합니다.';
+  // 폐기 금액 하나를 해시에서 역으로 찾아 쓴다(평문을 이 파일에 싣지 않으려고).
+  let RETIRED_MAN = null;
+  for (let n = 1; n <= 5000 && RETIRED_MAN === null; n++) if (RETIRED.has(sha(n * 10000))) RETIRED_MAN = n;
+  const WRONG = man(a0 + 5); // 가격표에 없는 금액(정찰가 +5만)
+  const OTHER_VAT = vatLabels(P0).others[0];
+  const offer = (won) => '<script type="application/ld+json">{"@type":"Product","offers":{"@type":"Offer","price":' + won + ',"priceCurrency":"KRW"}}</script>';
+  const CLEAN_P = CLEAN.replace('렌탈 문의 주세요.', REAL).replace('</body>', offer(a0 * 10000) + '</body>');
   const CASES = [
-    ['money', CLEAN.replace('렌탈 문의 주세요.', '대여료 150,000원입니다.')],
-    ['money', CLEAN.replace('렌탈 문의 주세요.', '월 30만원부터.')],
+    ['price-mismatch', CLEAN_P.replace(REAL, REAL + ' 대여료 150,000원입니다.')],
+    ['price-mismatch', CLEAN_P.replace(REAL, REAL + ' 월 30만원부터.')],
+    ['price-mismatch', CLEAN_P.replace(man(a0) + ',', WRONG + ',')],
+    ['price-mismatch', CLEAN_P.replace('"price":' + a0 * 10000, '"price":' + (a0 + 5) * 10000)],
+    ['price-retired', CLEAN_P.replace(REAL, REAL + ' 예전엔 ' + man(RETIRED_MAN || 1) + '이었습니다.')],
+    ['vat-label', CLEAN_P.replace(REAL, REAL + ' (' + (OTHER_VAT || '부가세 포함') + ')')],
     ['banned-copy', CLEAN.replace('렌탈 문의 주세요.', '업계 최저가 보장.')],
-    ['service-wording', CLEAN.replace('렌탈 문의 주세요.', '포토부스 제작해 드립니다.')],
     ['competitor', CLEAN.replace('렌탈 문의 주세요.', '인생네컷보다 낫습니다.')],
     ['tag-balance', CLEAN.replace('</section>', '')],
     ['json-ld', CLEAN.replace('{"@type":"Thing"}', '{"@type":,}')],
@@ -268,6 +447,39 @@ if (process.argv.includes('--selftest')) {
     console.log('  FAIL  정상판이 걸림: ' + clean.join(','));
     bad++;
   } else console.log('  ok    정상판 통과(오탐 없음)');
+  if (RETIRED_MAN === null) {
+    console.log('  FAIL  prices.json retired_sha256 에서 폐기 금액을 찾지 못함 — price-retired 시험 불가');
+    bad++;
+  }
+  const cleanP = run(CLEAN_P);
+  if (cleanP.length) {
+    console.log('  FAIL  가격표 금액·예시 합계·JSON-LD Offer·제작/판매 문구를 넣은 정상판이 걸림: ' + cleanP.join(','));
+    bad++;
+  } else console.log('  ok    가격 정상판 통과 — 가격표 금액·계산 예시·Offer·"제작·판매" 문구 오탐 없음');
+  // data JSON 규칙: 합성 data 폴더로 정상/결함 양방향
+  {
+    const dd = path.join(ROOT, 'tools', '.gate-selftest-data');
+    fs.mkdirSync(dd, { recursive: true });
+    const df = path.join(dd, 'x.json');
+    const runData = (obj) => {
+      viol.length = 0;
+      fs.writeFileSync(df, JSON.stringify(obj), 'utf8');
+      checkDataJson(dd);
+      return viol.map((v) => v.rule);
+    };
+    const okD = runData({ note: '2대면 ' + man(a0 + b0) + '이에요.' });
+    const badD = runData({ note: '2대면 ' + man(a0 + b0 + 1) + '이에요.' });
+    fs.rmSync(dd, { recursive: true, force: true });
+    if (okD.length) {
+      console.log('  FAIL  data JSON 정상판이 걸림: ' + okD.join(','));
+      bad++;
+    } else console.log('  ok    data JSON 정상판 통과');
+    if (badD.includes('price-mismatch')) console.log('  ok    data JSON — 틀린 금액을 물었다');
+    else {
+      console.log('  FAIL  data JSON — 틀린 금액을 놓쳤다');
+      bad++;
+    }
+  }
   for (const [rule, html] of CASES) {
     const got = run(html);
     if (got.includes(rule)) console.log('  ok    ' + rule + ' — 합성 결함을 물었다');
@@ -277,7 +489,7 @@ if (process.argv.includes('--selftest')) {
     }
   }
   fs.unlinkSync(tmp);
-  console.log(bad ? '\n역검증 FAIL — ' + bad + '건' : '\n역검증 PASS — 10개 규칙 + 정상판 대조군 전부 정상');
+  console.log(bad ? '\n역검증 FAIL — ' + bad + '건' : '\n역검증 PASS — 결함 ' + (CASES.length + 4) + '종 검출 + 정상판 대조군 3종 통과');
   process.exit(bad ? 1 : 0);
 }
 
@@ -291,7 +503,12 @@ for (const f of files) {
   checkImages(f, html);
   checkLinks(f, html);
 }
-if (!argv.length) checkSitemap(files);
+if (!argv.length) {
+  checkSitemap(files);
+  checkDataJson(path.join(ROOT, 'data'));
+  checkRetiredEverywhere();
+  checkPriceCoverage();
+}
 
 console.log('검사 대상 ' + files.length + '개 HTML');
 if (!viol.length) {
