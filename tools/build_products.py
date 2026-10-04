@@ -805,7 +805,7 @@ def detail_page(prod, idx):
 
     # FAQ
     out.append(f"""<section class="pd-faq" id="faq"><div class="wrap">
-{sec_head('FAQ', '자주 묻는 질문')}
+{sec_head('궁금한 점', '자주 묻는 질문')}
   <div class="faq ps-faq">
 {faq_html(c['faq'])}
   </div>
@@ -1112,7 +1112,7 @@ def hub_page():
 </div></section>
 
 <section class="ph-faq" id="faq"><div class="wrap">
-{sec_head('FAQ', '자주 묻는 질문')}
+{sec_head('궁금한 점', '자주 묻는 질문')}
   <div class="faq ps-faq">
 {faq_html(h['faq'])}
   </div>
@@ -1150,7 +1150,7 @@ def pricing_page():
     <a class="sum" href="#kiosk"><span class="sum-k">포토키오스크 · 키오스크만</span><span class="sum-v">{amt_html('wood_monthly')}</span><span class="sum-d">인화지 700매 포함 · 한 달 단위</span></a>
     <a class="sum" href="#purchase"><span class="sum-k">구매</span><span class="sum-v"><span class="amt" data-price-key="{buy_min_key}">{esc(man(buy_min))}부터</span>{vat_html()}</span><span class="sum-d">{esc(it[buy_min_key]['label'])} 기준 · 제품별 구매가는 아래 표</span></a>
   </div>
-  <nav class="jump" aria-label="이 페이지 바로가기"><a href="#rental">렌탈</a><a href="#examples">계산 예시</a><a href="#wrap">4면 랩핑</a><a href="#kiosk">키오스크만</a><a href="#negotiable">협의 제품</a><a href="#purchase">구매</a><a href="#notes">운송비·부가세</a><a href="#faq">FAQ</a></nav>
+  <nav class="jump" aria-label="이 페이지 바로가기"><a href="#rental">렌탈</a><a href="#examples">계산 예시</a><a href="#wrap">4면 랩핑</a><a href="#kiosk">키오스크만</a><a href="#negotiable">협의 제품</a><a href="#purchase">구매</a><a href="#notes">운송비·부가세</a><a href="#faq">자주 묻는 질문</a></nav>
 </div></section>
 """)
     # 렌탈 — 스탠다드 부스 가격 카드(큰 금액 + 포함/별도 2열 + 계산 예시 문장, BRIEF 2-3 #2)
@@ -1249,7 +1249,7 @@ def pricing_page():
 </div></section>
 
 <section class="pp-faq" id="faq"><div class="wrap">
-{sec_head('FAQ', '자주 묻는 질문')}
+{sec_head('궁금한 점', '자주 묻는 질문')}
   <div class="faq ps-faq">
 {faq_html(PC['faq'])}
   </div>
