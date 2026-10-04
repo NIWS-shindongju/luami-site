@@ -1458,8 +1458,11 @@ def update_sitemap(xml, changed_pages):
     pages_new = ["products.html", "pricing.html"] + [f"products/{x['slug']}.html" for x in DETAIL]
     xml = re.sub(r"\s*<url><loc>https://luamiphoto\.com/services\.html</loc>.*?</url>", "", xml, flags=re.S)
     # 없어진 페이지(라인업에서 빠진 제품 상세·블로그 등) 제거 — 파일이 없는 .html loc
-    xml = re.sub(r"\s*<url><loc>https://luamiphoto\.com/([^<]+\.html)</loc>.*?</url>",
-                 lambda m: m.group(0) if (ROOT / m.group(1)).exists() else "", xml, flags=re.S)
+    # 내려간 페이지를 옛 주소 안내 스텁(robots noindex + refresh)으로 남긴 경우도 제거 — GitHub Pages 는 서버 301 이 없다
+    def keep(m):
+        f = ROOT / m.group(1)
+        return m.group(0) if f.exists() and not re.search(r'<meta name="robots" content="noindex', f.read_text(encoding="utf-8")) else ""
+    xml = re.sub(r"\s*<url><loc>https://luamiphoto\.com/([^<]+\.html)</loc>.*?</url>", keep, xml, flags=re.S)
     for pg in pages_new:
         loc = f"https://luamiphoto.com/{pg}"
         pri = "0.9" if pg in ("products.html", "pricing.html") else "0.8"
@@ -1538,7 +1541,7 @@ def main():
     gd = (ROOT / "guide.html").read_text(encoding="utf-8")
     outputs["guide.html"] = replace_gen(gd, "guide-prices", guide_prices(), "guide.html")
 
-    case_files = sorted(ROOT.glob("cases/*.html"))
+    case_files = sorted(f for f in ROOT.glob("cases/*.html") if 'content="noindex' not in f.read_text(encoding="utf-8"))  # 옛 주소 안내 스텁 제외
     for f in case_files:
         rel = f"cases/{f.name}"
         outputs[rel] = case_relprod(rel, f.read_text(encoding="utf-8"))
