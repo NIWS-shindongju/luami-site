@@ -131,6 +131,7 @@
      "w": 1600,
      "h": 1600,
      "kind": "render",
+     "baked_label": false,
      "scene": "render",
      "label": "CAD 3D 렌더"
     }

@@ -82,6 +82,7 @@
    "w": 1280,
    "h": 1456,
    "kind": "render",
+   "baked_label": false,
    "scene": "render",
    "label": "CAD 3D 렌더"
   }
@@ -527,6 +528,7 @@
    "w": 1600,
    "h": 1600,
    "kind": "render",
+   "baked_label": false,
    "scene": "render",
    "label": "CAD 3D 렌더"
   },
@@ -539,6 +541,7 @@
    "w": 1400,
    "h": 894,
    "kind": "render",
+   "baked_label": false,
    "scene": "render",
    "label": "CAD 3D 렌더"
   },
@@ -551,6 +554,7 @@
    "w": 1400,
    "h": 894,
    "kind": "render",
+   "baked_label": false,
    "scene": "render",
    "label": "CAD 3D 렌더"
   }

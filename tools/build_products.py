@@ -1544,6 +1544,12 @@ def main():
                     dst.mkdir(parents=True, exist_ok=True)
                     shutil.copy2(f, dst / f.name)
                     n += 1
+                    bl = SITE["covers"].get("baked_label_slugs") or {}
+                    if prod["slug"] in bl.get("slugs", []) and v in bl.get("variants", []):
+                        import strip_baked_label  # 이미지에 박힌 표기 → 지우고 HTML 칩 하나로(BRIEF 1-5 #4)
+                        r = strip_baked_label.strip(dst / f.name, "text")
+                        if r["residual"]:
+                            print(f"  ! 표기 지우기 자국 남음: {f.name} {r}")
         print(f"표지 {n}개 복사 → {dst.relative_to(ROOT)}" + (f" (superseded 건너뜀: {', '.join(skipped)})" if skipped else "")
               + (f" · 기준 {cj}" if cj else " · covers.json 없음(상태 확인 못 함)"))
 

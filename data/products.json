@@ -10,6 +10,7 @@
       "variants": ["4x5", "1x1", "angle1", "angle2", "angle3", "thumb"],
       "kind": "render",
       "label": "CAD 3D 렌더",
+      "baked_label_slugs": {"_doc": "표지 이미지 안에 'CAD 기반 3D 렌더 (실물 사진 아님)' 글자를 박아 내보낸 레인(L60a)의 slug. --covers-from 이 복사한 뒤 tools/strip_baked_label.py text 로 지운다(페이지의 HTML 칩 하나로만 표기, BRIEF 1-5 #4). thumb 는 축소본이라 글자 없음.", "slugs": ["mirror-booth", "steel-elevator", "vintage-elevator"], "variants": ["4x5", "1x1", "angle1", "angle2", "angle3"]},
       "hide": {"_doc": "쓰지 않는 표지 각도(slug → variant 목록). cover_path 가 없는 것으로 보고 --covers-from 도 복사하지 않는다. 2026-10-04 r4 V1: 엘리베이터 2종 angle2 = 크롬 벽에 흑백 줄무늬가 비쳐 깨진 그림처럼 보임, 미러 angle2 = 아무것도 없는 회색 뒷벽.", "vintage-elevator": ["angle2"], "steel-elevator": ["angle2"], "mirror-booth": ["angle2"]},
       "extra": {"_doc": "제품 갤러리에 더하는 보조 렌더(covers.json 의 set_* 등). 파일이 covers 폴더에 있을 때만 쓴다. covers.json 의 set_status 가 superseded 면 --covers-from 이 복사하지 않는다.", "standard-booth": [{"variant": "set_4x5", "caption": "CAD 3D 렌더 · 부스 안 촬영 키오스크 구성", "alt": "스탠다드 부스 CAD 3D 렌더 — 열린 앞면 안쪽에 진회색 경사형 촬영 키오스크와 원형 링조명 카메라"}, {"variant": "set_wrap_4x5", "caption": "CAD 3D 렌더 · 4면 랩핑 예시 무늬", "alt": "스탠다드 부스 CAD 3D 렌더 — 겉면에 일러스트 무늬를 랩핑한 예시와 안쪽 촬영 키오스크"}]}
     },
