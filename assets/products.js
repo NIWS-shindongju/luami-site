@@ -67,7 +67,9 @@
         f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
       }
     });
-    /* 스와이프: 가로 50px 이상이면 넘김, 아래로 90px 이상이면 닫기 */
+    /* 스와이프: 가로 50px 이상이면 넘김, 아래로 90px 이상이면 닫기.
+       .lb 는 touch-action:pinch-zoom — 한 손가락 끌기를 브라우저 스크롤(pan-y)에 넘기지 않아야 세로 스와이프가
+       pointercancel 로 끊기지 않는다(예전 pan-y 에선 아래로 쓸어도 닫히지 않았음, r2 S1 실측). 두 손가락 확대는 그대로 된다. */
     var sx = 0, sy = 0, tracking = false;
     lb.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse') return; tracking = true; sx = e.clientX; sy = e.clientY; });
     lb.addEventListener('pointerup', function (e) {
