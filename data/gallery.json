@@ -328,6 +328,78 @@
  ],
  "standard-booth": [
   {
+   "src": "assets/images/products/standard-booth/14-muji-wrap-front.webp",
+   "thumb": "assets/images/products/standard-booth/thumb/14-muji-wrap-front.webp",
+   "alt": "무인양품 「2026 연결되는 시장 · 구황장」 그래픽으로 네 면을 랩핑한 스탠다드 부스 정면 — 야간 실내 광장, 열린 출입구의 흰 조명",
+   "caption": "무인양품 구황장 · 4면 랩핑 정면",
+   "source_id": "MUJI-6096",
+   "w": 750,
+   "h": 1000,
+   "kind": "photo",
+   "scene": "event",
+   "source_file": "1789662876096.jpg"
+  },
+  {
+   "src": "assets/images/products/standard-booth/15-muji-wrap-angle.webp",
+   "thumb": "assets/images/products/standard-booth/thumb/15-muji-wrap-angle.webp",
+   "alt": "같은 무인양품 랩핑 부스를 비스듬히 본 모습 — 옆면까지 이어진 곡물·채소 일러스트와 출입구",
+   "caption": "무인양품 구황장 · 4면 랩핑 측면 각도",
+   "source_id": "MUJI-0705",
+   "w": 750,
+   "h": 1000,
+   "kind": "photo",
+   "scene": "event",
+   "source_file": "1789660705111.jpg"
+  },
+  {
+   "src": "assets/images/products/standard-booth/16-muji-wrap-side.webp",
+   "thumb": "assets/images/products/standard-booth/thumb/16-muji-wrap-side.webp",
+   "alt": "무인양품 랩핑 부스 옆면 — 바닥에서 올라오는 간접조명, 뒤쪽은 행사 준비 중인 광장",
+   "caption": "무인양품 구황장 · 옆면과 하부 조명",
+   "source_id": "MUJI-5017",
+   "w": 750,
+   "h": 1000,
+   "kind": "photo",
+   "scene": "event",
+   "source_file": "1789662875017.jpg"
+  },
+  {
+   "src": "assets/images/products/standard-booth/17-kiosk-ring-camera.webp",
+   "thumb": "assets/images/products/standard-booth/thumb/17-kiosk-ring-camera.webp",
+   "alt": "스탠다드 부스 안의 진회색 경사형 촬영 키오스크와 벽에 단 원형 링조명 카메라 — 터치 화면, 결제 단말, 사진 출력구",
+   "caption": "부스 안 촬영 키오스크 · 링조명 카메라",
+   "source_id": "KIOSK-9347",
+   "w": 750,
+   "h": 1000,
+   "kind": "photo",
+   "scene": "detail",
+   "source_file": "1789662869347.jpg"
+  },
+  {
+   "src": "assets/images/products/standard-booth/18-kiosk-inside-muji.webp",
+   "thumb": "assets/images/products/standard-booth/thumb/18-kiosk-inside-muji.webp",
+   "alt": "무인양품 랩핑 패널 너머로 보이는 부스 내부 — 천장 조명, 원형 링조명 카메라, 진회색 촬영 키오스크",
+   "caption": "부스 안 구성 · 키오스크와 랩핑 패널",
+   "source_id": "KIOSK-0378",
+   "w": 750,
+   "h": 1000,
+   "kind": "photo",
+   "scene": "detail",
+   "source_file": "1789660378437.jpg"
+  },
+  {
+   "src": "assets/images/products/standard-booth/19-kiosk-inside-angle.webp",
+   "thumb": "assets/images/products/standard-booth/thumb/19-kiosk-inside-angle.webp",
+   "alt": "부스 안 촬영 키오스크와 링조명 카메라를 비스듬히 본 모습 — 흰 내벽과 천장 조명",
+   "caption": "부스 안 구성 · 다른 각도",
+   "source_id": "KIOSK-7517",
+   "w": 750,
+   "h": 1000,
+   "kind": "photo",
+   "scene": "detail",
+   "source_file": "1789660707517.jpg"
+  },
+  {
    "src": "assets/images/products/standard-booth/01-plain-front.webp",
    "thumb": "assets/images/products/standard-booth/thumb/01-plain-front.webp",
    "alt": "필로티 아래 놓인 스탠다드 부스 정면 — 흰색 알루미늄 패널, 문 없이 뚫린 출입구와 흰 커튼, 하단 캐스터",

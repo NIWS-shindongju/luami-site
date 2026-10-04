@@ -9,7 +9,8 @@
       "pattern": "{slug}_{variant}.jpg",
       "variants": ["4x5", "1x1", "angle1", "angle2", "angle3", "thumb"],
       "kind": "render",
-      "label": "CAD 3D 렌더"
+      "label": "CAD 3D 렌더",
+      "extra": {"_doc": "제품 갤러리에 더하는 보조 렌더(covers.json 의 set_* 등). 파일이 covers 폴더에 있을 때만 쓴다. covers.json 의 set_status 가 superseded 면 --covers-from 이 복사하지 않는다.", "standard-booth": [{"variant": "set_4x5", "caption": "CAD 3D 렌더 · 부스 안 촬영 키오스크 구성", "alt": "스탠다드 부스 CAD 3D 렌더 — 열린 앞면 안쪽에 진회색 경사형 촬영 키오스크와 원형 링조명 카메라"}, {"variant": "set_wrap_4x5", "caption": "CAD 3D 렌더 · 4면 랩핑 예시 무늬", "alt": "스탠다드 부스 CAD 3D 렌더 — 겉면에 일러스트 무늬를 랩핑한 예시와 안쪽 촬영 키오스크"}]}
     },
     "gallery_hide_scenes": [],
     "install_fields": {"_doc": "제품 상세 '설치 조건' 표의 행 순서·이름. 제품 install 에 값이 있는 행만 그린다(빈 값·없는 키는 행을 만들지 않음). 전원·설치/철수 시간·1회 촬영~인화 시간은 현장 실측 전이라 비워 둔다.", "footprint": "차지 면적", "height": "높이", "head": "촬영 헤드 크기", "weight": "무게", "entrance": "출입구", "structure": "구조", "power": "전원", "setup_time": "설치·철수 시간", "print_time": "1회 촬영~인화 시간", "carry_in": "반입·이동"},

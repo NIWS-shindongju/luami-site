@@ -286,6 +286,8 @@ def render_tag(img, large=False):
     - 3D 표지(covers/)는 이미지 안 표기 여부를 모르므로 화면 위에 표기를 얹는다.
     - 갤러리 렌더(data/gallery.json·wrap.json)는 우하단에 표기가 박혀 있지만 썸네일에선 글자가 작다 →
       contain 으로 통째로 보여 주고(img_tag, 박힌 표기가 잘리지 않게) 왼쪽에 읽히는 크기로 한 번 더 얹는다."""
+    if img and img.get("kind") == "mockup":  # 랩핑 디자인 목업(사진 아님) — 화면 위에 표기
+        return f'<span class="render-tag">{esc(img.get("label", "디자인 목업"))}</span>'
     if not img or img.get("kind") != "render":
         return ""
     if large and not img.get("is_cover") and img.get("baked_label", True):
@@ -336,6 +338,8 @@ SCENE_RANK = {"install": 0, "event": 0, "detail": 1, "render": 2, "factory": 3}
 
 
 def gallery(slug):
+    """상세 사진 묶음 — 실사(설치·행사 → 디테일) 먼저, 그다음 3D 표지 보조 각도, 그다음 나머지 렌더·출고 전.
+    첫 화면 표지가 이미 3D 렌더라 갤러리는 실제 현장 사진으로 시작한다(실사가 없는 제품은 렌더가 맨 앞)."""
     hide = set(SITE.get("gallery_hide_scenes") or [])
     items = []
     for v in ("angle1", "angle2", "angle3"):
@@ -344,10 +348,15 @@ def gallery(slug):
             w, h = dims(rel)
             items.append({"src": rel, "thumb": rel, "w": w, "h": h, "kind": "render", "scene": "render", "is_cover": True,
                           "alt": f"{BYSLUG[slug]['name']} CAD 3D 렌더 — 다른 각도", "caption": "CAD 3D 렌더"})
-    base = [x for x in G.get(slug, []) if x.get("scene") not in hide]
-    base = sorted(enumerate(base), key=lambda t: (SCENE_RANK.get(t[1].get("scene"), 1), t[0]))
-    items += [x for _, x in base]
-    return items
+    for ex in SITE["covers"].get("extra", {}).get(slug, []):
+        rel = cover_path(slug, ex["variant"])
+        if rel:
+            w, h = dims(rel)
+            items.append({"src": rel, "thumb": rel, "w": w, "h": h, "kind": "render", "scene": "render", "is_cover": True,
+                          "alt": ex["alt"], "caption": ex["caption"]})
+    items += [x for x in G.get(slug, []) if x.get("scene") not in hide]
+    ranked = sorted(enumerate(items), key=lambda t: (SCENE_RANK.get(t[1].get("scene"), 1), not t[1].get("is_cover"), t[0]))
+    return [x for _, x in ranked]
 
 
 def contain_style(it):
@@ -1476,15 +1485,27 @@ def main():
     if a.covers_from:
         src = pathlib.Path(a.covers_from)
         dst = ROOT / SITE["covers"]["dir"]
-        n = 0
+        # 렌더 레인의 covers.json(폴더 또는 상위 폴더)이 있으면 status/set_status = superseded 는 복사하지 않는다
+        cj = next((p_ / "covers.json" for p_ in (src, src.parent) if (p_ / "covers.json").exists()), None)
+        meta = json.loads(cj.read_text(encoding="utf-8")).get("products", {}) if cj else {}
+        n, skipped = 0, []
+        extra = SITE["covers"].get("extra", {})
         for prod in DETAIL + CONCEPTS:
-            for v in SITE["covers"]["variants"]:
+            m = meta.get(prod["slug"], {})
+            if m.get("status") == "superseded":
+                skipped.append(prod["slug"])
+                continue
+            vs = list(SITE["covers"]["variants"])
+            if m.get("set_status") != "superseded":
+                vs += [ex["variant"] for ex in extra.get(prod["slug"], [])]
+            for v in vs:
                 f = src / SITE["covers"]["pattern"].format(slug=prod["slug"], variant=v)
                 if f.exists():
                     dst.mkdir(parents=True, exist_ok=True)
                     shutil.copy2(f, dst / f.name)
                     n += 1
-        print(f"표지 {n}개 복사 → {dst.relative_to(ROOT)}")
+        print(f"표지 {n}개 복사 → {dst.relative_to(ROOT)}" + (f" (superseded 건너뜀: {', '.join(skipped)})" if skipped else "")
+              + (f" · 기준 {cj}" if cj else " · covers.json 없음(상태 확인 못 함)"))
 
     outputs = {}
     outputs["products.html"] = chrome("products.html", hub_page())
