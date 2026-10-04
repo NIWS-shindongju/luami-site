@@ -74,7 +74,7 @@
   {
    "id": "winter",
    "title": "기본형 → 4면 랩핑",
-   "note": "왼쪽은 랩핑 전 기본형 CAD 3D 렌더, 오른쪽은 실제 4면 랩핑 설치 사진입니다.",
+   "note": "왼쪽은 랩핑 전 기본형 설계 3D 이미지(CAD 3D 렌더), 오른쪽은 실제 4면 랩핑 설치 사진입니다.",
    "before": [
     {
      "src": "assets/images/wrap/05-base-render.webp",

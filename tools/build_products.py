@@ -108,8 +108,11 @@ def man_text(n):
 
 
 def tmpl(s):
-    """{price:key} → '185만원(부가세 별도)', '({vat})' → '(부가세 별도)' 또는 '' (표기 안 함 모드)."""
+    """{price:key} → '185만원(부가세 별도)', '({vat})' → '(부가세 별도)' 또는 '' (표기 안 함 모드).
+    {man:key} → '185만원'(월·+ 접두·부가세 없이 금액만, 계산식 안에서), {total:대수:개월} → 스탠다드 합계 '275만원'."""
     s = re.sub(r"\{price:([a-z0-9_]+)\}", lambda m: amt_text(m.group(1)), s)
+    s = re.sub(r"\{man:([a-z0-9_]+)\}", lambda m: man(PR["items"][m.group(1)]["amount"]), s)
+    s = re.sub(r"\{total:(\d+):(\d+)\}", lambda m: man(std_total(int(m.group(1)), int(m.group(2)))), s)
     v = vat_label()
     return s.replace("({vat})", f"({v})" if v else "")
 
@@ -940,7 +943,7 @@ def hub_page():
 </div></section>
 {anchors}
 <section class="ph-featured" id="featured"><div class="wrap">
-{sec_head('주력', '주력 제품', '스탠다드 부스와 포토키오스크는 표의 가격 그대로 바로 진행할 수 있습니다.')}
+{sec_head('주력', '주력 제품', '스탠다드 부스와 포토키오스크는 표의 가격 그대로 바로 진행할 수 있습니다. 스탠다드 부스 렌탈에는 촬영 키오스크(부스 안에서 찍고 출력하는 기계)·4면 랩핑(겉면 네 면에 행사 디자인을 인쇄해 붙이는 것)·인화지(사진 출력 용지)·설치·회수(행사 후 철거해 가져감)가 들어 있습니다.')}
   <div class="fc-grid">
 {chr(10).join(featured_card(x) for x in feat)}
   </div>
@@ -1216,9 +1219,22 @@ def home_prices():
       <li><span class="hp-k">포토키오스크만 빌리기</span><span class="hp-v">{amt_html('wood_monthly')}</span><span class="hp-d">인화지 700매 포함 · 한 달 단위</span></li>
       <li><span class="hp-k">구매</span><span class="hp-v"><span class="amt">{esc(man(it['std_buy']['amount']))}부터</span>{vat_html()}</span><span class="hp-d">스탠다드 부스 {esc(man(it['std_buy']['amount']))} · 포토키오스크 {esc(man(it['wood_buy']['amount']))}</span></li>
     </ul>
-    <p class="hp-foot">미러·엘리베이터·지하철·원형 하이앵글 부스와 커스텀 제작은 기간·가격 협의 · 운송비 별도 <a href="pricing.html">전체 가격표 보기 →</a></p>
+    <p class="hp-foot">미러·엘리베이터·지하철·원형 하이앵글부스와 커스텀 제작은 기간·가격 협의 · 운송비 별도 <a href="pricing.html">전체 가격표 보기 →</a></p>
   </div>
 </div></section>"""
+
+
+def home_hero_h1():
+    a = man(PR["items"]["std_short"]["amount"])
+    return (f'<h1 aria-label="포토부스 렌탈 {esc(a)}, 4면 랩핑 포함"><span class="lm"><span>포토부스 렌탈</span></span>'
+            f'<span class="lm"><span>{esc(a)},</span></span><span class="lm"><span><i>4면 랩핑</i> 포함</span></span></h1>')
+
+
+def home_hero_sub():
+    v = vat_label()
+    basis = f"스탠다드 부스 1대·1개월 미만 기준({v})입니다." if v else "스탠다드 부스 1대·1개월 미만 기준입니다."
+    return (f'<div class="sub fade"><p>{esc(basis)} 부스·촬영 키오스크(찍고 출력하는 기계)·4면 랩핑(겉면 행사 디자인)·'
+            f'인화지(사진 용지) 1,400매에 설치·회수(행사 후 철거)까지 포함되고, 운송비만 별도입니다.</p></div>')
 
 
 def home_pbox():
@@ -1237,8 +1253,8 @@ def guide_prices():
     return f"""<aside class="g-price fade" aria-label="루아미 실제 가격 요약">
     <b class="g-price-t">루아미 실제 가격은?</b>
     <ul>
-      <li>스탠다드 부스 1개월 미만 렌탈 <strong>{esc(amt_text('std_short'))}</strong> — 촬영 키오스크·4면 랩핑·인화지 1,400매·설치·회수 포함, 운송비 별도</li>
-      <li>2대째부터 1대마다 <strong>{esc(amt_text('std_extra_unit'))}</strong> · 2개월차부터 부스당 <strong>{esc(amt_text('std_monthly'))}</strong></li>
+      <li>스탠다드 부스 1개월 미만 렌탈 <strong>{esc(amt_text('std_short'))}</strong> — 촬영 키오스크(찍고 출력하는 기계)·4면 랩핑(겉면 네 면 디자인 인쇄)·인화지(사진 출력 용지) 1,400매·설치·회수(행사 후 철거) 포함, 운송비 별도</li>
+      <li>2대째부터 1대마다 <strong>{esc(amt_text('std_extra_unit'))}</strong> · 두 번째 달부터 부스당 <strong>{esc(amt_text('std_monthly'))}</strong></li>
       <li>포토키오스크만 렌탈 <strong>{esc(amt_text('wood_monthly'))}</strong> — 인화지 700매 포함</li>
       <li>구매 스탠다드 부스 <strong>{esc(amt_text('std_buy'))}</strong> · 포토키오스크 <strong>{esc(amt_text('wood_buy'))}</strong></li>
     </ul>
@@ -1331,7 +1347,9 @@ def main():
     outputs["services.html"] = chrome("services.html", services_stub())
 
     idx = (ROOT / "index.html").read_text(encoding="utf-8")
-    idx2 = replace_gen(idx, "home-lineup", home_lineup(), "index.html")
+    idx2 = replace_gen(idx, "home-hero-h1", home_hero_h1(), "index.html")
+    idx2 = replace_gen(idx2, "home-hero-sub", home_hero_sub(), "index.html")
+    idx2 = replace_gen(idx2, "home-lineup", home_lineup(), "index.html")
     idx2 = replace_gen(idx2, "home-prices", home_prices(), "index.html")
     idx2 = replace_gen(idx2, "home-pbox", home_pbox(), "index.html")
     idx2 = replace_gen(idx2, "home-faq-cost", home_faq_cost(), "index.html")
