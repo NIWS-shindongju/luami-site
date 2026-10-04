@@ -30,7 +30,6 @@
 .badge-recommend{background:var(--gold);color:var(--ink)}
 .badge-ha{background:rgba(30,90,64,.1);color:var(--accent-dark);border:1px solid rgba(30,90,64,.35)}
 .badge-line{border:1px solid rgba(24,33,27,.22);color:var(--ink2)}
-.render-tag{position:absolute;left:8px;bottom:8px;z-index:2;font-size:12px;font-weight:600;letter-spacing:.02em;color:var(--cream);background:rgba(24,33,27,.8);padding:4px 8px;border-radius:3px;pointer-events:none}
 .amt{font-weight:700;color:var(--ink);white-space:nowrap}
 .vat{font-size:12.5px;font-weight:500;color:var(--muted);white-space:nowrap}
 .ask{font-weight:600;color:var(--ink2)}

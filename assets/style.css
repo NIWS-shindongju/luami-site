@@ -63,6 +63,14 @@ body.home header.nav{--navfg:var(--paper);--navborder:rgba(244,245,241,.32)}
 .nav-cta{border:1px solid var(--navborder);color:var(--navfg);padding:10px 18px;border-radius:10px;font-size:14px;font-weight:700;letter-spacing:0;text-transform:none;transition:background .25s,color .25s}
 .nav-cta:hover{background:var(--accent);border-color:var(--accent);color:var(--ink)}
 @media(max-width:880px){.nav-links{display:none}}
+/* 머리 오른쪽: 전화번호 · 카톡 · 무료 견적 받기 (tools/unify_chrome.py) — 880px 이하는 하단 바(.mcta)가 대신 */
+.nav-act{display:flex;align-items:center;gap:10px}
+.hdr-tel{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 4px;font-weight:700;font-size:14.5px;color:var(--navfg);white-space:nowrap}
+.hdr-tel:hover{text-decoration:underline;text-underline-offset:3px}
+.hdr-kakao,.nav-cta{display:inline-flex;align-items:center;min-height:42px;padding:0 15px;border-radius:10px;font-weight:700;font-size:14px;white-space:nowrap}
+@media(max-width:1180px){.nav-links{gap:20px}.nav-act{gap:8px}}
+@media(max-width:1000px){.hdr-tel{display:none}}
+@media(max-width:880px){.nav-act{display:none}}
 
 .hero{position:relative;background:var(--ink);color:var(--cream);overflow:hidden;padding:0}
 /* 시그니처: 사인파 리플 배경(습득자산#3 재사용) — 순수 SVG+수학, 정적 히어로에 은은한 생동감 */
@@ -647,6 +655,9 @@ body.home .nav-links a[aria-current="page"]{color:var(--accent-l)}
 .contacts a,.mcta a{border-color:var(--ghost-bd)}
 /* 모바일 하단 바의 카톡 = 공식 노랑(마크업 76파일 하드코딩이라 href 로 고른다) */
 .mcta a[href*="pf.kakao.com"]{background:#FEE500;border-color:#FEE500;color:#191919}
+
+/* 'CAD 3D 렌더' 표기 칩(홈·허브·상세 공용) — 렌더 위 글자는 흰 칩 + ink 만(BRIEF 1-5 #4, ink/흰 16:1) */
+.render-tag{position:absolute;left:8px;bottom:8px;z-index:2;font-size:12px;font-weight:700;letter-spacing:0;color:var(--ink);background:#fff;padding:4px 8px;border-radius:6px;box-shadow:0 1px 3px rgba(24,33,27,.18);pointer-events:none}
 
 /* 가이드 '루아미 실제 가격은?' 상자 (tools/build_products.py GEN:guide-prices) */
 .g-price{grid-column:1/-1;margin-top:clamp(24px,3vw,36px);padding:22px 24px;border:1px solid var(--line);border-left:3px solid var(--accent-dark);border-radius:12px;background:rgba(244,245,241,.7)}

@@ -1184,42 +1184,104 @@ def services_stub():
 
 
 # ───────────────────────── 홈·가이드 GEN 블록 ─────────────────────────
+def tile_img(prod, variant, depth=0, priority=False):
+    """홈 타일 문법(BRIEF 1-5 #4): 사진 칸 바탕 = --tile, 렌더는 contain(통째로), 실사는 cover.
+    렌더 대체 이미지 중 바탕이 밝은 것(예: L53 설계 시트 크롭)은 is-light → CSS 가 타일 회색에 곱하기로 얹어 같은 가족으로 보이게 한다.
+    표지(covers/)가 생기면 cover() 가 그걸 먼저 돌려주므로 이 함수는 손댈 필요 없다."""
+    img = cover(prod, variant)
+    if img is None:
+        return "", None
+    cls = "is-render" if img["kind"] == "render" else "is-photo"
+    if img["kind"] == "render" and not img.get("is_cover"):
+        bg = edge_color(img["src"])
+        hexes = re.findall(r"#([0-9a-f]{6})", bg)
+        if hexes and min(sum(int(h[i:i + 2], 16) for i in (0, 2, 4)) / 3 for h in hexes) > 200:
+            cls += " is-light"
+    return img_tag(img, depth, cover_alt(prod, img), cls=cls, priority=priority), img
+
+
+def lineup_tile(prod):
+    m = PR["products"].get(prod["slug"]) or {}
+    v = vat_label()
+    vs = f" <small>{esc(v)}</small>" if v else ""
+    if m.get("rental_summary"):
+        k = m["rental_summary"]
+        sub = f'{esc(m.get("rental_summary_prefix", ""))} <span class="lu-amt">{esc(amt(k))}</span>{vs}'.strip()
+    else:
+        sub = esc(m.get("rental_text", ""))
+    tag, img = tile_img(prod, "thumb")
+    badge = f'<span class="lu-badge lu-{prod.get("badge_kind", "main")}">{esc(prod["badge"])}</span>' if prod.get("badge") else ""
+    return (f'<li><a class="lu-card" href="products/{prod["slug"]}.html"><span class="lu-im tile">{tag}{badge}{render_tag(img)}</span>'
+            f'<b>{esc(prod["name"])}</b><em>{sub}</em></a></li>')
+
+
 def home_lineup():
-    def sub(slug):
-        m = PR["products"].get(slug) or {}
-        v = vat_label()
-        vs = f" <small>{esc(v)}</small>" if v else ""
-        if m.get("rental_summary"):
-            k = m["rental_summary"]
-            return f"{esc(m.get('rental_summary_prefix', ''))} {esc(amt(k))}{vs}".strip()
-        if m.get("purchase"):
-            return f"구매 {esc(amt(m['purchase']))}{vs}"
-        return esc(m.get("rental_text", ""))
-    lis = []
-    for prod in DETAIL:
-        img = cover(prod, "thumb")
-        badge = f'<span class="hl-badge hl-{prod.get("badge_kind", "main")}">{esc(prod["badge"])}</span>' if prod.get("badge") else ""
-        no = "+" if prod["slug"] == "custom" else f"{prod['order']:02d}"
-        lis.append(f'<li><a href="products/{prod["slug"]}.html"><span class="hl-im">{img_tag(img, 0, "")}{badge}{render_tag(img)}</span>'
-                   f'<span class="hl-no">{no}</span><b>{esc(prod["name"])}</b><em>{sub(prod["slug"])}</em></a></li>')
-    return f"""<div class="h-lineup" aria-labelledby="hlTitle">
-    <div class="h-lineup-head"><h2 id="hlTitle" class="h-lineup-t">제품 {len(LINEUP)}종 <span>+ 커스텀 제작</span></h2><a href="products.html">제품 전체 보기 →</a></div>
-    <ul class="h-lineup-list">{''.join(lis)}</ul>
-  </div>"""
-
-
-def home_prices():
+    """홈 라인업 — '정가로 바로 진행'(가격이 정해진 제품) / '기간·가격 협의'(나머지 + 커스텀) 두 묶음, 같은 타일 문법.
+    정가 묶음 아래에 가격 규칙 4줄(예전 '가격 한눈에' 띠)을 붙인다. 금액은 전부 prices.json."""
+    fixed = [x for x in DETAIL if has_fixed_price(x["slug"])]
+    fixed.sort(key=lambda x: (x.get("badge_kind") != "main", x["order"]))  # 주력(스탠다드) 먼저
+    neg = [x for x in DETAIL if not has_fixed_price(x["slug"])]
     it = PR["items"]
-    return f"""<section class="h-prices" id="prices" aria-labelledby="hpTitle"><div class="wrap">
-  <div class="hp-in">
-    <div class="hp-head"><span class="idxlabel">가격 한눈에</span><h2 id="hpTitle">스탠다드 부스·포토키오스크는 <i>정가로 바로 진행</i></h2></div>
-    <ul class="hp-list">
-      <li><span class="hp-k">스탠다드 부스 렌탈 · 1개월 미만</span><span class="hp-v">{amt_html('std_short')}</span><span class="hp-d">4면 랩핑·인화지 1,400매·설치·회수 포함 · 운송비 별도</span></li>
-      <li><span class="hp-k">2대째부터 · 1대 추가마다</span><span class="hp-v"><span class="amt">{esc(amt('std_extra_unit'))}</span><span class="hp-unit">/대</span>{vat_html()}</span><span class="hp-d">한 달을 넘기면 두 번째 달부터 부스당 {esc(amt_text('std_monthly'))}</span></li>
-      <li><span class="hp-k">포토키오스크만 빌리기</span><span class="hp-v">{amt_html('wood_monthly')}</span><span class="hp-d">인화지 700매 포함 · 한 달 단위</span></li>
-      <li><span class="hp-k">구매</span><span class="hp-v"><span class="amt">{esc(man(it['std_buy']['amount']))}부터</span>{vat_html()}</span><span class="hp-d">스탠다드 부스 {esc(man(it['std_buy']['amount']))} · 포토키오스크 {esc(man(it['wood_buy']['amount']))}</span></li>
-    </ul>
-    <p class="hp-foot">미러·엘리베이터·지하철·원형 하이앵글부스와 커스텀 제작은 기간·가격 협의 · 운송비 별도 <a href="pricing.html">전체 가격표 보기 →</a></p>
+    v = vat_label()
+    vs = f' <small class="vat">{esc(v)}</small>' if v else ""
+    notes = (f'<li><span class="lp-k">2대째부터 1대마다</span><span class="lp-v"><b>{esc(amt("std_extra_unit"))}</b>{vs}</span>'
+             f'<span class="lp-d">4면 랩핑 포함 · 인화지는 700매 {esc(man(it["paper_700"]["amount"]))}씩 추가</span></li>'
+             f'<li><span class="lp-k">두 번째 달부터</span><span class="lp-v"><b>부스당 {esc(amt("std_monthly"))}</b>{vs}</span>'
+             f'<span class="lp-d">1년 가까이 쓰실 곳이면 구매를 권해 드립니다</span></li>'
+             f'<li><span class="lp-k">구매</span><span class="lp-v"><b>{esc(man(it["std_buy"]["amount"]))}부터</b>{vs}</span>'
+             f'<span class="lp-d">스탠다드 부스 {esc(man(it["std_buy"]["amount"]))} · 포토키오스크 {esc(man(it["wood_buy"]["amount"]))}</span></li>')
+    return f"""<section class="h-lineup2 h-alt" id="lineup" aria-labelledby="luTitle"><div class="wrap">
+  <div class="h-head">
+    <div><span class="idxlabel">제품 {len(LINEUP)}종 + 커스텀</span><h2 id="luTitle">정가 제품과 <i>협의 제품</i></h2><p>스탠다드 부스·포토키오스크는 아래 가격 그대로 바로 진행합니다. 나머지는 기간·대수·구성을 듣고 견적을 드립니다.</p></div>
+    <a class="h-link" href="products.html">제품 전체 보기 →</a>
+  </div>
+  <div class="lu-groups">
+    <div class="lu-group lu-g-fixed" id="prices">
+      <div class="lu-gh"><h3>정가로 바로 진행</h3><span>{esc(v) if v else ""}</span></div>
+      <ul class="lu-grid lu-grid-2">{''.join(lineup_tile(x) for x in fixed)}</ul>
+      <ul class="lu-notes">{notes}</ul>
+      <p class="lu-foot">설치·회수 포함, 운송비 별도 · <a href="pricing.html">전체 가격표 보기 →</a></p>
+    </div>
+    <div class="lu-group lu-g-neg">
+      <div class="lu-gh"><h3>기간·가격 협의</h3><span>{len(neg) - 1}종 + 커스텀 제작</span></div>
+      <ul class="lu-grid lu-grid-3">{''.join(lineup_tile(x) for x in neg)}</ul>
+    </div>
+  </div>
+</div></section>"""
+
+
+def home_paths():
+    """첫 갈림길 2카드(BRIEF 2-1 #5) — 행사에 빌리기(스탠다드) / 매장에 들여놓기(포토키오스크). 카드마다 사진 1·버튼 1, 금액은 prices.json."""
+    std, kio = BYSLUG["standard-booth"], BYSLUG["photo-kiosk"]
+    it = PR["items"]
+    v = vat_label()
+    vs = f' <small class="vat">{esc(v)}</small>' if v else ""
+    ev = {"src": "assets/images/event-festival-white.webp", "kind": "photo", "position": "50% 60%", "is_cover": False}
+    ev["w"], ev["h"] = dims(ev["src"])
+    k_tag, k_img = tile_img(kio, "4x5")
+    return f"""<section class="h-paths" id="paths" aria-labelledby="pathTitle"><div class="wrap">
+  <div class="h-head"><div><span class="idxlabel">어떻게 쓰시나요</span><h2 id="pathTitle">행사에 빌리거나, <i>매장에 들여놓거나</i></h2></div></div>
+  <div class="path-grid">
+    <article class="path-card">
+      <figure class="path-im">{img_tag(ev, 0, "서울 뷰티 트래블 위크 야외 행사에 설치한 스탠다드 부스")}</figure>
+      <div class="path-body">
+        <span class="path-k">행사·팝업 · 며칠에서 몇 주</span>
+        <h3>행사에 빌리기</h3>
+        <p class="path-price">{esc(std["name"])} <b>{esc(man(it["std_short"]["amount"]))}</b>부터{vs}</p>
+        <p class="path-d">1대·1개월 미만 기준. 4면 랩핑·인화지 1,400매·설치·회수가 들어 있고 운송비만 별도입니다.</p>
+        <a class="btn path-cta" href="products/{std["slug"]}.html">{esc(std["name"])} 자세히 보기 <span aria-hidden="true">→</span></a>
+      </div>
+    </article>
+    <article class="path-card">
+      <figure class="path-im tile">{k_tag}{render_tag(k_img)}</figure>
+      <div class="path-body">
+        <span class="path-k">매장·카페 · 한 달 단위</span>
+        <h3>매장에 들여놓기</h3>
+        <p class="path-price">{esc(kio["name"])} 키오스크만 <b>{esc(amt("wood_monthly"))}</b> · 구매 <b>{esc(man(it["wood_buy"]["amount"]))}</b>{vs}</p>
+        <p class="path-d">렌탈은 인화지 700매 포함, 한 달 단위입니다. 1년 가까이 두실 곳이면 구매를 권해 드립니다.</p>
+        <a class="btn path-cta" href="products/{kio["slug"]}.html">{esc(kio["name"])} 자세히 보기 <span aria-hidden="true">→</span></a>
+      </div>
+    </article>
   </div>
 </div></section>"""
 
@@ -1349,8 +1411,8 @@ def main():
     idx = (ROOT / "index.html").read_text(encoding="utf-8")
     idx2 = replace_gen(idx, "home-hero-h1", home_hero_h1(), "index.html")
     idx2 = replace_gen(idx2, "home-hero-sub", home_hero_sub(), "index.html")
+    idx2 = replace_gen(idx2, "home-paths", home_paths(), "index.html")
     idx2 = replace_gen(idx2, "home-lineup", home_lineup(), "index.html")
-    idx2 = replace_gen(idx2, "home-prices", home_prices(), "index.html")
     idx2 = replace_gen(idx2, "home-pbox", home_pbox(), "index.html")
     idx2 = replace_gen(idx2, "home-faq-cost", home_faq_cost(), "index.html")
     outputs["index.html"] = sync_faq_jsonld(idx2)

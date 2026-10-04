@@ -2,6 +2,8 @@
 """모든 페이지의 머리(메뉴)·서랍 메뉴·푸터를 한 벌로 통일하고 장식 요소를 걷어낸다.
 
 - 메뉴 5개 고정(2026-10-04~): 제품 · 가격 · 사례 · 블로그 · 문의(버튼)
+- 머리 오른쪽(2026-10-04 r4, BRIEF 2-1 #2): 전화번호 글자 · 카톡 상담(공식 노랑) · 무료 견적 받기(채움 버튼).
+  880px 이하에선 숨기고 하단 바(.mcta: 카톡·전화·무료 견적)가 대신한다.
   렌탈 가이드는 상단 메뉴에서 빠지고 푸터 바로가기에 남는다(사이트 전역 내부 링크 유지).
 - 현재 페이지 메뉴에 aria-current="page"
 - 푸터 최하단 사업자 정보 한 줄(BIZ) — 메뉴 없는 단독 페이지(404·thanks)엔 얇은 푸터로
@@ -19,6 +21,8 @@ MENU = [
     ("blog.html", "블로그"),
 ]
 CONTACT = ("index.html#contact", "무료 견적")
+TEL = ("tel:01036297743", "010-3629-7743")
+KAKAO = "http://pf.kakao.com/_YRxoPX/chat"
 # 푸터 바로가기 — 메뉴 + 렌탈 가이드(상단 메뉴에서 빠진 순위 페이지로 가는 전역 링크)
 QUICK = MENU + [("guide.html", "렌탈 가이드"), CONTACT]
 SECTION_OF = {"blog": "blog.html", "cases": "portfolio.html", "products": "products.html"}
@@ -39,7 +43,11 @@ def chrome(prefix, current):
     header = f'''<header class="nav"><div class="wrap nav-in">
   <a href="{prefix}index.html" class="logo">Luami<span class="dot"></span></a>
   <nav class="nav-links">{top}</nav>
-  <a href="{prefix}{CONTACT[0]}" class="nav-cta">{CONTACT[1]}</a>
+  <div class="nav-act">
+    <a href="{TEL[0]}" class="hdr-tel" aria-label="전화 상담 {TEL[1]}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>{TEL[1]}</a>
+    <a href="{KAKAO}" class="hdr-kakao kakao" target="_blank" rel="noopener">카톡 상담</a>
+    <a href="{prefix}{CONTACT[0]}" class="nav-cta">{CONTACT[1]} 받기</a>
+  </div>
   <button class="navtoggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button>
 </div></header>'''
     drawer_html = f'''<div class="drawer-scrim" id="drawerScrim" aria-hidden="true"></div>
