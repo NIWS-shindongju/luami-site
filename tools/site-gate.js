@@ -25,7 +25,7 @@
  *  8) sitemap ↔ 실제 파일 정합 + lastmod 정책(stale-lastmod, 아래)
  *  9) 사각지대 메우기(2026-10-04 r4 V2 M7):
  *     a. 속성 글자 — alt·title·aria-label·data-caption·placeholder 값도 금액·부가세·경쟁사 규칙(검색·라이트박스·화면낭독기에 노출)
- *     b. '원' 없는 'N만'(예: '800만') 도 금액으로 본다. 단 명·장·매·개·회·건·번·대·곳 같은 셈 단위가 바로 뒤면 금액 아님
+ *     b. '원' 없는 'N만'(숫자 뒤 '만'에서 끝나는 금액) 도 금액으로 본다. 단 명·장·매·개·회·건·번·대·곳 같은 셈 단위가 바로 뒤면 금액 아님
  *     c. 한글 수사 금액('팔백만원'·'백팔십오만 원')도 숫자로 바꿔 같은 규칙
  *     d. 공개 경로의 PDF(pdf-unchecked / price-mismatch): pdftotext 로 글자를 뽑아 금액 규칙 — 뽑을 수 없으면 FAIL
  *        (사람이 확인 못 한 PDF 가 공개 URL 로 나가지 않게. 이미지 속 글자는 여전히 못 읽는다)
@@ -760,7 +760,7 @@ if (process.argv.includes('--selftest')) {
     ['price-mismatch', CLEAN_P.replace('2대면 ' + man(a0 + b0) + '(', '2대면 ' + man(a0 + b0 + 20) + '(')], // FAQ JSON-LD 답변에만 틀린 금액
     ['price-mismatch', CLEAN_P.replace(OG, OG.replace(man(a0), WRONG))], // og:description 에만 틀린 금액
     ['price-mismatch', CLEAN_P.replace('alt="스탠다드 부스 ' + man(a0) + ' 설치 모습"', 'alt="스탠다드 부스 23만원 설치 모습"')], // 이미지 대체글(alt)에만 틀린 금액
-    ['price-mismatch', CLEAN_P.replace(REAL, REAL + ' 일반 키오스크 800만.')], // '원' 없는 N만
+    ['price-mismatch', CLEAN_P.replace(REAL, REAL + ' 일반 키오스크 ' + (a0 * 4 + 60) + '만.')], // '원' 없는 N만(가격표에 없는 값을 계산해 만든다 — 폐기 금액 문자열을 저장소에 두지 않음)
     ['price-mismatch', CLEAN_P.replace(REAL, REAL + ' 일반 키오스크 팔백만원.')], // 한글 수사 금액
     ['price-binding', CLEAN_P.replace('data-price-key="wood_buy">' + man(it0.wood_buy.amount), 'data-price-key="wood_buy">' + man(it0.std_buy.amount))],
     ['price-binding', CLEAN_P.replace('data-price-total="2:1">' + man(a0 + b0), 'data-price-total="2:1">' + man(a0 + 2 * b0))],
