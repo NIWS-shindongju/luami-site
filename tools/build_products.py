@@ -146,18 +146,9 @@ def has_fixed_price(slug):
 
 
 # ───────────────────────── 포함/별도 2열 · 요인 카드 · 설치 조건 (BRIEF 2-2 #2·#4·#6, 2-3 #2·#3·#5) ─────────────────────────
-GLOSS = PC.get("glossary", {})
-
-
-def inc_li(x, gloss=False):
+def inc_li(x):
     """'가격에 포함' 목록 한 줄. data-item = prices.json includes 원문(site-gate 의 포함 목록 대조용)."""
-    g = ""
-    if gloss:
-        for term, d in GLOSS.items():
-            if x.startswith(term):
-                g = f' <small class="ie-g">({esc(d)})</small>'
-                break
-    return f'<li data-item="{esc(x)}"><span class="ie-ck" aria-hidden="true"></span><span>{esc(x)}{g}</span></li>'
+    return f'<li data-item="{esc(x)}"><span class="ie-ck" aria-hidden="true"></span><span>{esc(x)}</span></li>'
 
 
 def sep_li(s):
@@ -172,12 +163,12 @@ def sep_li(s):
     return f'<li><span class="ie-l">{lab}{note}</span><span class="ie-r">{val}</span></li>'
 
 
-def package_card(slug, gloss=False):
+def package_card(slug):
     """정가 제품 가격 카드: 큰 금액 + 포함 ✓ / 별도 2열(한 목록에 섞지 않음) + (스탠다드) 계산 예시 문장."""
     m = PR["products"][slug]
     base = m["rental_summary"]
     it = PR["items"][base]
-    inc = "".join(inc_li(x, gloss) for x in it.get("includes", []))
+    inc = "".join(inc_li(x) for x in it.get("includes", []))
     sep = "".join(sep_li(s) for s in m.get("separate", []))
     calc = ""
     if base == PR["rules"]["std_total"][0]:
@@ -1396,6 +1387,14 @@ def home_faq_cost():
             f"자세한 기준은 <a href=\"pricing.html\">가격 페이지</a>에 정리했습니다.")
 
 
+def home_form_products():
+    """견적 폼 '제품' 선택지 — products.json 순서·이름 그대로(기본값 = 주력 스탠다드 부스). 값 = 제품 이름(메일에 그대로 찍힌다)."""
+    main = next(x for x in LINEUP if x.get("badge_kind") == "main")
+    opts = [main] + [x for x in DETAIL if x is not main]
+    out = "".join(f'<option value="{esc(x["name"])}"{" selected" if x is main else ""}>{esc(x["name"])}</option>' for x in opts)
+    return out + f'<option value="신규 컨셉">신규 컨셉 {len(CONCEPTS)}종(제작 상담)</option><option value="아직 모르겠어요">아직 모르겠어요 — 추천해 주세요</option>'
+
+
 def guide_prices():
     it = PR["items"]
     return f"""<aside class="g-price fade" aria-label="루아미 실제 가격 요약">
@@ -1501,6 +1500,7 @@ def main():
     idx2 = replace_gen(idx2, "home-lineup", home_lineup(), "index.html")
     idx2 = replace_gen(idx2, "home-pbox", home_pbox(), "index.html")
     idx2 = replace_gen(idx2, "home-faq-cost", home_faq_cost(), "index.html")
+    idx2 = replace_gen(idx2, "home-form-products", home_form_products(), "index.html")
     outputs["index.html"] = sync_faq_jsonld(idx2)
     gd = (ROOT / "guide.html").read_text(encoding="utf-8")
     outputs["guide.html"] = replace_gen(gd, "guide-prices", guide_prices(), "guide.html")

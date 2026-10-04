@@ -440,7 +440,6 @@ html.lb-open,html.lb-open body{overflow:hidden}
 .ie-in li{display:flex;gap:10px;align-items:flex-start;font-weight:600;color:var(--ink)}
 .ie-ck{flex:0 0 18px;height:18px;margin-top:2px;border-radius:50%;background:var(--accent-dark);position:relative}
 .ie-ck::after{content:"";position:absolute;left:6px;top:3px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
-.ie-g{display:block;font-weight:500;font-size:14px;color:var(--muted)}
 .ie-out li{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;color:var(--ink2)}
 .ie-l{display:flex;flex-direction:column;gap:2px;font-weight:600;color:var(--ink)}
 .ie-l small{font-size:14px;font-weight:500;color:var(--muted)}

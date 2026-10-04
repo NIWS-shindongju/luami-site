@@ -252,27 +252,49 @@
       <p class="trust-mini">청룡영화상 · KCON · 인천대학교 학위수여식에서도 이 견적 절차로 시작했습니다.</p>
     </div>
     <div class="h-band-r">
-    <form action="https://formsubmit.co/luami@luamiphoto.com" method="POST" class="cform">
+    <!-- 견적 폼 2단계(BRIEF 2-1 #12). 기존 formsubmit 필드명(name·phone·event_type·message·privacy_consent·_subject·_next·_captcha·_honey)은 그대로 두고
+         칸만 추가(event_date·region·product·units). JS 가 없으면 두 단계가 한 화면에 모두 보이고 그대로 전송된다. -->
+    <form action="https://formsubmit.co/luami@luamiphoto.com" method="POST" class="cform qf" id="quoteForm">
       <input type="hidden" name="_subject" value="[루아미] 홈페이지 렌탈 문의">
       <input type="hidden" name="_next" value="https://luamiphoto.com/thanks.html">
       <input type="hidden" name="_captcha" value="false">
       <input type="text" name="_honey" class="hpot" tabindex="-1" autocomplete="off">
-      <div class="crow">
-        <input type="text" name="name" placeholder="담당자 성함 / 회사·브랜드명" required>
-        <input type="tel" name="phone" placeholder="연락처(휴대폰)" required>
-      </div>
-      <select name="event_type" required>
-        <option value="" disabled selected>행사 종류를 선택해 주세요</option>
-        <option value="웨딩">웨딩 · 예식장</option>
-        <option value="기업행사">기업행사 · 프로모션</option>
-        <option value="팝업스토어">팝업스토어 · 전시</option>
-        <option value="매장 상설">매장 상설 설치</option>
-        <option value="대학교/기관">대학교 · 기관 행사</option>
-        <option value="기타">기타</option>
-      </select>
-      <textarea name="message" rows="3" placeholder="예) 11월 15일 하루 · 서울 성수동 팝업 · 스탠다드 부스 1대" required></textarea>
-      <label class="consent"><input type="checkbox" name="privacy_consent" required> 개인정보 수집·이용에 동의합니다 (상담 목적, 상담 종료 후 파기)</label>
-      <button type="submit" class="btn cbtn">무료 견적 받기 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <div class="qf-prog" aria-live="polite"><span class="qf-pn"><b>1</b> / 2</span><span class="qf-pt">행사 종류</span><span class="qf-bar" aria-hidden="true"><i></i></span></div>
+      <fieldset class="qf-s qf-s1" data-step="1">
+        <legend>어떤 행사인가요?</legend>
+        <div class="qf-types">
+          <label class="qf-type"><input type="radio" name="event_type" value="팝업스토어·전시" required><span><b>팝업·전시</b><small>팝업스토어 · 박람회</small></span></label>
+          <label class="qf-type"><input type="radio" name="event_type" value="기업행사"><span><b>기업 행사</b><small>런칭 · 프로모션 · 사내 행사</small></span></label>
+          <label class="qf-type"><input type="radio" name="event_type" value="웨딩·파티"><span><b>웨딩·파티</b><small>예식장 · 돌잔치 · 파티</small></span></label>
+          <label class="qf-type"><input type="radio" name="event_type" value="매장 상설"><span><b>매장 상설</b><small>매장에 계속 두기</small></span></label>
+        </div>
+        <label class="qf-etc"><input type="radio" name="event_type" value="기타(학교·기관 등)"><span>그 밖의 행사(학교 · 기관 등)</span></label>
+        <button type="button" class="qf-next">다음 단계로 →</button>
+      </fieldset>
+      <fieldset class="qf-s qf-s2" data-step="2">
+        <legend>날짜·장소·연락처를 알려 주세요</legend>
+        <div class="crow">
+          <label class="qf-f"><span>행사 날짜·기간 <em>필수</em></span><input type="text" name="event_date" placeholder="예) 11월 15일 하루 / 12월 중 2주" required autocomplete="off"></label>
+          <label class="qf-f"><span>설치 지역 <em>필수</em></span><input type="text" name="region" placeholder="예) 서울 성동구 성수동" required autocomplete="address-level2"></label>
+        </div>
+        <div class="crow">
+          <label class="qf-f"><span>담당자 성함 / 회사·브랜드명 <em>필수</em></span><input type="text" name="name" placeholder="예) 김루아 / 루아미" required autocomplete="name"></label>
+          <label class="qf-f"><span>연락처(휴대폰) <em>필수</em></span><input type="tel" name="phone" placeholder="010-0000-0000" required autocomplete="tel"></label>
+        </div>
+        <details class="qf-more">
+          <summary>제품·대수·요청 사항 <small>선택</small></summary>
+          <div class="crow">
+            <label class="qf-f"><span>제품</span><select name="product"><!-- GEN:home-form-products --><option value="스탠다드 부스" selected>스탠다드 부스</option><option value="포토키오스크">포토키오스크</option><option value="미러포토부스">미러포토부스</option><option value="빈티지 엘리베이터 부스">빈티지 엘리베이터 부스</option><option value="스텐 엘리베이터 부스">스텐 엘리베이터 부스</option><option value="지하철부스">지하철부스</option><option value="원형 하이앵글부스">원형 하이앵글부스</option><option value="커스텀 제작">커스텀 제작</option><option value="신규 컨셉">신규 컨셉 4종(제작 상담)</option><option value="아직 모르겠어요">아직 모르겠어요 — 추천해 주세요</option><!-- /GEN:home-form-products --></select></label>
+            <label class="qf-f"><span>대수</span><input type="number" name="units" min="1" max="50" value="1" inputmode="numeric"></label>
+          </div>
+          <label class="qf-f"><span>더 알려 주실 내용</span><textarea name="message" rows="3" placeholder="예) 브랜드 로고 랩핑 원해요 · 실내 2층 · 엘리베이터 있음"></textarea></label>
+        </details>
+        <label class="consent"><input type="checkbox" name="privacy_consent" required> 개인정보 수집·이용에 동의합니다 (상담 목적, 상담 종료 후 파기)</label>
+        <div class="qf-nav">
+          <button type="button" class="qf-back">← 행사 종류 다시 고르기</button>
+          <button type="submit" class="btn cbtn">무료 견적 받기 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </fieldset>
     </form>
     <div class="contacts">
       <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener" class="kakao">카톡으로 바로 상담</a><a href="tel:01036297743">전화 010-3629-7743</a><a href="mailto:luami@luamiphoto.com">이메일로 문의</a>
@@ -316,5 +338,6 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <script src="assets/main.js?v=20260911b" defer></script>
+<script src="assets/quote-form.js?v=20261004a" defer></script>
 </body>
 </html>

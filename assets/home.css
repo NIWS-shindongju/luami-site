@@ -245,3 +245,42 @@
   .h-flow .h-steps h3,.h-flow .h-steps p{grid-column:2}
 }
 .home .vat{font-size:12.5px;font-weight:500;color:var(--muted);white-space:nowrap}
+
+/* ===== r4 step 7 — 견적 폼 2단계(BRIEF 2-1 #12). 어두운 문의 띠 위: 테두리 --field(4.81:1), 선택 = --accent-l ===== */
+.qf fieldset{border:0;padding:0;margin:0;min-width:0;display:flex;flex-direction:column;gap:12px}
+.qf legend{font-size:17px;font-weight:700;color:var(--cream);margin-bottom:12px;padding:0}
+.qf-prog{display:none;align-items:center;gap:10px;font-size:14px;color:#C8CCC6;margin-bottom:4px}
+.qf-on .qf-prog{display:flex}
+.qf-pn{font-weight:700;color:var(--cream);white-space:nowrap}
+.qf-pn b{color:var(--accent-l)}
+.qf-bar{flex:1;height:4px;border-radius:2px;background:rgba(244,245,241,.16);overflow:hidden}
+.qf-bar i{display:block;height:100%;width:50%;background:var(--accent-l);transition:width .3s}
+.qf[data-step="2"] .qf-bar i{width:100%}
+.qf-types{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qf-type{position:relative;cursor:pointer}
+.qf-type input,.qf-etc input{position:absolute;opacity:0;width:1px;height:1px}
+.qf-type span{display:flex;flex-direction:column;gap:4px;min-height:84px;justify-content:center;padding:14px 16px;border-radius:12px;border:1px solid var(--field);background:rgba(244,245,241,.04);transition:border-color .2s,background .2s}
+.qf-type b{font-size:17px;color:var(--cream)}
+.qf-type small{font-size:14px;color:#C8CCC6}
+.qf-type:hover span{border-color:var(--accent-l)}
+.qf-type input:checked+span{border-color:var(--accent-l);background:rgba(169,211,190,.14);box-shadow:inset 0 0 0 1px var(--accent-l)}
+.qf-type input:focus-visible+span,.qf-etc input:focus-visible+span{outline:2px solid var(--accent-l);outline-offset:3px}
+.qf-etc{display:inline-flex;align-items:center;min-height:44px;cursor:pointer;font-size:14px;color:#C8CCC6;text-decoration:underline;text-underline-offset:3px;align-self:flex-start;position:relative}
+.qf-etc input:checked+span{color:var(--accent-l);font-weight:700}
+.qf-f{display:flex;flex-direction:column;gap:6px;font-size:14px;color:#C8CCC6;text-align:left}
+.qf-f em{font-style:normal;font-size:12.5px;color:var(--accent-l);margin-left:4px}
+.qf-more{border:1px solid rgba(134,140,135,.6);border-radius:10px;padding:0 14px}
+.qf-more summary{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--cream);min-height:48px;display:flex;align-items:center;justify-content:flex-start;gap:8px}
+.qf-more summary small{font-size:13px;font-weight:500;color:#C8CCC6}
+.qf-more summary::after{content:"+";margin-left:auto;color:var(--accent-l);font-size:20px}
+.qf-more[open] summary::after{content:"−"}
+.qf-more[open]{padding-bottom:14px}
+.qf-more>.crow,.qf-more>.qf-f{margin-top:10px}
+.qf-nav{display:flex;flex-direction:column;gap:10px}
+.qf-back{display:none;align-self:flex-start;background:transparent;border:0;color:#C8CCC6;font:inherit;font-size:14px;min-height:44px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.qf-on .qf-back{display:inline-flex;align-items:center}
+.qf .qf-s[hidden]{display:none}
+@media(max-width:560px){.qf-types{grid-template-columns:1fr 1fr}.qf-type span{min-height:76px;padding:12px}.qf-type b{font-size:16px}}
+.qf-next{display:none;align-self:flex-start;font:inherit;font-size:15px;font-weight:700;min-height:44px;padding:0 18px;border-radius:10px;border:1px solid var(--accent-l);background:transparent;color:var(--accent-l);cursor:pointer}
+.qf-on .qf-next{display:inline-flex;align-items:center}
+.qf-next:disabled{opacity:.45;cursor:default}
