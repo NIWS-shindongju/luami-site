@@ -12,6 +12,7 @@
       "label": "CAD 3D 렌더"
     },
     "gallery_hide_scenes": [],
+    "install_fields": {"_doc": "제품 상세 '설치 조건' 표의 행 순서·이름. 제품 install 에 값이 있는 행만 그린다(빈 값·없는 키는 행을 만들지 않음). 전원·설치/철수 시간·1회 촬영~인화 시간은 현장 실측 전이라 비워 둔다.", "footprint": "차지 면적", "height": "높이", "head": "촬영 헤드 크기", "weight": "무게", "entrance": "출입구", "structure": "구조", "power": "전원", "setup_time": "설치·철수 시간", "print_time": "1회 촬영~인화 시간", "carry_in": "반입·이동"},
     "kakao": "http://pf.kakao.com/_YRxoPX/chat",
     "contact": "index.html#contact"
   },
@@ -25,6 +26,7 @@
       "badge": "추천",
       "badge_kind": "recommend",
       "highangle": null,
+      "install": {"height": "전체 1,700mm", "head": "410 × 348 × 513mm (진한 월넛 원목)", "weight": "약 44.5kg", "structure": "접이식 원목 삼각대 위에 촬영 헤드, 삼각대 선반 위에 사진 프린터", "power": "", "setup_time": "", "print_time": "", "note": "설계값입니다. 제품 이미지는 설계 3D 이미지(CAD 3D 렌더)라 세부 모양은 바뀔 수 있습니다."},
       "fallback": {"4x5": "assets/images/products/photo-kiosk/l53-cad-3q.jpg", "thumb": "assets/images/products/photo-kiosk/l53-cad-3q-thumb.jpg", "kind": "render", "baked_label": false, "position": "50% 50%"},
       "legacy_anchors": ["p-a02"],
       "seo": {
@@ -106,6 +108,7 @@
       "badge": "주력",
       "badge_kind": "main",
       "highangle": null,
+      "install": {"footprint": "1,860 × 1,860mm (가로·세로 1.86m)", "height": "2,100mm (2.1m) · 천장이 이보다 높아야 합니다", "entrance": "800 × 1,900mm · 문짝 없이 열린 앞면", "structure": "알루미늄 뼈대(30mm 프로파일) + 흰색 벽판 · 천장판 있음, 바닥판 없음", "power": "", "setup_time": "", "print_time": "", "carry_in": "면별로 분리해 접어서 옮깁니다 · 바퀴 달림", "note": ""},
       "fallback": {"4x5": "assets/images/products/standard-booth/05-winter-front.webp", "thumb": "assets/images/products/standard-booth/thumb/05-winter-front.webp", "kind": "photo", "position": "50% 50%"},
       "legacy_anchors": ["p-a01", "p-a11", "p-a12"],
       "seo": {

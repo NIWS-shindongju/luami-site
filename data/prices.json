@@ -20,7 +20,8 @@
       "unit": "1대",
       "kind": "rental",
       "includes": [
-        "부스 + 촬영 키오스크",
+        "부스 1대",
+        "촬영 키오스크",
         "4면 랩핑",
         "인화지 1,400매",
         "설치·회수"
@@ -58,6 +59,7 @@
       "unit": "1대",
       "kind": "rental",
       "includes": [
+        "포토키오스크 1대",
         "인화지 700매"
       ]
     },
@@ -105,6 +107,7 @@
     }
   ],
   "products": {
+    "_doc": "제품별 가격 연결. rental_summary = 대표 렌탈 항목(이 항목의 includes 가 '가격에 포함' 목록), separate = '별도' 목록(key 가 있으면 금액은 items 에서), hero_separate = 상세 첫 화면 '별도' 한 줄. site-gate.js 가 화면의 포함 목록·금액 연결(data-price-key)을 이 파일과 대조한다.",
     "standard-booth": {
       "rental": [
         "std_short",
@@ -114,7 +117,30 @@
       ],
       "rental_summary": "std_short",
       "rental_summary_prefix": "1개월 미만",
-      "purchase": "std_buy"
+      "purchase": "std_buy",
+      "separate": [
+        {
+          "label": "운송비",
+          "note": "설치 장소에 따라 따로 안내"
+        },
+        {
+          "label": "인화지 추가",
+          "unit": "700매",
+          "key": "paper_700"
+        },
+        {
+          "label": "2대째부터",
+          "unit": "1대 추가마다",
+          "key": "std_extra_unit",
+          "note": "4면 랩핑만 포함, 인화지는 별도"
+        },
+        {
+          "label": "두 번째 달부터",
+          "unit": "부스당",
+          "key": "std_monthly"
+        }
+      ],
+      "hero_separate": "운송비 · 추가 대수·기간·인화지"
     },
     "photo-kiosk": {
       "rental": [
@@ -123,7 +149,19 @@
       ],
       "rental_summary": "wood_monthly",
       "rental_summary_prefix": "키오스크만",
-      "purchase": "wood_buy"
+      "purchase": "wood_buy",
+      "separate": [
+        {
+          "label": "인화지 추가",
+          "unit": "700매",
+          "key": "paper_700"
+        },
+        {
+          "label": "운송·설치",
+          "note": "설치 장소에 맞춰 따로 안내"
+        }
+      ],
+      "hero_separate": "운송·설치 · 인화지 추가"
     },
     "mirror-booth": {
       "rental": [],

@@ -420,3 +420,71 @@ html.lb-open,html.lb-open body{overflow:hidden}
   .fchip{flex:0 0 auto}
 }
 @media(prefers-reduced-motion:reduce){.pc,.pc-im img,.pg-item img,.st-card{transition:none!important}.pc:hover,.st-card:hover{transform:none}}
+
+/* ===== r4 step 6 — 가격 카드(포함/별도 2열) · 협의 요인 카드 · 설치 조건 표 (BRIEF 2-2 #2·#4·#6, 2-3 #2·#3·#5) =====
+   포함과 별도는 서로 다른 목록(data-list="included" / "separate") — 한 목록에 섞지 않는다(03 R5). site-gate 가 대조한다. */
+.pkg{background:var(--paper);border:1px solid var(--card-bd);border-radius:var(--r);padding:24px;box-shadow:var(--shadow)}
+.pkg-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.pkg-name{display:flex;flex-direction:column;gap:4px}
+.pkg-k{font-size:16px;font-weight:700;color:var(--ink)}
+.pkg-u{font-size:14px;color:var(--muted)}
+.pkg-v{text-align:right}
+.pkg-v .amt{font-size:clamp(30px,3.4vw,40px);letter-spacing:-.02em;line-height:1.1}
+.pkg-v .vat{display:block;margin-top:4px}
+.ie-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding-top:16px}
+.ie-t{display:block;font-size:14px;font-weight:700;letter-spacing:.02em;color:var(--accent-dark);margin-bottom:8px}
+.ie-out .ie-t{color:var(--ink2)}
+.ie-list{list-style:none;display:grid;gap:0}
+.ie-list li{font-size:15px;line-height:1.5;padding:8px 0;border-bottom:1px solid var(--line)}
+.ie-list li:last-child{border-bottom:0}
+.ie-in li{display:flex;gap:10px;align-items:flex-start;font-weight:600;color:var(--ink)}
+.ie-ck{flex:0 0 18px;height:18px;margin-top:2px;border-radius:50%;background:var(--accent-dark);position:relative}
+.ie-ck::after{content:"";position:absolute;left:6px;top:3px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.ie-g{display:block;font-weight:500;font-size:14px;color:var(--muted)}
+.ie-out li{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;color:var(--ink2)}
+.ie-l{display:flex;flex-direction:column;gap:2px;font-weight:600;color:var(--ink)}
+.ie-l small{font-size:14px;font-weight:500;color:var(--muted)}
+.ie-n{font-size:14px;font-weight:500;color:var(--ink2)}
+.ie-r{text-align:right;flex-shrink:0}
+.ie-r .amt{font-size:16px}
+.ie-r .vat{display:block}
+.ie-ask{font-size:14px;color:var(--ink2);font-weight:500;max-width:11em;display:inline-block}
+.pkg-calc{margin-top:16px;padding:14px 16px;border-radius:8px;background:var(--paper2);font-size:15px;line-height:1.7;color:var(--ink2)}
+.pt-buy{margin-top:16px}
+/* 상세 첫 화면 가격 상자 — 포함 / 별도 두 줄 */
+.pb-ie{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.pb-ie .pb-k{min-width:2.6em;padding-top:2px}
+.pb-inc{list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.pb-inc li{font-size:14px;font-weight:600;padding:4px 9px;border-radius:6px;background:rgba(30,90,64,.1);color:var(--accent-dark)}
+.pb-sep{font-size:14px;line-height:1.6;color:var(--ink2)}
+.pb-sep a{color:var(--accent-dark);text-decoration:underline;text-underline-offset:3px}
+.fc-sep{font-size:14px;color:var(--ink2);margin-top:-2px}
+.fc-sep b{color:var(--ink);margin-right:6px}
+/* 협의 제품 — 가격에 영향을 주는 요소 */
+.fx-wrap{margin-top:clamp(32px,4vw,48px)}
+.fx-t{display:block;font-family:var(--serif);font-weight:700;font-size:clamp(20px,2.2vw,24px);margin-bottom:8px}
+.fx-lead{font-size:15px;line-height:1.7;color:var(--ink2);max-width:46em;margin-bottom:16px}
+.fx-grid{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.fx{background:var(--paper);border:1px solid var(--card-bd);border-radius:var(--r);padding:18px 20px;display:flex;flex-direction:column;gap:6px}
+.fx-no{font-size:13px;font-weight:700;color:var(--accent-dark);letter-spacing:.04em}
+.fx b{font-size:17px;color:var(--ink)}
+.fx p{font-size:15px;line-height:1.65;color:var(--ink2)}
+/* 설치 조건 표 — 아는 값만, 빈 행 없음 */
+.ins{margin-top:24px}
+.ins-t{display:block;font-size:14px;font-weight:700;letter-spacing:.04em;color:var(--accent-dark);margin-bottom:8px}
+.ins-table{width:100%;border-collapse:collapse;background:var(--paper);border:1px solid var(--card-bd);border-radius:var(--r);overflow:hidden}
+.ins-table th,.ins-table td{padding:12px 16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);font-size:15px;line-height:1.6}
+.ins-table tr:last-child th,.ins-table tr:last-child td{border-bottom:0}
+.ins-table th{width:9.5em;font-weight:700;color:var(--ink);background:rgba(242,241,238,.6)}
+.ins-table td{color:var(--ink2)}
+.ins-note{font-size:14px;line-height:1.6;color:var(--muted);margin-top:8px}
+@media(max-width:880px){.fx-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){
+  .pkg{padding:18px 16px}
+  .pkg-head{flex-direction:column;align-items:flex-start}
+  .pkg-v{text-align:left}
+  .ie-grid{grid-template-columns:1fr;gap:16px}
+  .fx-grid{grid-template-columns:1fr}
+  .ins-table th{width:7em}
+  .ins-table th,.ins-table td{padding:10px 12px}
+}

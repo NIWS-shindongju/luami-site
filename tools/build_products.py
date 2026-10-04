@@ -93,8 +93,9 @@ def vat_html():
 
 
 def amt_html(key, lead=""):
+    """금액 표기 + 가격표 연결 표식(data-price-key). site-gate.js 가 표식이 붙은 글자 금액을 prices.json 의 그 항목과 대조한다."""
     lead = f"{esc(lead)} " if lead else ""
-    return f'<span class="amt">{lead}{esc(amt(key))}</span>{vat_html()}'
+    return f'<span class="amt" data-price-key="{key}">{lead}{esc(amt(key))}</span>{vat_html()}'
 
 
 def amt_text(key):
@@ -142,6 +143,92 @@ def price_of(slug):
 def has_fixed_price(slug):
     m = PR["products"].get(slug) or {}
     return bool(m.get("rental_summary") or m.get("purchase"))
+
+
+# ───────────────────────── 포함/별도 2열 · 요인 카드 · 설치 조건 (BRIEF 2-2 #2·#4·#6, 2-3 #2·#3·#5) ─────────────────────────
+GLOSS = PC.get("glossary", {})
+
+
+def inc_li(x, gloss=False):
+    """'가격에 포함' 목록 한 줄. data-item = prices.json includes 원문(site-gate 의 포함 목록 대조용)."""
+    g = ""
+    if gloss:
+        for term, d in GLOSS.items():
+            if x.startswith(term):
+                g = f' <small class="ie-g">({esc(d)})</small>'
+                break
+    return f'<li data-item="{esc(x)}"><span class="ie-ck" aria-hidden="true"></span><span>{esc(x)}{g}</span></li>'
+
+
+def sep_li(s):
+    """'별도' 목록 한 줄 — 금액이 있으면 prices.json 항목(key)에서, 없으면 안내 문구."""
+    lab = esc(s["label"]) + (f' <small>{esc(s["unit"])}</small>' if s.get("unit") else "")
+    if s.get("key"):
+        note = f'<span class="ie-n">{esc(s["note"])}</span>' if s.get("note") else ""
+        val = amt_html(s["key"])
+    else:
+        note = ""
+        val = f'<span class="ie-ask">{esc(s.get("note", ""))}</span>'
+    return f'<li><span class="ie-l">{lab}{note}</span><span class="ie-r">{val}</span></li>'
+
+
+def package_card(slug, gloss=False):
+    """정가 제품 가격 카드: 큰 금액 + 포함 ✓ / 별도 2열(한 목록에 섞지 않음) + (스탠다드) 계산 예시 문장."""
+    m = PR["products"][slug]
+    base = m["rental_summary"]
+    it = PR["items"][base]
+    inc = "".join(inc_li(x, gloss) for x in it.get("includes", []))
+    sep = "".join(sep_li(s) for s in m.get("separate", []))
+    calc = ""
+    if base == PR["rules"]["std_total"][0]:
+        a, b, c = (PR["items"][k]["amount"] for k in PR["rules"]["std_total"])
+        v = vat_label()
+        calc = (f'<p class="pkg-calc">첫 1대 {man(a)} · 2대째부터 1대마다 +{man(b)} · 두 번째 달부터 부스마다 매달 +{man(c)}. '
+                f'2대면 {man(std_total(2, 1))}, 3대면 {man(std_total(3, 1))}' + (f'({esc(v)})' if v else '') + '입니다.</p>')
+    unit = " · ".join(x for x in [it.get("unit", ""), "한 달 단위" if it.get("per") == "월" else ""] if x)
+    return f"""<div class="pkg" data-package="{slug}">
+      <div class="pkg-head"><div class="pkg-name"><span class="pkg-k">{esc(it['label'])}</span><span class="pkg-u">{esc(unit)}</span></div><div class="pkg-v">{amt_html(base)}</div></div>
+      <div class="ie-grid">
+        <div class="ie ie-in"><b class="ie-t">가격에 포함</b><ul class="ie-list" data-list="included">{inc}</ul></div>
+        <div class="ie ie-out"><b class="ie-t">별도</b><ul class="ie-list" data-list="separate">{sep}</ul></div>
+      </div>
+      {calc}
+    </div>"""
+
+
+def hero_ie(slug):
+    """상세 첫 화면 가격 상자 안 '포함 / 별도' 두 줄 — 얼마·포함·어떻게를 첫 화면에(BRIEF 2-2 #1)."""
+    m = PR["products"].get(slug) or {}
+    if not m.get("rental_summary"):
+        return ('<div class="pb-ie"><span class="pb-k">견적</span><span class="pb-sep">장소·기간·용도·대수를 알려 주시면 '
+                '24시간 안에 구성과 견적을 보내 드립니다 · <a href="#price">가격을 정하는 요소</a></span></div>')
+    inc = PR["items"][m["rental_summary"]].get("includes", [])
+    lis = "".join(f'<li data-item="{esc(x)}">{esc(x)}</li>' for x in inc)
+    sep = m.get("hero_separate", "")
+    return (f'<div class="pb-ie"><span class="pb-k">포함</span><ul class="pb-inc" data-list="included">{lis}</ul></div>'
+            + (f'<div class="pb-ie"><span class="pb-k">별도</span><span class="pb-sep">{esc(sep)}</span></div>' if sep else ""))
+
+
+def factor_cards():
+    """협의 제품 '가격에 영향을 주는 요소' 카드(범위 금액은 넣지 않음 — 가격 정책은 동주님 결정)."""
+    neg = PC["negotiable"]
+    cards = "".join(f'<li class="fx"><span class="fx-no">{i + 1:02d}</span><b>{esc(f["title"])}</b><p>{esc(f["body"])}</p></li>'
+                    for i, f in enumerate(neg["factors"]))
+    return (f'<div class="fx-wrap"><b class="fx-t">{esc(neg["factors_title"])}</b><p class="fx-lead">{esc(neg["factors_lead"])}</p>'
+            f'<ul class="fx-grid">{cards}</ul></div>')
+
+
+def install_table(prod):
+    """설치 조건 표 — 아는 값만. 값이 빈 행은 만들지 않고, 행이 하나도 없으면 표 자체를 그리지 않는다."""
+    ins = prod.get("install") or {}
+    rows = [(lab, (ins.get(k) or "").strip()) for k, lab in SITE.get("install_fields", {}).items() if not k.startswith("_")]
+    rows = [(a, b) for a, b in rows if b]
+    if not rows:
+        return ""
+    trs = "".join(f'<tr><th scope="row">{esc(a)}</th><td>{esc(b)}</td></tr>' for a, b in rows)
+    note = f'<p class="ins-note">{esc(ins["note"])}</p>' if (ins.get("note") or "").strip() else ""
+    return (f'<div class="ins"><b class="ins-t">설치 조건</b><table class="ins-table" data-table="install"><tbody>{trs}</tbody></table>'
+            f'{note}<p class="ins-note">표에 없는 조건(전원·설치 시간 등)은 설치 장소를 확인한 뒤 안내해 드립니다.</p></div>')
 
 
 # ───────────────────────── 이미지 ─────────────────────────
@@ -586,7 +673,8 @@ def detail_page(prod, idx):
       <p class="pd-lead">{esc(c['hero'])}</p>
       <div class="pricebox">
         {price_rows}
-        <p class="pb-note">{esc(ship + ' · ' if has_fixed_price(slug) else '')}<a href="#price">가격 조건 보기</a> · <a href="{pre}pricing.html">전체 가격표</a></p>
+        {hero_ie(slug)}
+        <p class="pb-note">{esc(ship + ' · ' if has_fixed_price(slug) and not PR['products'].get(slug, {}).get('hero_separate') else '')}<a href="#price">가격 조건 보기</a> · <a href="{pre}pricing.html">전체 가격표</a></p>
       </div>
       {hero_jump}
       <div class="pd-cta"><a class="btn" href="{pre}index.html#contact">무료 견적 받기 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn-ghost" href="{KAKAO}" target="_blank" rel="noopener">카톡으로 바로 상담</a></div>
@@ -661,7 +749,7 @@ def detail_page(prod, idx):
     <span class="idxlabel">추천 용도</span>
     <h2>이런 곳에 잘 맞습니다</h2>
     <ul class="fit-list">{fit}</ul>
-    <div class="spec-note"><b>크기·구조</b><p>{esc(c['specs_note'])}</p></div>
+    {install_table(prod) or f'<div class="spec-note"><b>크기·구조</b><p>{esc(c["specs_note"])}</p></div>'}
   </div>
   <div>
     <span class="idxlabel">진행 순서</span>
@@ -721,20 +809,13 @@ def detail_page(prod, idx):
 def detail_price_section(slug, depth):
     pre = "../" * depth
     m = PR["products"].get(slug) or PR["products"]["_concept"]
-    rows = []
-    for k in m.get("rental", []):
-        it = PR["items"][k]
-        inc = "".join(f"<li>{esc(x)}</li>" for x in it.get("includes", []))
-        inc = f'<ul class="inc">{inc}</ul>' if inc else ""
-        note = f'<span class="pt-note">{esc(it["note"])}</span>' if it.get("note") else ""
-        rows.append(f'<tr><th scope="row">{esc(it["label"])}<span class="pt-unit">{esc(it.get("unit", ""))}</span>{inc}{note}</th>'
-                    f'<td>{amt_html(k)}</td></tr>')
+    body = ""
+    if m.get("rental_summary"):
+        body += package_card(slug)
     if m.get("purchase"):
         k = m["purchase"]
-        rows.append(f'<tr><th scope="row">구매 · {esc(PR["items"][k]["label"])}</th><td>{amt_html(k)}</td></tr>')
-    body = ""
-    if rows:
-        body += f'<table class="ptable"><tbody>{"".join(rows)}</tbody></table>'
+        body += (f'<table class="ptable pt-buy"><tbody><tr><th scope="row">구매 · {esc(PR["items"][k]["label"])}'
+                 f'<span class="pt-unit">한 번 결제</span></th><td>{amt_html(k)}</td></tr></tbody></table>')
     if not m.get("rental"):
         body += f'<div class="ask-box"><div class="pb-row"><span class="pb-k">렌탈</span><span class="pb-v"><span class="ask">{esc(m["rental_text"])}</span></span></div>'
         if not m.get("purchase"):
@@ -742,12 +823,16 @@ def detail_price_section(slug, depth):
         body += "</div>"
     extra = ""
     if slug == "standard-booth":
-        ex = "".join(f'<li><span>{esc(e["label"])}</span><span>{amt_html_val(std_total(e["units"], e["months"]))}</span></li>'
+        ex = "".join(f'<li><span>{esc(e["label"])}</span><span>{amt_html_val(std_total(e["units"], e["months"]), (e["units"], e["months"]))}</span></li>'
                      for e in PR["examples"])
         extra = f'<div class="ex-box"><b>계산 예시</b><ul class="ex-list">{ex}</ul><p>1년 가까이 쓰실 계획이라면 구매를 권해 드립니다. <a href="{pre}pricing.html#examples">계산 기준 보기</a></p></div>'
+    elif has_fixed_price(slug):
+        extra = (f'<div class="ex-box"><b>렌탈과 구매, 어느 쪽이 나을까요</b><p>한두 달 쓰실 곳이라면 렌탈, 1년 가까이 두고 쓰실 곳이라면 '
+                 f'구매를 권해 드립니다. <a href="{pre}pricing.html#purchase">구매가 보기</a></p></div>')
     if not has_fixed_price(slug):
         ask = "".join(f"<li>{esc(x)}</li>" for x in PC["negotiable"]["ask_for"])
         extra += f'<div class="ex-box"><b>이 4가지를 알려 주시면 견적이 빨라집니다</b><ul class="ask-list">{ask}</ul></div>'
+    factors = "" if has_fixed_price(slug) else f'\n  {factor_cards()}'
     notes = []
     if PR["products"].get(slug, {}).get("rental"):
         notes.append(PR.get("shipping_note", ""))
@@ -757,7 +842,7 @@ def detail_price_section(slug, depth):
   <div class="price-grid">
     <div>{body}</div>
     <div>{extra}</div>
-  </div>
+  </div>{factors}
 </div></section>
 """
 
@@ -834,6 +919,9 @@ def legacy_map_script():
             ";function go(){var h=location.hash.slice(1);if(m[h]){location.replace(m[h]);return}"
             "if(s[h]){history.replaceState(null,'',s[h]);var t=document.querySelector(s[h]);if(t)t.scrollIntoView();return}"
             "if(/^p-[ab]\\d\\d$/.test(h)){document.documentElement.classList.add('legacy-gone')}}"
+            "function norm(){var h=location.hash.slice(1);if(/^(p-)?[ab]\\d\\d$/i.test(h)&&!/^p-[ab]\\d\\d$/.test(h))"
+            "history.replaceState(null,'','#p-'+h.replace(/^p-/i,'').toLowerCase())}"
+            "norm();addEventListener('hashchange',norm);"
             "go();addEventListener('hashchange',go)})();</script>\n")
 
 
@@ -864,13 +952,18 @@ def featured_card(prod):
     c = COPY[prod["slug"]]
     img = cover(prod, "4x5")
     pk = PR["products"][prod["slug"]]
+    sep_line = ""
     if pk.get("rental_summary") and PR["items"][pk["rental_summary"]].get("includes"):
-        hl = PR["items"][pk["rental_summary"]]["includes"] + (["별도: " + PR["items"][pk["rental_summary"]]["note"].replace(" 별도", "")] if PR["items"][pk["rental_summary"]].get("note") else [])
-        hl_html = "".join(f"<li>{esc(x)}</li>" for x in hl)
+        # 포함 목록에는 포함만(BRIEF R5: 포함과 별도를 한 목록에 섞지 않는다). 별도는 아래 한 줄로 따로.
+        hl_html = "".join(f'<li data-item="{esc(x)}">{esc(x)}</li>' for x in PR["items"][pk["rental_summary"]]["includes"])
         hl_title = "렌탈 가격에 포함"
+        hl_attr = ' data-list="included"'
+        if pk.get("hero_separate"):
+            sep_line = f'<p class="fc-sep"><b>별도</b> {esc(pk["hero_separate"])}</p>'
     else:
         hl_html = "".join(f"<li>{esc(a['title'])}</li>" for a in c["appeal"][:4])
         hl_title = "이런 점이 좋습니다"
+        hl_attr = ""
     rows = "".join(f'<div class="pb-row"><span class="pb-k">{a}</span><span class="pb-v">{b}</span></div>' for a, b, _ in price_of(prod["slug"]))
     return f"""    <article class="fc">
       <a class="fc-im" href="products/{prod['slug']}.html" tabindex="-1" aria-hidden="true">{img_tag(img, 0, cover_alt(prod, img))}{render_tag(img, large=True)}</a>
@@ -879,7 +972,7 @@ def featured_card(prod):
         <h3><a href="products/{prod['slug']}.html">{esc(prod['name'])}</a></h3>
         <p class="fc-tag">{esc(c['tagline'])}</p>
         <b class="fc-hl-t">{hl_title}</b>
-        <ul class="fc-hl">{hl_html}</ul>
+        <ul class="fc-hl"{hl_attr}>{hl_html}</ul>{sep_line}
         <div class="pricebox fc-price">{rows}</div>
         <div class="fc-cta"><a class="btn" href="products/{prod['slug']}.html">자세히 보기</a><a class="btn-ghost" href="index.html#contact">무료 견적 받기</a></div>
       </div>
@@ -933,6 +1026,9 @@ def hub_page():
     anchors = "".join(f'<span id="{a}" class="legacy-anchor" aria-hidden="true"></span>'
                       for prod in DETAIL for a in prod.get("legacy_anchors", []))
     anchors += "".join(f'<span id="{a}" class="legacy-anchor" aria-hidden="true"></span>' for a in P["unmapped_anchors"])
+    # 옛 허브는 같은 제품에 대문자 별칭 id(#A01·#B04)도 있었다 — JS 없이 와도 목록 위치로 떨어지게 별칭 자리도 둔다
+    old_ids = [a for prod in DETAIL for a in prod.get("legacy_anchors", [])] + P["unmapped_anchors"]
+    anchors += "".join(f'<span id="{a[2:].upper()}" class="legacy-anchor" aria-hidden="true"></span>' for a in old_ids)
     out.append(f"""
 <section class="page-head ph-head"><div class="wrap">
   <span class="idxlabel">제품 {len(LINEUP)}종 + 커스텀</span>
@@ -1028,27 +1124,17 @@ def pricing_page():
   <div class="sum-grid">
     <a class="sum" href="#rental"><span class="sum-k">스탠다드 부스 렌탈 · 1개월 미만</span><span class="sum-v">{amt_html('std_short')}</span><span class="sum-d">4면 랩핑·인화지 1,400매·설치·회수 포함 · 운송비 별도</span></a>
     <a class="sum" href="#kiosk"><span class="sum-k">포토키오스크 · 키오스크만</span><span class="sum-v">{amt_html('wood_monthly')}</span><span class="sum-d">인화지 700매 포함 · 한 달 단위</span></a>
-    <a class="sum" href="#purchase"><span class="sum-k">구매</span><span class="sum-v"><span class="amt">{esc(man(buy_min))}부터</span>{vat_html()}</span><span class="sum-d">{esc(it[buy_min_key]['label'])} 기준 · 제품별 구매가는 아래 표</span></a>
+    <a class="sum" href="#purchase"><span class="sum-k">구매</span><span class="sum-v"><span class="amt" data-price-key="{buy_min_key}">{esc(man(buy_min))}부터</span>{vat_html()}</span><span class="sum-d">{esc(it[buy_min_key]['label'])} 기준 · 제품별 구매가는 아래 표</span></a>
   </div>
   <nav class="jump" aria-label="이 페이지 바로가기"><a href="#rental">렌탈</a><a href="#examples">계산 예시</a><a href="#wrap">4면 랩핑</a><a href="#kiosk">키오스크만</a><a href="#negotiable">협의 제품</a><a href="#purchase">구매</a><a href="#notes">운송비·부가세</a><a href="#faq">FAQ</a></nav>
 </div></section>
 """)
-    # 렌탈 표
+    # 렌탈 — 스탠다드 부스 가격 카드(큰 금액 + 포함/별도 2열 + 계산 예시 문장, BRIEF 2-3 #2)
     r = PC["rental"]
-    rows = []
-    for row in r["rows"]:
-        k = row["key"]
-        if k not in it or k == "wood_monthly":
-            continue
-        x = it[k]
-        inc = "".join(f"<li>{esc(v)}</li>" for v in x.get("includes", []))
-        inc = f'<ul class="inc">{inc}</ul>' if inc else ""
-        note = f'<span class="pt-note">{esc(tmpl(row["note"]))}</span>' if row.get("note") else ""
-        rows.append(f'<tr><th scope="row">{esc(x["label"])}<span class="pt-unit">{esc(x.get("unit", ""))}</span>{inc}{note}</th><td>{amt_html(k)}</td></tr>')
     out.append(f"""<section class="pp-rental" id="rental"><div class="wrap">
 {sec_head('렌탈', '스탠다드 부스 렌탈', esc(r['desc']), f'<a class="ps-link" href="products/standard-booth.html">스탠다드 부스 보기 →</a>')}
   <div class="price-grid">
-    <div><table class="ptable"><tbody>{''.join(rows)}</tbody></table></div>
+    <div>{package_card('standard-booth')}</div>
     <figure class="pp-fig"><a href="products/standard-booth.html">{img_tag(cover(std, '4x5'), 0, '스탠다드 부스')}{render_tag(cover(std, '4x5'), large=True)}</a><figcaption>스탠다드 부스 · 가로·세로 1.86m, 높이 2.1m</figcaption></figure>
   </div>
 </div></section>
@@ -1063,7 +1149,7 @@ def pricing_page():
             parts.append(f"{man(b)} × {U - 1}" if U > 2 else man(b))
         if M > 1:
             parts.append(f"{man(c)} × {U * (M - 1)}" if U * (M - 1) > 1 else man(c))
-        exrows.append(f'<tr><th scope="row">{esc(e["label"])}</th><td class="calc">{" + ".join(parts)}</td><td>{amt_html_val(std_total(U, M))}</td></tr>')
+        exrows.append(f'<tr><th scope="row">{esc(e["label"])}</th><td class="calc">{" + ".join(parts)}</td><td>{amt_html_val(std_total(U, M), (U, M))}</td></tr>')
     Y = PR["rules"]["year_months"]
     yc = PC["year_compare"]
     buy = it[PR["rules"]["year_buy"]]["amount"]
@@ -1076,8 +1162,8 @@ def pricing_page():
       <b class="year-t">{esc(yc['title'])}</b>
       <p>{esc(yc['lead'])}</p>
       <div class="year-cmp">
-        <div class="yc"><span>1년 렌탈 합계</span><b>{amt_html_val(std_total(1, Y))}</b><small>{man(a)} + {man(c)} × {Y - 1}</small></div>
-        <div class="yc yc-buy"><span>{esc(yc['purchase']['label'])}</span><b>{amt_html_val(buy)}</b><small>한 번 결제</small></div>
+        <div class="yc"><span>1년 렌탈 합계</span><b>{amt_html_val(std_total(1, Y), (1, Y))}</b><small>{man(a)} + {man(c)} × {Y - 1}</small></div>
+        <div class="yc yc-buy"><span>{esc(yc['purchase']['label'])}</span><b>{amt_html(PR['rules']['year_buy'])}</b><small>한 번 결제</small></div>
       </div>
       <p>{esc(yc['conclusion'])}</p>
       <p class="muted">{esc(yc['footnote'])}</p>
@@ -1091,10 +1177,7 @@ def pricing_page():
     out.append(f"""<section class="pp-kiosk" id="kiosk"><div class="wrap">
 {sec_head('키오스크만', '포토키오스크 · 키오스크만 렌탈', '부스 없이 키오스크만 필요하면 포토키오스크를 한 달 단위로 빌릴 수 있습니다.', '<a class="ps-link" href="products/photo-kiosk.html">포토키오스크 보기 →</a>')}
   <div class="price-grid">
-    <div><table class="ptable"><tbody>
-      <tr><th scope="row">{esc(it['wood_monthly']['label'])}<span class="pt-unit">{esc(it['wood_monthly']['unit'])}</span><ul class="inc">{''.join(f'<li>{esc(v)}</li>' for v in it['wood_monthly'].get('includes', []))}</ul></th><td>{amt_html('wood_monthly')}</td></tr>
-      <tr><th scope="row">{esc(it['paper_700']['label'])}<span class="pt-unit">{esc(it['paper_700']['unit'])}</span></th><td>{amt_html('paper_700')}</td></tr>
-    </tbody></table></div>
+    <div>{package_card('photo-kiosk')}</div>
     <figure class="pp-fig pp-fig-sm"><a href="products/photo-kiosk.html">{img_tag(wimg, 0, cover_alt(kiosk, wimg))}{render_tag(wimg, large=True)}</a><figcaption>포토키오스크 · 월넛 원목 헤드 + 원목 삼각대</figcaption></figure>
   </div>
 </div></section>
@@ -1111,6 +1194,7 @@ def pricing_page():
     <div><ul class="neg-list">{neg_links}</ul></div>
     <div class="ex-box"><b>이 4가지를 알려 주시면 견적이 빨라집니다</b><ul class="ask-list">{ask}</ul></div>
   </div>
+  {factor_cards()}
 </div></section>
 """)
     # 구매
@@ -1120,7 +1204,7 @@ def pricing_page():
         k = row["key"]
         if k in it:
             prod = BYSLUG[row["products"][0]]
-            prow.append(f'<tr><th scope="row"><a href="products/{prod["slug"]}.html">{esc(it[k]["label"])}</a></th><td>{amt_html(k)}</td></tr>')
+            prow.append(f'<tr data-product="{prod["slug"]}"><th scope="row"><a href="products/{prod["slug"]}.html">{esc(it[k]["label"])}</a></th><td>{amt_html(k)}</td></tr>')
         else:
             prow.append(f'<tr><th scope="row">{esc(row["item"])}</th><td><span class="ask">{esc(row["price"])}</span></td></tr>')
     out.append(f"""<section class="pp-purchase" id="purchase"><div class="wrap">
@@ -1153,8 +1237,10 @@ def pricing_page():
     return "".join(out)
 
 
-def amt_html_val(n):
-    return f'<span class="amt">{esc(man(n))}</span>{vat_html()}'
+def amt_html_val(n, total=None):
+    """계산 합계 금액. total=(대수, 개월)이면 data-price-total 표식 — site-gate 가 prices.json 규칙으로 다시 계산해 대조한다."""
+    t = f' data-price-total="{total[0]}:{total[1]}"' if total else ""
+    return f'<span class="amt"{t}>{esc(man(n))}</span>{vat_html()}'
 
 
 # ───────────────────────── services 스텁 ─────────────────────────
@@ -1206,7 +1292,7 @@ def lineup_tile(prod):
     vs = f" <small>{esc(v)}</small>" if v else ""
     if m.get("rental_summary"):
         k = m["rental_summary"]
-        sub = f'{esc(m.get("rental_summary_prefix", ""))} <span class="lu-amt">{esc(amt(k))}</span>{vs}'.strip()
+        sub = f'{esc(m.get("rental_summary_prefix", ""))} <span class="lu-amt" data-price-key="{k}">{esc(amt(k))}</span>{vs}'.strip()
     else:
         sub = esc(m.get("rental_text", ""))
     tag, img = tile_img(prod, "thumb")
@@ -1224,11 +1310,11 @@ def home_lineup():
     it = PR["items"]
     v = vat_label()
     vs = f' <small class="vat">{esc(v)}</small>' if v else ""
-    notes = (f'<li><span class="lp-k">2대째부터 1대마다</span><span class="lp-v"><b>{esc(amt("std_extra_unit"))}</b>{vs}</span>'
+    notes = (f'<li><span class="lp-k">2대째부터 1대마다</span><span class="lp-v"><b data-price-key="std_extra_unit">{esc(amt("std_extra_unit"))}</b>{vs}</span>'
              f'<span class="lp-d">4면 랩핑 포함 · 인화지는 700매 {esc(man(it["paper_700"]["amount"]))}씩 추가</span></li>'
-             f'<li><span class="lp-k">두 번째 달부터</span><span class="lp-v"><b>부스당 {esc(amt("std_monthly"))}</b>{vs}</span>'
+             f'<li><span class="lp-k">두 번째 달부터</span><span class="lp-v"><b data-price-key="std_monthly">부스당 {esc(amt("std_monthly"))}</b>{vs}</span>'
              f'<span class="lp-d">1년 가까이 쓰실 곳이면 구매를 권해 드립니다</span></li>'
-             f'<li><span class="lp-k">구매</span><span class="lp-v"><b>{esc(man(it["std_buy"]["amount"]))}부터</b>{vs}</span>'
+             f'<li><span class="lp-k">구매</span><span class="lp-v"><b data-price-key="std_buy">{esc(man(it["std_buy"]["amount"]))}부터</b>{vs}</span>'
              f'<span class="lp-d">스탠다드 부스 {esc(man(it["std_buy"]["amount"]))} · 포토키오스크 {esc(man(it["wood_buy"]["amount"]))}</span></li>')
     return f"""<section class="h-lineup2 h-alt" id="lineup" aria-labelledby="luTitle"><div class="wrap">
   <div class="h-head">
@@ -1267,7 +1353,7 @@ def home_paths():
       <div class="path-body">
         <span class="path-k">행사·팝업 · 며칠에서 몇 주</span>
         <h3>행사에 빌리기</h3>
-        <p class="path-price">{esc(std["name"])} <b>{esc(man(it["std_short"]["amount"]))}</b>부터{vs}</p>
+        <p class="path-price">{esc(std["name"])} <b data-price-key="std_short">{esc(man(it["std_short"]["amount"]))}</b>부터{vs}</p>
         <p class="path-d">1대·1개월 미만 기준. 4면 랩핑·인화지 1,400매·설치·회수가 들어 있고 운송비만 별도입니다.</p>
         <a class="btn path-cta" href="products/{std["slug"]}.html">{esc(std["name"])} 자세히 보기 <span aria-hidden="true">→</span></a>
       </div>
@@ -1277,7 +1363,7 @@ def home_paths():
       <div class="path-body">
         <span class="path-k">매장·카페 · 한 달 단위</span>
         <h3>매장에 들여놓기</h3>
-        <p class="path-price">{esc(kio["name"])} 키오스크만 <b>{esc(amt("wood_monthly"))}</b> · 구매 <b>{esc(man(it["wood_buy"]["amount"]))}</b>{vs}</p>
+        <p class="path-price">{esc(kio["name"])} 키오스크만 <b data-price-key="wood_monthly">{esc(amt("wood_monthly"))}</b> · 구매 <b data-price-key="wood_buy">{esc(man(it["wood_buy"]["amount"]))}</b>{vs}</p>
         <p class="path-d">렌탈은 인화지 700매 포함, 한 달 단위입니다. 1년 가까이 두실 곳이면 구매를 권해 드립니다.</p>
         <a class="btn path-cta" href="products/{kio["slug"]}.html">{esc(kio["name"])} 자세히 보기 <span aria-hidden="true">→</span></a>
       </div>
@@ -1289,7 +1375,7 @@ def home_paths():
 def home_hero_h1():
     a = man(PR["items"]["std_short"]["amount"])
     return (f'<h1 aria-label="포토부스 렌탈 {esc(a)}, 4면 랩핑 포함"><span class="lm"><span>포토부스 렌탈</span></span>'
-            f'<span class="lm"><span>{esc(a)},</span></span><span class="lm"><span><i>4면 랩핑</i> 포함</span></span></h1>')
+            f'<span class="lm"><span data-price-key="std_short">{esc(a)},</span></span><span class="lm"><span><i>4면 랩핑</i> 포함</span></span></h1>')
 
 
 def home_hero_sub():
@@ -1315,10 +1401,10 @@ def guide_prices():
     return f"""<aside class="g-price fade" aria-label="루아미 실제 가격 요약">
     <b class="g-price-t">루아미 실제 가격은?</b>
     <ul>
-      <li>스탠다드 부스 1개월 미만 렌탈 <strong>{esc(amt_text('std_short'))}</strong> — 촬영 키오스크(찍고 출력하는 기계)·4면 랩핑(겉면 네 면 디자인 인쇄)·인화지(사진 출력 용지) 1,400매·설치·회수(행사 후 철거) 포함, 운송비 별도</li>
-      <li>2대째부터 1대마다 <strong>{esc(amt_text('std_extra_unit'))}</strong> · 두 번째 달부터 부스당 <strong>{esc(amt_text('std_monthly'))}</strong></li>
-      <li>포토키오스크만 렌탈 <strong>{esc(amt_text('wood_monthly'))}</strong> — 인화지 700매 포함</li>
-      <li>구매 스탠다드 부스 <strong>{esc(amt_text('std_buy'))}</strong> · 포토키오스크 <strong>{esc(amt_text('wood_buy'))}</strong></li>
+      <li>스탠다드 부스 1개월 미만 렌탈 <strong data-price-key="std_short">{esc(amt_text('std_short'))}</strong> — 촬영 키오스크(찍고 출력하는 기계)·4면 랩핑(겉면 네 면 디자인 인쇄)·인화지(사진 출력 용지) 1,400매·설치·회수(행사 후 철거) 포함, 운송비 별도</li>
+      <li>2대째부터 1대마다 <strong data-price-key="std_extra_unit">{esc(amt_text('std_extra_unit'))}</strong> · 두 번째 달부터 부스당 <strong data-price-key="std_monthly">{esc(amt_text('std_monthly'))}</strong></li>
+      <li>포토키오스크만 렌탈 <strong data-price-key="wood_monthly">{esc(amt_text('wood_monthly'))}</strong> — 인화지 700매 포함</li>
+      <li>구매 스탠다드 부스 <strong data-price-key="std_buy">{esc(amt_text('std_buy'))}</strong> · 포토키오스크 <strong data-price-key="wood_buy">{esc(amt_text('wood_buy'))}</strong></li>
     </ul>
     <a href="pricing.html" class="h-link-g">가격표 전체 보기 →</a>
   </aside>"""

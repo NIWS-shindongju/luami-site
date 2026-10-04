@@ -1,7 +1,7 @@
 {
   "_format": {
-    "amount_manwon": "금액(만원 단위 숫자). 화면 금액·부가세 표기는 data/prices.json 이 단일 출처이고, tools/build_products.py 가 그 값으로 그린다.",
-    "{vat}": "문장 안 금액 뒤 괄호 속 {vat} 자리에 data/prices.json 의 vat.mode 에 맞는 표기(vat.labels 값, none 이면 괄호째 생략)를 넣는다. 부가세 표기 문구를 이 파일에 따로 두지 않는다."
+    "{vat}": "문장 안 금액 뒤 괄호 속 {vat} 자리에 data/prices.json 의 vat.mode 에 맞는 표기(vat.labels 값, none 이면 괄호째 생략)를 넣는다. 부가세 표기 문구를 이 파일에 따로 두지 않는다.",
+    "amounts": "이 파일에는 금액 숫자를 두지 않는다. 금액은 data/prices.json 의 key 로만 연결하고({price:key}·{man:key}·{total:대수:개월} 템플릿 또는 rows[].key), 화면 금액은 생성기가 그린다."
   },
   "page": {
     "title": "포토부스 렌탈·구매 가격",
@@ -10,90 +10,7 @@
   },
   "rental": {
     "title": "렌탈",
-    "desc": "스탠다드 부스는 1개월 미만 패키지 하나에 부스, 촬영 키오스크(부스 안 촬영·출력 기계), 4면 랩핑(겉면 네 면에 행사 디자인을 인쇄해 붙이는 것), 인화지(사진 출력 용지) 1,400매, 설치·회수(행사 후 철거해 가져감)가 모두 포함됩니다. 운송비만 별도입니다. 여러 대를 빌리거나 한 달을 넘겨 쓰면 아래 기준으로 더합니다.",
-    "rows": [
-      {
-        "key": "std_short",
-        "products": [
-          "standard-booth"
-        ],
-        "item": "스탠다드 부스 · 1개월 미만",
-        "price": "185만원",
-        "amount_manwon": 185,
-        "unit": "1대",
-        "includes": [
-          "부스 + 촬영 키오스크",
-          "4면 랩핑",
-          "인화지 1,400매"
-        ],
-        "note": "운송비 별도"
-      },
-      {
-        "key": "std_extra_unit",
-        "products": [
-          "standard-booth"
-        ],
-        "item": "스탠다드 부스 · 2대째부터",
-        "price": "+90만원",
-        "amount_manwon": 90,
-        "unit": "1대 추가마다",
-        "note": "추가 대수에는 4면 랩핑이 포함되고 인화지는 별도입니다. 예: 2대면 {man:std_short} + {man:std_extra_unit} = {total:2:1}({vat})"
-      },
-      {
-        "key": "std_monthly",
-        "products": [
-          "standard-booth"
-        ],
-        "item": "스탠다드 부스 · 1개월 이상",
-        "price": "월 100만원",
-        "amount_manwon": 100,
-        "unit": "부스당, 두 번째 달부터",
-        "note": "예: 1대를 3개월 쓰면 {man:std_short} + {man:std_monthly} × 2 = {total:1:3}({vat})"
-      },
-      {
-        "key": "paper_700",
-        "products": [
-          "standard-booth",
-          "photo-kiosk"
-        ],
-        "item": "인화지 추가",
-        "price": "13만원",
-        "amount_manwon": 13,
-        "unit": "700매"
-      },
-      {
-        "key": "wood_monthly",
-        "products": [
-          "photo-kiosk"
-        ],
-        "item": "포토키오스크 · 키오스크만",
-        "price": "월 50만원",
-        "amount_manwon": 50,
-        "unit": "1대",
-        "includes": [
-          "인화지 700매"
-        ],
-        "note": "인화지가 더 필요하면 700매 {price:paper_700}"
-      },
-      {
-        "key": "negotiable_rental",
-        "products": [
-          "mirror-booth",
-          "vintage-elevator",
-          "steel-elevator",
-          "subway-booth",
-          "round-highangle",
-          "custom",
-          "phone-booth",
-          "paparazzi-booth",
-          "overhead-bed-booth",
-          "karaoke-booth"
-        ],
-        "item": "미러포토부스 · 빈티지 엘리베이터 부스 · 스텐 엘리베이터 부스 · 지하철부스 · 원형 하이앵글부스 · 커스텀 제작 · 신규 컨셉(실물 미제작)",
-        "price": "기간·가격 협의",
-        "amount_manwon": null
-      }
-    ]
+    "desc": "스탠다드 부스는 1개월 미만 패키지 하나에 부스, 촬영 키오스크(부스 안 촬영·출력 기계), 4면 랩핑(겉면 네 면에 행사 디자인을 인쇄해 붙이는 것), 인화지(사진 출력 용지) 1,400매, 설치·회수(행사 후 철거해 가져감)가 모두 포함됩니다. 운송비만 별도입니다. 여러 대를 빌리거나 한 달을 넘겨 쓰면 아래 기준으로 더합니다."
   },
   "purchase": {
     "title": "구매",
@@ -103,19 +20,13 @@
         "key": "std_buy",
         "products": [
           "standard-booth"
-        ],
-        "item": "스탠다드 부스",
-        "price": "500만원",
-        "amount_manwon": 500
+        ]
       },
       {
         "key": "wood_buy",
         "products": [
           "photo-kiosk"
-        ],
-        "item": "포토키오스크",
-        "price": "600만원",
-        "amount_manwon": 600
+        ]
       },
       {
         "key": "inquiry_buy",
@@ -132,8 +43,7 @@
           "karaoke-booth"
         ],
         "item": "그 밖의 부스·커스텀 제작·신규 컨셉(실물 미제작)",
-        "price": "문의",
-        "amount_manwon": null
+        "price": "문의"
       }
     ],
     "note": "운송·설치 조건은 설치 장소를 확인한 뒤 따로 안내해 드립니다."
@@ -187,33 +97,41 @@
       "기간(행사일, 또는 계속 두는 상설 설치인지)",
       "용도와 예상 인원",
       "원하는 대수와 디자인 범위"
+    ],
+    "factors_title": "가격에 영향을 주는 요소",
+    "factors_lead": "협의 제품은 아래 여섯 가지에 따라 구성과 금액이 달라집니다. 정해진 범위 금액은 아직 공개하지 않고, 상담 때 구성과 함께 견적으로 드립니다.",
+    "factors": [
+      {
+        "title": "기간",
+        "body": "며칠 행사인지, 매장에 계속 두는 상설 설치인지에 따라 달라집니다."
+      },
+      {
+        "title": "대수",
+        "body": "같은 부스를 여러 대 함께 쓰면 대수만큼 장비와 운영 구성이 늘어납니다."
+      },
+      {
+        "title": "랩핑·외장 디자인",
+        "body": "겉면에 행사 그래픽을 새로 입힐지, 기본 외장 그대로 쓸지에 따라 달라집니다."
+      },
+      {
+        "title": "커스텀 범위",
+        "body": "촬영 화면·사진 테두리(프레임)·외장 모양을 얼마나 바꿀지에 따라 달라집니다."
+      },
+      {
+        "title": "지역(운송비)",
+        "body": "설치 장소까지의 거리와 차량 조건에 따라 운송비가 정해집니다."
+      },
+      {
+        "title": "설치 난이도",
+        "body": "층수·엘리베이터·야외 여부와 설치·철수 가능 시간에 따라 달라집니다."
+      }
     ]
   },
   "year_compare": {
     "title": "1년을 쓰신다면 구매를 권해 드립니다",
     "lead": "스탠다드 부스 1대를 12개월 빌릴 때와 살 때를 비교했습니다.",
-    "rental_rows": [
-      {
-        "label": "1개월차 (1개월 미만 패키지)",
-        "price": "185만원",
-        "amount_manwon": 185
-      },
-      {
-        "label": "두 번째~열두 번째 달 (월 100만원 × 11개월)",
-        "price": "1,100만원",
-        "amount_manwon": 1100
-      }
-    ],
-    "rental_total": {
-      "label": "1년 렌탈 합계",
-      "price": "1,285만원",
-      "amount_manwon": 1285,
-      "formula": "185만원 + 100만원 × 11 = 1,285만원"
-    },
     "purchase": {
-      "label": "스탠다드 부스 구매",
-      "price": "500만원",
-      "amount_manwon": 500
+      "label": "스탠다드 부스 구매"
     },
     "conclusion": "1년 가까이 쓰실 계획이라면 렌탈보다 구매를 권해 드립니다.",
     "footnote": "구매가는 스탠다드 부스 본체 기준입니다. 렌탈에 포함된 촬영 키오스크·랩핑·인화지까지 구매로 갖추는 비용은 상담 때 함께 계산해 드립니다."
@@ -243,5 +161,11 @@
       "q": "테마 부스도 빌릴 수 있나요?",
       "a": "네. 미러·빈티지 엘리베이터·스텐 엘리베이터·지하철·원형 하이앵글부스는 기간과 가격을 협의해 빌릴 수 있습니다."
     }
-  ]
+  ],
+  "glossary": {
+    "촬영 키오스크": "부스 안에서 찍고 출력하는 기계",
+    "4면 랩핑": "겉면 네 면에 행사 디자인을 인쇄해 붙이는 것",
+    "인화지": "사진 출력 용지",
+    "설치·회수": "행사장 설치와 행사 후 철거·회수"
+  }
 }
