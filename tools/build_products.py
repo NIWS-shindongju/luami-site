@@ -1208,7 +1208,7 @@ def home_prices():
     <div class="hp-head"><span class="idxlabel">가격 한눈에</span><h2 id="hpTitle">정해진 가격, <i>바로 확인하세요</i></h2></div>
     <ul class="hp-list">
       <li><span class="hp-k">스탠다드 부스 렌탈 · 1개월 미만</span><span class="hp-v">{amt_html('std_short')}</span><span class="hp-d">4면 랩핑 · 인화지 1,400매 포함</span></li>
-      <li><span class="hp-k">대수·기간 추가</span><span class="hp-v"><span class="amt">{esc(amt('std_extra_unit'))}</span><span class="hp-unit">/대</span></span><span class="hp-d">2개월차부터 부스당 {esc(amt('std_monthly'))}</span></li>
+      <li><span class="hp-k">대수·기간 추가</span><span class="hp-v"><span class="amt">{esc(amt('std_extra_unit'))}</span><span class="hp-unit">/대</span>{vat_html()}</span><span class="hp-d">2개월차부터 부스당 {esc(amt_text('std_monthly'))}</span></li>
       <li><span class="hp-k">목재 키오스크만 렌탈</span><span class="hp-v">{amt_html('wood_monthly')}</span><span class="hp-d">인화지 700매 제공</span></li>
       <li><span class="hp-k">구매</span><span class="hp-v"><span class="amt">{esc(man(it['std_buy']['amount']))}부터</span>{vat_html()}</span><span class="hp-d">스탠다드 {esc(man(it['std_buy']['amount']))} · 목재형 {esc(man(it['wood_buy']['amount']))} · 포토키오스크 {esc(man(it['kiosk_buy']['amount']))}</span></li>
     </ul>
@@ -1234,8 +1234,8 @@ def guide_prices():
     <b class="g-price-t">루아미 실제 가격은?</b>
     <ul>
       <li>스탠다드 부스 1개월 미만 렌탈 <strong>{esc(amt_text('std_short'))}</strong> — 촬영 키오스크·4면 랩핑·인화지 1,400매 포함, 운임 별도</li>
-      <li>2대째부터 1대마다 <strong>{esc(amt('std_extra_unit'))}</strong> · 2개월차부터 부스당 <strong>{esc(amt('std_monthly'))}</strong></li>
-      <li>목재 키오스크만 렌탈 <strong>{esc(amt_text('wood_monthly'))}</strong> · 구매 <strong>{esc(man(it['std_buy']['amount']))}부터</strong></li>
+      <li>2대째부터 1대마다 <strong>{esc(amt_text('std_extra_unit'))}</strong> · 2개월차부터 부스당 <strong>{esc(amt_text('std_monthly'))}</strong></li>
+      <li>목재 키오스크만 렌탈 <strong>{esc(amt_text('wood_monthly'))}</strong> · 구매 <strong>{esc(man_text(it['std_buy']['amount']).replace('만원', '만원부터', 1))}</strong></li>
     </ul>
     <a href="pricing.html" class="h-link-g">가격표 전체 보기 →</a>
   </aside>"""
