@@ -476,7 +476,7 @@ def svg_highangle(kind):
   <circle cx="160" cy="60" r="5" class="lens"/>
   <g class="ppl"><circle cx="138" cy="160" r="10"/><rect x="127" y="172" width="22" height="34" rx="9"/>
   <circle cx="182" cy="164" r="10"/><rect x="171" y="176" width="22" height="30" rx="9"/></g>
-  <text x="182" y="40" class="lbl">천장 가운데 카메라</text>"""
+  <text x="160" y="20" class="lbl" text-anchor="middle">천장 가운데 카메라</text>"""
         label = "원형 부스 측면 개념도: 천장 가운데 카메라가 바로 아래 바닥을 향해 찍는다"
     else:
         body = """
