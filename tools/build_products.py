@@ -15,7 +15,8 @@
   services.html               스텁(noindex · canonical/refresh → pricing.html · 옛 앵커 JS 매핑)
   index.html · guide.html     <!-- GEN:이름 --> … <!-- /GEN:이름 --> 사이만 갈아 끼움
   cases/*.html                "이 현장에 쓰인 제품" 줄을 content_map 기준으로 갱신
-  sitemap.xml                 새 페이지 추가 · services·없어진 페이지 제거 · 내용이 바뀐 생성 페이지만 lastmod 갱신
+  sitemap.xml                 새 페이지 추가 · services·없어진 페이지 제거 · 본문이 바뀐 페이지 lastmod = 오늘
+                              (판정은 site-gate.js --stale-lastmod-json 과 같은 규칙: 메뉴·푸터·버전 쿼리만 바뀐 건 제외)
 
 3D 표지: assets/images/covers/<slug>_<variant>.jpg 가 생기면 다음 빌드부터 자동으로 쓴다.
   표지가 없으면 products.json 의 fallback(제품당 경로 한 줄). fallback 이 렌더인데 이미지 안에 'CAD 3D 렌더'
@@ -1471,6 +1472,17 @@ def update_sitemap(xml, changed_pages):
     return xml
 
 
+def stale_lastmod_locs():
+    """site-gate.js 의 lastmod 판정(본문 지문 비교)을 그대로 불러 올려야 할 loc 목록을 받는다. node 가 없으면 None."""
+    import subprocess
+    try:
+        r = subprocess.run(["node", str(ROOT / "tools" / "site-gate.js"), "--stale-lastmod-json"], cwd=ROOT, capture_output=True,
+                           text=True, timeout=120, env=dict(os.environ, BUILD_DATE=TODAY))
+        return json.loads(r.stdout or "[]") if r.returncode == 0 else None
+    except (OSError, ValueError, subprocess.TimeoutExpired):
+        return None
+
+
 # ───────────────────────── 실행 ─────────────────────────
 def chrome(rel, s):
     return unify_chrome.transform(pathlib.PurePosixPath(rel), s)
@@ -1537,8 +1549,20 @@ def main():
         old = f.read_text(encoding="utf-8") if f.exists() else None
         if old != s:
             changed.append(rel)
-    # 생성 페이지·홈·가이드만 lastmod 갱신(사례 페이지는 제품 링크 줄만 바뀌므로 올리지 않는다 — 재크롤 flux 방지)
-    bump = [r for r in changed if r in ("index.html", "guide.html", "products.html", "pricing.html") or r.startswith("products/")]
+
+    if not a.check:
+        for rel in changed:
+            f = ROOT / rel
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_text(outputs[rel], encoding="utf-8")
+    # sitemap lastmod = 본문이 마지막으로 바뀐 날(site-gate.js 와 한 규칙). 쓰고 난 작업본을 게이트의 같은 판정으로 잰다 —
+    # 메뉴·푸터·CSS/JS 버전만 바뀐 페이지는 올리지 않고, 손으로 고친 블로그·사례도 본문이 바뀌었으면 올린다.
+    stale = stale_lastmod_locs()
+    if stale is None:  # node 없음 → 예전 규칙(생성 페이지만)으로 대신
+        bump = [r for r in changed if r in ("index.html", "guide.html", "products.html", "pricing.html") or r.startswith("products/")]
+        print("주의: node 를 못 찾아 lastmod 는 생성 페이지만 갱신(site-gate 의 본문 기준 판정 못 함)")
+    else:
+        bump = ["index.html" if x == "" else x for x in stale]
     sm = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
     sm2 = update_sitemap(sm, bump)
     if sm2 != sm:
@@ -1548,10 +1572,8 @@ def main():
     if a.check:
         print("바뀔 파일:", ", ".join(changed) if changed else "없음")
         sys.exit(1 if changed else 0)
-    for rel in changed:
-        f = ROOT / rel
-        f.parent.mkdir(parents=True, exist_ok=True)
-        f.write_text(outputs[rel], encoding="utf-8")
+    if "sitemap.xml" in changed:
+        (ROOT / "sitemap.xml").write_text(sm2, encoding="utf-8")
     fb = [p_["slug"] for p_ in DETAIL + CONCEPTS if not cover_path(p_["slug"], "4x5")]
     print(f"갱신 {len(changed)}개: " + (", ".join(changed) if changed else "없음"))
     print(f"3D 표지 없음 → 대체 이미지 사용: {', '.join(fb) if fb else '없음'}")

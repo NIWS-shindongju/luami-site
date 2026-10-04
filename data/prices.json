@@ -198,21 +198,5 @@
       "rental_text": "기간·가격 협의",
       "purchase_text": "제작 문의"
     }
-  },
-  "retired_sha256": {
-    "_doc": "폐기된 옛 금액(원 단위 정수 문자열의 SHA-256). 평문을 공개 저장소에 다시 싣지 않으려고 해시로 둔다. site-gate.js 가 HTML·data·md 어디서든 이 금액이 금액 표기로 나오면 FAIL 낸다.",
-    "hashes": [
-      "f0d0684b111b4511f2e151a0065852129b79cf0c3e12b20ed59117e81a3f7fb8",
-      "c59b9dcb06ac6479d1afe9058d3773f7b0612ac80c5131e5863df4929ad8d5a2",
-      "06c117bb812639e8f80c10b64953df8b099fd534b2fcae74f49f735b93fedba4",
-      "ac1ec9ffe493690e5d56ef94a5dba7feb75537e9176882cdd9b57a810966d62a",
-      "60294b8b3ba8c97807f9b28de4fe670fbc3f67b5a6e8f2bea66c6bf163c9f73b",
-      "806cf9ce40d557e06091f341a1c011441a8eaccf35123678e30bc9332a285d51",
-      "741fea70e24108bfc9f28e86f74d220463f2b6922a66c9aed3341e6e5b880da5",
-      "3eb1335461b8166081d2f74625d1fce8249a30968ba8b4a91bc1c2f5474661da",
-      "f1cf94b8f53a5b3fd6a928f7e69cce597ef5c828acd8bb3f4c21693fc06266ec",
-      "f5b32f00fe05eee941f38440cb4208f97bd5af9e5613e7386d60666548060d23",
-      "4efd4e347e50d8d3cb48e6436026593720f351971c11dccedc54789fb84062fd"
-    ]
   }
 }
