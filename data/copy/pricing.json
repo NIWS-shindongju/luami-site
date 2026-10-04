@@ -1,9 +1,8 @@
 {
   "_format": {
-    "amount_manwon": "금액(만원 단위 숫자). 화면에는 price 문자열 옆에 vat_label을 붙여 표시합니다.",
-    "{vat}": "문장 안 금액 뒤 괄호 속 {vat} 자리에 vat_label 값을 넣습니다. 예: 275만원({vat}) → 괄호 안에 vat_label 값이 들어갑니다"
+    "amount_manwon": "금액(만원 단위 숫자). 화면 금액·부가세 표기는 data/prices.json 이 단일 출처이고, tools/build_products.py 가 그 값으로 그린다.",
+    "{vat}": "문장 안 금액 뒤 괄호 속 {vat} 자리에 data/prices.json 의 vat.mode 에 맞는 표기(vat.labels 값, none 이면 괄호째 생략)를 넣는다. 부가세 표기 문구를 이 파일에 따로 두지 않는다."
   },
-  "vat_label": "부가세 별도",
   "page": {
     "title": "포토부스 렌탈·구매 가격",
     "h1": "렌탈·구매 가격, 한 페이지에.",
