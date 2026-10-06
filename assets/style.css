@@ -10,6 +10,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-heigh
   -webkit-font-smoothing:antialiased;overflow-x:hidden;letter-spacing:-.01em;word-break:keep-all;overflow-wrap:break-word}
 img{display:block;max-width:100%;image-orientation:from-image}
 a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
 /* 사진 톤 통일 — 따뜻한 그레이드로 한 세트처럼 */
 .hero-media img,.hero-media video{}
