@@ -237,6 +237,13 @@ footer{background:var(--ink);color:var(--cream);padding:70px 0 40px;border-top:1
 .biz a:hover{color:var(--accent-l)}
 .biz + .note{margin-top:8px}
 footer.foot-min{padding:28px 0 32px}
+/* 메뉴·하단 바 없는 단독 페이지(404·thanks): 푸터를 화면 맨 아래로, 하단 바(.mcta) 몫 여백 없음 */
+body.solo{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding-bottom:0}
+body.solo>.page-head{flex:1 0 auto}
+.page-head .solo-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;max-width:none;margin:0 auto}
+.page-head .solo-links+.solo-links{margin-top:12px}
+.page-head p.solo-sub{margin:22px auto 0;font-size:14.5px;display:flex;justify-content:center;align-items:center;gap:4px;flex-wrap:wrap}
+.solo-sub a{display:inline-flex;align-items:center;min-height:44px;padding:0 8px;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
 footer.foot-min .biz{margin-top:0;text-align:center}
 
 /* --navfg: 스티키바는 header.nav 밖이라 메뉴 점(.navtoggle span)이 변수를 못 받아 투명이었다 */
