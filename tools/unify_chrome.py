@@ -80,7 +80,7 @@ def chrome(prefix, current):
     footer = f'''<footer><div class="wrap">
   <div class="foot-grid">
     <div class="col"><b>루아미 (Luami)</b>무인 포토부스 렌탈 · 설치 · 운영<br>전국 상담 가능</div>
-    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="https://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
+    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="https://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://www.youtube.com/@luamiphoto" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
     <div class="col"><b>바로가기</b>{quick}<br><a href="{prefix}index.html#faq">자주 묻는 질문</a></div>
   </div>
   {BIZ}
@@ -100,6 +100,9 @@ def transform(rel, src):
         if "</body>" not in src:
             return src
         out = re.sub(r'<footer class="foot-min">.*?</footer>\n', "", src, flags=re.S)
+        if "<footer>" in out:
+            # unsubscribe 처럼 자체 스타일·자체 푸터를 가진 단독 페이지: 사업자 정보가 두 번 찍히지 않게 손대지 않는다
+            return out
         return out.replace("</body>", MINI_FOOTER + "\n</body>", 1)
     header, drawer, footer = chrome(prefix, current)
     out = re.sub(r'<header class="nav".*?</header>', header, src, count=1, flags=re.S)

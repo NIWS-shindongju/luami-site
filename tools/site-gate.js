@@ -45,6 +45,14 @@ const cp = require('child_process');
 
 const ROOT = path.join(__dirname, '..');
 const COMPETITORS = ['인생네컷', '포토이즘', '하루필름', '포토그레이', '셀픽스', '모노맨션', '인싸포토', '지금이순간', '모멘트컷', '심플큐브', '피키픽', '포토시그니처'];
+// 2026-10-12: 영문·로고 표기 경쟁사명. 대소문자 무시·단어 경계. 위 한글 목록만으로는 'MOODIT'·'WYC' 를 심어도 PASS 였다(검증 레인 실측).
+// 'Haru Film' 은 동주님 결정 대기(협력 브랜드인지 — 오너 질문 #6)라 아직 넣지 않는다. 결정 나면 여기에 추가.
+const COMPETITORS_RE = [/출칵출칵/, /\bMOODIT\b/i, /\bBYTP\b/i, /\bWYC\b/i, /\bSNAP\s?CLUB\b/i, /\bpic\s?dot\b/i, /\bPHOTO\s?SIGNATURE\b/i];
+function competitorHits(text) {
+  const hits = COMPETITORS.filter((c) => text.includes(c));
+  for (const re of COMPETITORS_RE) { const m = text.match(re); if (m) hits.push(m[0]); }
+  return hits;
+}
 const BANNED_COPY = [/최저가/, /지금\s*신청/, /초특가/, /파격\s*할인/];
 
 // ── 가격 단일 출처: data/prices.json ─────────────────────────────────────────
@@ -445,7 +453,7 @@ function checkCopy(file, html) {
     const m = body.match(re);
     if (m) add(file, 'banned-copy', '금지 카피: "' + m[0] + '"');
   }
-  for (const c of COMPETITORS) if (exposed.includes(c)) add(file, 'competitor', '경쟁사 실명: "' + c + '"');
+  for (const c of competitorHits(exposed)) add(file, 'competitor', '경쟁사 실명: "' + c + '"');
 }
 
 function checkStructure(file, html, relPath) {
@@ -514,7 +522,7 @@ function checkPdf(file, extract) {
   }
   checkMoneyText(file, text, ' (PDF)');
   checkVat(file, text);
-  for (const c of COMPETITORS) if (text.includes(c)) add(file, 'competitor', '경쟁사 실명(PDF): "' + c + '"');
+  for (const c of competitorHits(text)) add(file, 'competitor', '경쟁사 실명(PDF): "' + c + '"');
 }
 function checkPdfs() {
   (function w(d) {
@@ -772,6 +780,9 @@ if (process.argv.includes('--selftest')) {
     ['vat-label', CLEAN_P.replace(REAL, REAL + ' (' + (OTHER_VAT || '부가세 포함') + ')')],
     ['banned-copy', CLEAN.replace('렌탈 문의 주세요.', '업계 최저가 보장.')],
     ['competitor', CLEAN.replace('렌탈 문의 주세요.', '인생네컷보다 낫습니다.')],
+    ['competitor', CLEAN.replace('렌탈 문의 주세요.', 'Moodit 부스보다 낫습니다.')], // 영문·대소문자 섞임
+    ['competitor', CLEAN.replace('렌탈 문의 주세요.', '출칵출칵 매장에도 들어갑니다.')],
+    ['competitor', CLEAN.replace('렌탈 문의 주세요.', 'WYC 팝업 납품 사례.')],
     ['tag-balance', CLEAN.replace('</section>', '')],
     ['json-ld', CLEAN.replace('{"@type":"Thing"}', '{"@type":,}')],
     ['missing-image', CLEAN.replace('assets/images/hero.webp', 'assets/images/__nope__.webp')],
