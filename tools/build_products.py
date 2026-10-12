@@ -489,7 +489,7 @@ def head(title, desc, keywords, path, og_image, depth, lds, og_type="website", r
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 {chr(10).join(ld(x) for x in lds)}
 <link rel="stylesheet" href="{pre}assets/style.css?v={STYLE_V}">
 <link rel="stylesheet" href="{pre}assets/products.css?v={asset_ver('assets/products.css')}">
