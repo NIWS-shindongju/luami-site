@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>광고 메일 수신거부 | 루아미</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://luamiphoto.com/unsubscribe.html">
+<link rel="icon" href="favicon.ico">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+  :root { --ink:#1F2417; --text:#26251F; --sub:#6E6960; --line:#E6E1D6; --bg:#FAF7F0; --accent:#2F5D3A; --gold:#C9A45C; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:"Pretendard Variable", Pretendard, "Malgun Gothic", sans-serif; font-size:16px; line-height:1.7; }
+  .wrap { max-width:560px; margin:0 auto; padding:56px 20px 40px; }
+  .logo { font-weight:700; letter-spacing:2px; color:var(--ink); text-decoration:none; font-size:18px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:28px 24px; margin-top:28px; }
+  h1 { font-size:24px; line-height:1.35; margin:0 0 10px; color:var(--ink); }
+  p { margin:0 0 14px; }
+  label { display:block; font-weight:600; font-size:14px; margin:18px 0 6px; }
+  input[type=email], select { width:100%; font:inherit; font-size:16px; padding:12px 14px; border:1px solid #BDB7AA; border-radius:8px; background:#fff; color:var(--text); }
+  button { font:inherit; width:100%; margin-top:22px; padding:14px; min-height:48px; border:0; border-radius:8px; background:var(--ink); color:#fff; font-size:16px; font-weight:600; cursor:pointer; }
+  button:focus-visible, input:focus-visible, select:focus-visible { outline:3px solid var(--gold); outline-offset:2px; }
+  .note { color:var(--sub); font-size:14px; }
+  .done { display:none; }
+  body.is-done .form-area { display:none; }
+  body.is-done .done { display:block; }
+  footer { margin-top:28px; color:var(--sub); font-size:13px; line-height:1.6; }
+  footer a { color:var(--sub); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="logo" href="https://luamiphoto.com/">LUAMI 루아미</a>
+
+  <div class="card form-area">
+    <h1>광고 메일 수신거부</h1>
+    <p>루아미가 보내드린 광고 메일을 더 이상 받지 않으시려면 아래 버튼을 눌러 주세요. 비용은 없고, 접수 즉시 발송 명단에서 빠집니다.</p>
+    <form id="unsub" action="https://formsubmit.co/luami@luamiphoto.com" method="POST">
+      <input type="hidden" name="_subject" value="[루아미] 광고 메일 수신거부 요청">
+      <input type="hidden" name="_next" value="https://luamiphoto.com/unsubscribe.html?done=1">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="요청" value="광고 메일 수신거부">
+      <label for="email">수신거부할 이메일 주소</label>
+      <input type="email" id="email" name="email" required autocomplete="email" inputmode="email" placeholder="name@example.com">
+      <label for="reason">이유 (선택)</label>
+      <select id="reason" name="reason">
+        <option value="">선택하지 않음</option>
+        <option>필요 없는 내용입니다</option>
+        <option>메일을 너무 자주 받습니다</option>
+        <option>담당자가 아닙니다</option>
+        <option>기타</option>
+      </select>
+      <button type="submit">수신거부하기</button>
+    </form>
+    <p class="note" style="margin-top:16px">받으신 메일에 ‘수신거부’라고 회신해 주셔도 똑같이 처리됩니다.</p>
+  </div>
+
+  <div class="card done" role="status">
+    <h1>수신거부가 접수되었습니다</h1>
+    <p>앞으로 이 주소로 루아미의 광고 메일을 보내지 않습니다. 이미 예약된 발송이 있다면 처리되는 동안 한 번 더 받으실 수 있으니 양해 부탁드립니다.</p>
+    <p class="note">잘못 누르셨거나 다시 받고 싶으시면 luami@luamiphoto.com 으로 알려 주세요.</p>
+  </div>
+
+  <footer>
+    주식회사 니우스(루아미) · 대표 신동주 · <span style="white-space:nowrap">사업자등록번호 805-81-04322</span><br>
+    인천광역시 서해구 청라한울로 17 · <span style="white-space:nowrap">010-3629-7743</span> · <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a>
+  </footer>
+</div>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  if (q.get("done") === "1") { document.body.classList.add("is-done"); return; }
+  var e = (q.get("e") || "").trim();
+  if (/^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(e)) { document.getElementById("email").value = e; }
+})();
+</script>
+</body>
+</html>
