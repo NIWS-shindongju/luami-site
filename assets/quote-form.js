@@ -50,7 +50,10 @@
   var srcPage = f.querySelector('input[name="source_page"]');
   var ref = null;
   try { var r = new URL(document.referrer); if (r.origin === location.origin) ref = r; } catch (e) { ref = null; }
-  if (srcPage && ref && ref.pathname !== location.pathname) srcPage.value = decodeURIComponent(ref.pathname.replace(/^\//, ''));
+  /* '/' 와 '/index.html' 은 같은 페이지(콜드메일·검색은 루트로 들어온다) — 같으면 정적값 index.html 을 둔다.
+     깨진 %인코딩 referrer 는 디코딩하지 않고 그대로 쓴다(예외로 아래 제품 미리선택까지 멈추지 않게). */
+  function pagePath(p) { var s = p.replace(/^\//, ''); try { s = decodeURIComponent(s); } catch (e) { /* 원문 유지 */ } return s || 'index.html'; }
+  if (srcPage && ref && pagePath(ref.pathname) !== pagePath(location.pathname)) srcPage.value = pagePath(ref.pathname);
   if (!sel) return;
   var DEFAULT = '아직 모르겠어요';
   var opt = null, want = null, i;
