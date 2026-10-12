@@ -404,7 +404,7 @@ html.lb-open,html.lb-open body{overflow:hidden}
   .pc-price dd{text-align:left}
   .pc-no{font-size:13px;padding:5px 7px;left:8px;top:8px}
   .pc-badge{right:auto;left:8px;top:auto;bottom:8px}
-  .pc .render-tag{font-size:11.5px;left:6px;bottom:6px;padding:3px 6px}
+  .pc .render-tag{font-size:12px;left:6px;bottom:6px;padding:3px 6px}
   .pc:has(.pc-badge) .render-tag{bottom:auto;top:36px;left:8px}
   .cc-grid{grid-template-columns:1fr}
   .st-grid{grid-template-columns:1fr}
