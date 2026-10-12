@@ -167,6 +167,19 @@ section.pd-hero{padding:clamp(128px,15vh,150px) 0 clamp(48px,6vw,80px)}
 .pd-jump a:hover{color:var(--ink)}
 .pd-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
 .pd-cta .btn,.pd-cta .btn-ghost{min-height:52px;padding:0 26px;justify-content:center}
+/* 상세 첫 화면(880px 이하): h1 부제 아래 가격 한 줄 + 이 제품 견적 링크(D07) */
+.pd-sum{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:2px 16px;padding:6px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pd-sum-p{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;font-size:16px;padding:6px 0}
+.pd-sum-k{font-size:14px;font-weight:700;color:var(--accent-dark)}
+.pd-sum .amt{font-size:19px;font-weight:700;color:var(--ink)}
+.pd-sum .ask{font-size:17px;font-weight:700;color:var(--ink)}
+.pd-sum-q{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:15px;font-weight:700;color:var(--accent-dark);text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(30,90,64,.45)}
+.pd-sum-q:hover{color:var(--ink)}
+/* 넓은 화면은 아래 가격 상자가 이미 첫 화면에 있다 — 한 줄 요약은 표지가 위에 쌓이는 880px 이하에서만 */
+@media(min-width:881px){.pd-sum{display:none}}
+/* 가격표 구매 행: 이 제품 견적 링크(D01) */
+.ptable tbody th .pt-q{display:flex;align-items:center;width:max-content;min-height:44px;margin-bottom:-12px;font-size:14px;font-weight:600;color:var(--accent-dark);text-decoration:none}
+.ptable tbody th .pt-q:hover{text-decoration:underline;text-underline-offset:3px}
 
 /* ── 상세: 포인트 ── */
 .pts{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;counter-reset:pt}
@@ -490,3 +503,5 @@ html.lb-open,html.lb-open body{overflow:hidden}
   .ins-table th{width:7em}
   .ins-table th,.ins-table td{padding:10px 12px}
 }
+/* 좁은 화면: 상세 표지를 화면 높이의 40%로 묶어(비율 그대로, 가운데) 제품 이름·가격·견적 링크가 첫 화면에 들어오게(D07) */
+@media(max-width:560px){.pd-cover{max-height:40vh;margin-inline:auto}.pd-info{gap:10px}}

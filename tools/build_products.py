@@ -35,6 +35,7 @@ import pathlib
 import re
 import shutil
 import sys
+import urllib.parse
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.dont_write_bytecode = True  # tools/__pycache__ 가 공개 저장소에 남지 않게
@@ -70,6 +71,12 @@ COPY = {x["slug"]: load(f"data/copy/{x['slug']}.json") for x in DETAIL + CONCEPT
 BYSLUG = {x["slug"]: x for x in DETAIL + CONCEPTS}
 KAKAO = SITE["kakao"]
 TEL = "tel:01036297743"
+
+
+def quote_href(depth=0, name=None):
+    """견적 폼 링크. 제품 이름(data/products.json name)을 넘기면 ?product= 로 실어 보내 폼이 그 제품을 미리 고른다(assets/quote-form.js)."""
+    q = f"?product={urllib.parse.quote(name)}" if name else ""
+    return f"{'../' * depth}index.html{q}#contact"
 
 esc = lambda s: html.escape(str(s), quote=True)  # noqa: E731
 
@@ -202,6 +209,22 @@ def hero_ie(slug):
     return (f'<div class="pb-ie"><span class="pb-k">포함</span><ul class="pb-inc" data-list="included">{lis}</ul></div>'
             + (f'<div class="pb-ie"><span class="pb-k">별도</span><span class="pb-sep">{esc(sep)}</span></div>' if sep else "")
             + (f'<div class="pb-ie"><span class="pb-k">상담</span><span class="pb-sep">{esc(m["hero_ask"])}</span></div>' if m.get("hero_ask") else ""))
+
+
+def hero_sum(prod):
+    """상세 첫 화면 h1 부제 바로 아래 가격 한 줄 + 이 제품 견적 링크(D07) — 아래 가격 상자와 같은 prices.json 라벨·금액 그대로.
+    정가 제품: '렌탈 1개월 미만 185만원 · 부가세 별도'(금액은 data-price-key 로 site-gate 가 대조), 협의 제품: '렌탈 기간·가격 협의'."""
+    m = PR["products"].get(prod["slug"]) or PR["products"]["_concept"]
+    if m.get("rental_summary"):
+        k = m["rental_summary"]
+        lead = m.get("rental_summary_prefix", "")
+        v = vat_label()
+        val = (f'<span class="amt" data-price-key="{k}">{esc((lead + " ") if lead else "")}{esc(amt(k))}</span>'
+               + (f'<small class="vat">{esc(v)}</small>' if v else ""))
+    else:
+        val = f'<span class="ask">{esc(m["rental_text"])}</span>'
+    return (f'<div class="pd-sum"><p class="pd-sum-p"><span class="pd-sum-k">렌탈</span>{val}</p>'
+            f'<a class="pd-sum-q" href="{quote_href(1, prod["name"])}">무료 견적 받기 <span aria-hidden="true">→</span></a></div>')
 
 
 def factor_cards():
@@ -541,12 +564,11 @@ def faq_html(faq):
     return "\n".join(f"    <details><summary>{esc(q['q'])}</summary><p>{esc(tmpl(q['a']))}</p></details>" for q in faq)
 
 
-def cta_band(depth, h2, p):
-    pre = "../" * depth
+def cta_band(depth, h2, p, product=None):
     return f"""<section class="ps-cta"><div class="wrap"><div class="band">
   <h2>{h2}</h2><p>{p}</p>
   <div class="contacts">
-    <a href="{KAKAO}" target="_blank" rel="noopener" class="kakao">카톡으로 바로 상담</a><a href="{TEL}">전화 010-3629-7743</a><a href="{pre}index.html#contact">무료 견적 받기</a>
+    <a href="{KAKAO}" target="_blank" rel="noopener" class="kakao">카톡으로 바로 상담</a><a href="{TEL}">전화 010-3629-7743</a><a href="{quote_href(depth, product)}">무료 견적 받기</a>
   </div>
 </div></div></section>
 """
@@ -689,6 +711,7 @@ def detail_page(prod, idx):
       <span class="idxlabel">{num}</span>
       <h1>{esc(prod['name'])}</h1>
       <p class="pd-tagline">{esc(c['tagline'])}</p>
+      {hero_sum(prod)}
       <div class="pd-chips">{chips}{''.join(count_chips)}</div>
       <p class="pd-lead">{esc(c['hero'])}</p>
       <div class="pricebox">
@@ -697,7 +720,7 @@ def detail_page(prod, idx):
         <p class="pb-note">{esc(ship + ' · ' if has_fixed_price(slug) and not PR['products'].get(slug, {}).get('hero_separate') else '')}<a href="#price">가격 조건 보기</a> · <a href="{pre}pricing.html">전체 가격표</a></p>
       </div>
       {hero_jump}
-      <div class="pd-cta"><a class="btn" href="{pre}index.html#contact">무료 견적 받기 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn-ghost" href="{KAKAO}" target="_blank" rel="noopener">카톡으로 바로 상담</a></div>
+      <div class="pd-cta"><a class="btn" href="{quote_href(depth, prod['name'])}">무료 견적 받기 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn-ghost" href="{KAKAO}" target="_blank" rel="noopener">카톡으로 바로 상담</a></div>
     </div>
   </div>
 </div></section>
@@ -813,7 +836,7 @@ def detail_page(prod, idx):
 """)
 
     out.append(cta_band(depth, f"{esc(prod['name'])}, <i>견적부터 받아 보세요.</i>",
-                        "장소·날짜·대수를 알려 주시면 24시간 안에 구성과 견적을 보내 드립니다. 상담·견적은 무료입니다."))
+                        "장소·날짜·대수를 알려 주시면 24시간 안에 구성과 견적을 보내 드립니다. 상담·견적은 무료입니다.", prod["name"]))
 
     # 이전·다음
     prv = DETAIL[idx - 1]
@@ -1001,7 +1024,7 @@ def featured_card(prod):
         <b class="fc-hl-t">{hl_title}</b>
         <ul class="fc-hl"{hl_attr}>{hl_html}</ul>{sep_line}
         <div class="pricebox fc-price">{rows}</div>
-        <div class="fc-cta"><a class="btn" href="products/{prod['slug']}.html">자세히 보기</a><a class="btn-ghost" href="index.html#contact">무료 견적 받기</a></div>
+        <div class="fc-cta"><a class="btn" href="products/{prod['slug']}.html">자세히 보기</a><a class="btn-ghost" href="{quote_href(0, prod['name'])}">무료 견적 받기</a></div>
       </div>
     </article>"""
 
@@ -1102,7 +1125,7 @@ def hub_page():
     <p>{esc(cc['hero'])}</p>
     <ul class="cu-list">{scopes}</ul>
     <p class="cu-price"><span class="pb-k">가격</span> <span class="ask">{esc(PR['products']['custom']['rental_text'])}</span></p>
-    <div class="fc-cta"><a class="btn" href="products/custom.html">커스텀 제작 자세히 보기</a><a class="btn-ghost on-dark" href="index.html#contact">제작 상담 받기</a></div>
+    <div class="fc-cta"><a class="btn" href="products/custom.html">커스텀 제작 자세히 보기</a><a class="btn-ghost on-dark" href="{quote_href(0, CUSTOM['name'])}">제작 상담 받기</a></div>
   </div>
   <div class="cu-mosaic" data-gallery="custom-hub">{mos_html}</div>
 </div></section>
@@ -1231,7 +1254,8 @@ def pricing_page():
         k = row["key"]
         if k in it:
             prod = BYSLUG[row["products"][0]]
-            prow.append(f'<tr data-product="{prod["slug"]}"><th scope="row"><a href="products/{prod["slug"]}.html">{esc(it[k]["label"])}</a></th><td>{amt_html(k)}</td></tr>')
+            prow.append(f'<tr data-product="{prod["slug"]}"><th scope="row"><a href="products/{prod["slug"]}.html">{esc(it[k]["label"])}</a>'
+                        f'<a class="pt-q" href="{quote_href(0, prod["name"])}">무료 견적 받기 <span aria-hidden="true">→</span></a></th><td>{amt_html(k)}</td></tr>')
         else:
             prow.append(f'<tr><th scope="row">{esc(row["item"])}</th><td><span class="ask">{esc(row["price"])}</span></td></tr>')
     out.append(f"""<section class="pp-purchase" id="purchase"><div class="wrap">
@@ -1424,11 +1448,13 @@ def home_faq_cost():
 
 
 def home_form_products():
-    """견적 폼 '제품' 선택지 — products.json 순서·이름 그대로(기본값 = 주력 스탠다드 부스). 값 = 제품 이름(메일에 그대로 찍힌다)."""
+    """견적 폼 '제품' 선택지 — products.json 순서·이름 그대로. 값 = 제품 이름(메일에 그대로 찍힌다).
+    기본값 = '아직 모르겠어요'(고르지 않은 방문자를 스탠다드 부스로 적어 보내지 않게). data-slug = 제품 상세에서 왔을 때
+    quote-form.js 가 그 제품을 미리 고르는 열쇠(?product= 가 없을 때 같은 사이트 referrer /products/<slug>.html)."""
     main = next(x for x in LINEUP if x.get("badge_kind") == "main")
     opts = [main] + [x for x in DETAIL if x is not main]
-    out = "".join(f'<option value="{esc(x["name"])}"{" selected" if x is main else ""}>{esc(x["name"])}</option>' for x in opts)
-    return out + f'<option value="신규 컨셉">신규 컨셉 {len(CONCEPTS)}종(제작 상담)</option><option value="아직 모르겠어요">아직 모르겠어요 — 추천해 주세요</option>'
+    out = "".join(f'<option value="{esc(x["name"])}" data-slug="{x["slug"]}">{esc(x["name"])}</option>' for x in opts)
+    return out + f'<option value="신규 컨셉">신규 컨셉 {len(CONCEPTS)}종(제작 상담)</option><option value="아직 모르겠어요" selected>아직 모르겠어요 — 추천해 주세요</option>'
 
 
 def guide_prices():

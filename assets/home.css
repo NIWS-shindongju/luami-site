@@ -251,6 +251,10 @@
 .qf legend{font-size:17px;font-weight:700;color:var(--cream);margin-bottom:12px;padding:0}
 .qf-prog{display:none;align-items:center;gap:10px;font-size:14px;color:#C8CCC6;margin-bottom:4px}
 .qf-on .qf-prog{display:flex}
+/* 제품 상세에서 넘어온 견적: 고른 제품을 폼 맨 위에 보인다(quote-form.js, D01) */
+.h-band .qf-picked{max-width:none;margin:0;padding:10px 14px;border-radius:10px;border:1px solid var(--accent-l);background:rgba(169,211,190,.12);font-size:15px;color:var(--cream)}
+.qf-picked b{color:var(--accent-l)}
+.qf-picked[hidden]{display:none}
 .qf-pn{font-weight:700;color:var(--cream);white-space:nowrap}
 .qf-pn b{color:var(--accent-l)}
 .qf-bar{flex:1;height:4px;border-radius:2px;background:rgba(244,245,241,.16);overflow:hidden}
