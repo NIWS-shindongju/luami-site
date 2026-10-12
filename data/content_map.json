@@ -1,0 +1,132 @@
+{
+  "photo-kiosk": {
+    "blog": [
+      "blog/photo-kiosk-story.html"
+    ],
+    "cases": []
+  },
+  "mirror-booth": {
+    "blog": [
+      "blog/hotel-premium-mirror-photobooth-story.html",
+      "blog/wedding-venue-photobooth-guide.html",
+      "blog/mirror-booth-story.html"
+    ],
+    "cases": [
+      "cases/premium-mirror-hotel.html"
+    ]
+  },
+  "vintage-elevator": {
+    "blog": [
+      "blog/vintage-elevator-photobooth-story.html",
+      "blog/vintage-elevator-story.html"
+    ],
+    "cases": [
+      "cases/vintage-elevator-booth.html"
+    ]
+  },
+  "steel-elevator": {
+    "blog": [
+      "blog/steel-elevator-story.html"
+    ],
+    "cases": []
+  },
+  "subway-booth": {
+    "blog": [
+      "blog/subway-photobooth-story.html",
+      "blog/subway-booth-story.html"
+    ],
+    "cases": [
+      "cases/subway-theme-booth.html"
+    ]
+  },
+  "standard-booth": {
+    "blog": [
+      "blog/kpop-goods-store-story.html",
+      "blog/inu-graduation-photobooth-story.html",
+      "blog/winter-popup-photobooth-story.html",
+      "blog/festival-multi-unit-photobooth-story.html",
+      "blog/photobooth-rental-process-guide.html",
+      "blog/standard-booth-story.html"
+    ],
+    "cases": [
+      "cases/kpop-goods-store.html",
+      "cases/inu-graduation-ceremony.html",
+      "cases/winter-forest-popup.html",
+      "cases/festival-multi-unit.html"
+    ]
+  },
+  "round-highangle": {
+    "blog": [
+      "blog/round-highangle-story.html"
+    ],
+    "cases": [
+      "cases/pre-shipment-lineup.html"
+    ]
+  },
+  "custom": {
+    "blog": [
+      "blog/alley-photobooth-story.html",
+      "blog/baseball-season-photobooth-story.html",
+      "blog/beauty-travel-photobooth-story.html",
+      "blog/beer-festival-photobooth-story.html",
+      "blog/christmas-popup-photobooth-story.html",
+      "blog/concert-brand-photobooth-story.html",
+      "blog/custom-wrap-photobooth-story.html",
+      "blog/department-store-popup-story.html",
+      "blog/drama-promotion-photobooth-story.html",
+      "blog/exhibition-expo-photobooth-story.html",
+      "blog/flipbook-outdoor-photobooth-story.html",
+      "blog/kcon-hechi-goods-booth-story.html",
+      "blog/pink-selfphoto-brand-story.html",
+      "blog/retail-photobooth-story.html",
+      "blog/rooftop-night-photobooth-story.html",
+      "blog/self-studio-photobooth-story.html",
+      "blog/inu-graduation-photobooth-story.html",
+      "blog/custom-story.html"
+    ],
+    "cases": [
+      "cases/alley-night-install.html",
+      "cases/baseball-season-banner.html",
+      "cases/beauty-travel-expo-booth.html",
+      "cases/beer-festival-wrap.html",
+      "cases/brand-booth-full-wrap.html",
+      "cases/christmas-popup-booth.html",
+      "cases/concert-brand-booth.html",
+      "cases/custom-wrap-design.html",
+      "cases/department-store-popup.html",
+      "cases/drama-promotion-booth.html",
+      "cases/exhibition-expo-booth.html",
+      "cases/flipbook-outdoor-tent.html",
+      "cases/pink-selfphoto-brand.html",
+      "cases/premium-self-studio.html",
+      "cases/retail-store-install.html",
+      "cases/rooftop-night-event.html",
+      "cases/inu-graduation-ceremony.html",
+      "cases/pre-shipment-lineup.html"
+    ]
+  },
+  "phone-booth": {
+    "blog": [
+      "blog/new-concepts-story.html"
+    ],
+    "cases": []
+  },
+  "paparazzi-booth": {
+    "blog": [
+      "blog/new-concepts-story.html"
+    ],
+    "cases": []
+  },
+  "overhead-bed-booth": {
+    "blog": [
+      "blog/new-concepts-story.html"
+    ],
+    "cases": []
+  },
+  "karaoke-booth": {
+    "blog": [
+      "blog/new-concepts-story.html"
+    ],
+    "cases": []
+  }
+}

@@ -1,0 +1,4 @@
+# 개발·빌드 부산물 — 공개 저장소(GitHub Pages)에 올리지 않는다
+__pycache__/
+*.pyc
+.claude/

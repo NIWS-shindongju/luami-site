@@ -1,0 +1,205 @@
+{
+  "_doc": "루아미 가격 단일 출처(2026-10-04 확정). 금액은 만원 단위 정수. 화면 표기는 tools/build_products.py 가 이 파일로 만들고, tools/site-gate.js 가 사이트 HTML·data JSON 의 모든 금액을 이 파일과 대조한다(여기 없는 금액이 보이면 FAIL). 포토키오스크(진한 월넛 원목 박스형)의 렌탈·구매 키는 wood_monthly·wood_buy 다.",
+  "updated": "2026-10-04",
+  "currency": "KRW",
+  "vat": {
+    "_doc": "부가세 표기 스위치. mode 하나만 바꾸고 빌드하면 모든 금액 옆 표기가 바뀐다. excluded=부가세 별도, included=부가세 포함, none=표기 안 함.",
+    "mode": "excluded",
+    "confirmed": false,
+    "labels": {
+      "excluded": "부가세 별도",
+      "included": "부가세 포함",
+      "none": ""
+    }
+  },
+  "shipping_note": "운송비 별도",
+  "items": {
+    "std_short": {
+      "amount": 185,
+      "label": "스탠다드 부스 · 1개월 미만",
+      "unit": "1대",
+      "kind": "rental",
+      "includes": [
+        "부스 1대",
+        "촬영 키오스크",
+        "4면 랩핑",
+        "인화지 1,400매",
+        "설치·회수"
+      ],
+      "note": "운송비 별도"
+    },
+    "std_extra_unit": {
+      "amount": 90,
+      "prefix": "+",
+      "label": "스탠다드 부스 · 2대째부터",
+      "unit": "1대 추가마다",
+      "kind": "rental",
+      "includes": [
+        "4면 랩핑"
+      ],
+      "note": "인화지는 별도(700매 단위 추가)"
+    },
+    "std_monthly": {
+      "amount": 100,
+      "per": "월",
+      "label": "스탠다드 부스 · 1개월 이상",
+      "unit": "부스당, 두 번째 달부터",
+      "kind": "rental"
+    },
+    "paper_700": {
+      "amount": 13,
+      "label": "인화지 추가",
+      "unit": "700매",
+      "kind": "option"
+    },
+    "wood_monthly": {
+      "amount": 50,
+      "per": "월",
+      "label": "포토키오스크 · 키오스크만",
+      "unit": "1대",
+      "kind": "rental",
+      "includes": [
+        "포토키오스크 1대",
+        "인화지 700매"
+      ]
+    },
+    "std_buy": {
+      "amount": 500,
+      "label": "스탠다드 부스",
+      "kind": "purchase"
+    },
+    "wood_buy": {
+      "amount": 600,
+      "label": "포토키오스크",
+      "kind": "purchase"
+    }
+  },
+  "rules": {
+    "_doc": "스탠다드 부스 합계 = std_short + std_extra_unit × (대수 − 1) + std_monthly × 대수 × (개월 − 1). 1년 이상이면 구매 권장.",
+    "std_total": [
+      "std_short",
+      "std_extra_unit",
+      "std_monthly"
+    ],
+    "year_months": 12,
+    "year_buy": "std_buy"
+  },
+  "examples": [
+    {
+      "units": 1,
+      "months": 1,
+      "label": "1대 · 1개월 미만"
+    },
+    {
+      "units": 2,
+      "months": 1,
+      "label": "2대 · 1개월 미만"
+    },
+    {
+      "units": 3,
+      "months": 1,
+      "label": "3대 · 1개월 미만"
+    },
+    {
+      "units": 1,
+      "months": 3,
+      "label": "1대 · 3개월"
+    }
+  ],
+  "products": {
+    "_doc": "제품별 가격 연결. rental_summary = 대표 렌탈 항목(이 항목의 includes 가 '가격에 포함' 목록), separate = '별도' 목록(key 가 있으면 금액은 items 에서), hero_separate = 상세 첫 화면 '별도' 한 줄. site-gate.js 가 화면의 포함 목록·금액 연결(data-price-key)을 이 파일과 대조한다. ask = 포함·별도 어느 쪽인지 사양서에 없는 조건(상담 때 안내 — 추가 비용으로 단정하지 않음), hero_ask = 상세 첫 화면 한 줄.",
+    "standard-booth": {
+      "rental": [
+        "std_short",
+        "std_extra_unit",
+        "std_monthly",
+        "paper_700"
+      ],
+      "rental_summary": "std_short",
+      "rental_summary_prefix": "1개월 미만",
+      "purchase": "std_buy",
+      "separate": [
+        {
+          "label": "운송비",
+          "note": "설치 장소에 따라 따로 안내"
+        },
+        {
+          "label": "인화지 추가",
+          "unit": "700매",
+          "key": "paper_700"
+        },
+        {
+          "label": "2대째부터",
+          "unit": "1대 추가마다",
+          "key": "std_extra_unit",
+          "note": "4면 랩핑만 포함, 인화지는 별도"
+        },
+        {
+          "label": "두 번째 달부터",
+          "unit": "부스당",
+          "key": "std_monthly"
+        }
+      ],
+      "hero_separate": "운송비 · 추가 대수·기간·인화지"
+    },
+    "photo-kiosk": {
+      "rental": [
+        "wood_monthly",
+        "paper_700"
+      ],
+      "rental_summary": "wood_monthly",
+      "rental_summary_prefix": "키오스크만",
+      "purchase": "wood_buy",
+      "separate": [
+        {
+          "label": "인화지 추가",
+          "unit": "700매",
+          "key": "paper_700"
+        }
+      ],
+      "hero_separate": "인화지 추가",
+      "ask": [
+        {
+          "label": "운송·설치",
+          "note": "설치 장소를 확인한 뒤 조건을 안내해 드립니다"
+        }
+      ],
+      "hero_ask": "운송·설치 조건은 상담 때 안내"
+    },
+    "mirror-booth": {
+      "rental": [],
+      "rental_text": "기간·가격 협의",
+      "purchase_text": "구매 문의"
+    },
+    "vintage-elevator": {
+      "rental": [],
+      "rental_text": "기간·가격 협의",
+      "purchase_text": "구매 문의"
+    },
+    "steel-elevator": {
+      "rental": [],
+      "rental_text": "기간·가격 협의",
+      "purchase_text": "구매 문의"
+    },
+    "subway-booth": {
+      "rental": [],
+      "rental_text": "기간·가격 협의",
+      "purchase_text": "구매 문의"
+    },
+    "round-highangle": {
+      "rental": [],
+      "rental_text": "기간·가격 협의",
+      "purchase_text": "구매 문의"
+    },
+    "custom": {
+      "rental": [],
+      "rental_text": "기간·가격 협의",
+      "purchase_text": "제작 문의"
+    },
+    "_concept": {
+      "rental": [],
+      "rental_text": "기간·가격 협의",
+      "purchase_text": "제작 문의"
+    }
+  }
+}
