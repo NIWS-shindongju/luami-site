@@ -505,3 +505,6 @@ html.lb-open,html.lb-open body{overflow:hidden}
 }
 /* 좁은 화면: 상세 표지를 화면 높이의 40%로 묶어(비율 그대로, 가운데) 제품 이름·가격·견적 링크가 첫 화면에 들어오게(D07) */
 @media(max-width:560px){.pd-cover{max-height:40vh;margin-inline:auto}.pd-info{gap:10px}}
+/* 주요 버튼 글자가 두 줄로 꺾이지 않게(D06) — 글자 폭보다 좁아지면 다음 줄로, 380px 이하 상세 버튼은 한 줄에 하나씩 */
+.pd-cta .btn,.pd-cta .btn-ghost,.fc-cta .btn,.fc-cta .btn-ghost{white-space:nowrap;text-align:center;justify-content:center}
+@media(max-width:380px){.pd-cta .btn,.pd-cta .btn-ghost{flex:1 1 100%}}

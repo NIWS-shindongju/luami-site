@@ -300,3 +300,7 @@
 .qf-next{display:none;align-self:flex-start;font:inherit;font-size:15px;font-weight:700;min-height:44px;padding:0 18px;border-radius:10px;border:1px solid var(--accent-l);background:transparent;color:var(--accent-l);cursor:pointer}
 .qf-on .qf-next{display:inline-flex;align-items:center}
 .qf-next:disabled{opacity:.45;cursor:default}
+/* 주요 버튼 글자가 두 줄로 꺾이지 않게(D06) — 380px 이하는 버튼을 한 줄에 하나씩, 문의 띠 연락 버튼은 글자 폭만큼(넘치면 다음 줄) */
+.hero-cta .btn,.hero-cta .btn-k{white-space:nowrap;justify-content:center;text-align:center}
+@media(max-width:380px){.hero-cta .btn,.hero-cta .btn-k{flex:1 1 100%}}
+@media(min-width:561px){.h-band .contacts a{flex:1 1 auto;white-space:nowrap}}
