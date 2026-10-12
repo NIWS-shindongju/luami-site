@@ -352,8 +352,75 @@ def edge_color(rel):
     return col
 
 
+# ───────────────────────── 반응형 이미지(srcset, D16) ─────────────────────────
+SMALL_W = 800
+SMALL_DIR = "assets/images/covers/w800"
+_small_needed = {}  # 축소본 경로 → 원본 경로
+
+
+def small_cover(rel):
+    """3D 표지(covers/*.jpg)의 같은 비율 축소본(가로 800px) 경로. 이름에 원본 내용 해시 8자리 —
+    표지가 바뀌면 이름이 바뀌어 HTML 도 같이 바뀐다(--check 가 잡음). 파일은 main() 이 만든다(없을 때만, 결정적 설정)."""
+    h = hashlib.md5((ROOT / rel).read_bytes()).hexdigest()[:8]
+    out = f"{SMALL_DIR}/{pathlib.PurePosixPath(rel).stem}-w{SMALL_W}-{h}.jpg"
+    _small_needed[out] = rel
+    return out
+
+
+def make_small(src_rel, out_rel):
+    with Image.open(ROOT / src_rel) as im:
+        im = im.convert("RGB")
+        w, h = im.size
+        im = im.resize((SMALL_W, round(h * SMALL_W / w)), Image.LANCZOS)
+        (ROOT / out_rel).parent.mkdir(parents=True, exist_ok=True)
+        im.save(ROOT / out_rel, "JPEG", quality=82, optimize=True, progressive=True)
+
+
+_thumb_of = None
+
+
+def srcset_for(src, w):
+    """[(경로, 가로px)] 작은 것부터 — 3D 표지는 축소본(800w), 사례 사진은 gallery.json·wrap.json 의 기존 썸네일(같은 비율).
+    작은 후보가 없거나 원본보다 크지 않으면 None."""
+    global _thumb_of
+    if _thumb_of is None:
+        _thumb_of = {}
+        items = [x for v in G.values() if isinstance(v, list) for x in v]
+        items += [x for k in ("examples", "details") for x in WRAP.get(k, [])]
+        items += [x for ba in WRAP.get("before_after", []) for k in ("before", "after") for x in ba.get(k, [])]
+        for x in items:
+            if x.get("thumb") and x["thumb"] != x["src"]:
+                _thumb_of[x["src"]] = x["thumb"]
+    small = None
+    if Image is not None and src.startswith(SITE["covers"]["dir"] + "/") and (ROOT / src).exists() and w > SMALL_W:
+        small = (small_cover(src), SMALL_W)
+    elif src in _thumb_of and (ROOT / _thumb_of[src]).exists():
+        tw = dims(_thumb_of[src])[0]
+        small = (_thumb_of[src], tw) if tw < w else None
+    return [small, (src, w)] if small else None
+
+
+def srcset_attr(src, w, depth, sizes):
+    cand = srcset_for(src, w) if sizes else None
+    if not cand:
+        return ""
+    return f' srcset="{", ".join(f"{u(r, depth)} {cw}w" for r, cw in cand)}" sizes="{sizes}"'
+
+
+# sizes — 실측 렌더 폭(1440·1024·800·600·390) 기준
+SZ_HUB = "(max-width:640px) 40vw, (max-width:880px) 48vw, (max-width:1080px) 31vw, 300px"
+SZ_FEAT = "(max-width:880px) 96vw, (max-width:1080px) 46vw, 300px"
+SZ_CONCEPT = "(max-width:640px) 92vw, (max-width:1080px) 46vw, 300px"
+SZ_COVER = "(max-width:560px) 74vw, (max-width:880px) 56vw, 580px"
+SZ_CELL = "(max-width:880px) 48vw, 300px"
+SZ_WIDE = "(max-width:880px) 96vw, 610px"
+
+
 def img_tag(img, depth, alt, cls="", lazy=True, sizes=None, priority=False):
     attrs = [f'src="{u(img["src"], depth)}"', f'width="{img["w"]}"', f'height="{img["h"]}"', f'alt="{esc(alt)}"']
+    ss = srcset_attr(img["src"], img["w"], depth, sizes)
+    if ss:
+        attrs.append(ss.strip())
     if img["kind"] == "render" and not img.get("is_cover"):
         attrs.append(f'style="object-fit:contain;background:{edge_color(img["src"])}"')
     elif img.get("position") and img["position"] != "50% 50%":
@@ -707,7 +774,7 @@ def detail_page(prod, idx):
 <section class="pd-hero"><div class="wrap">
   <nav class="crumb" aria-label="현재 위치"><a href="{pre}index.html">홈</a><span aria-hidden="true">›</span><a href="{pre}products.html">제품</a><span aria-hidden="true">›</span><span aria-current="page">{esc(prod['name'])}</span></nav>
   <div class="pd-grid">
-    <figure class="pd-cover">{img_tag(cov, depth, cover_alt(prod, cov), priority=True)}{render_tag(cov, large=True)}</figure>
+    <figure class="pd-cover">{img_tag(cov, depth, cover_alt(prod, cov), priority=True, sizes=SZ_COVER)}{render_tag(cov, large=True)}</figure>
     <div class="pd-info">
       <span class="idxlabel">{num}</span>
       <h1>{esc(prod['name'])}</h1>
@@ -763,9 +830,18 @@ def detail_page(prod, idx):
             tag = render_tag(it)
             vcap = visible_caption(it, bool(tag))
             span = " pg-wide" if i == 0 else (" pg-w2" if i >= len(gal) - k else "")
+            # 작은 후보(썸네일·표지 축소본) + 원본 srcset, sizes = 칸 폭(2칸짜리 pg-wide·pg-w2 는 넓게) — 넓은 칸이 600px 썸네일을 늘려 쓰지 않게(D16)
+            wide = i == 0 or span == " pg-w2"
+            ss = srcset_attr(it["src"], it["w"], depth, SZ_WIDE if wide else SZ_CELL)
+            if ss:
+                isrc = (it.get("thumb") if it.get("thumb") and it["thumb"] != it["src"] else small_cover(it["src"]) if it.get("is_cover") and Image is not None else it["src"])
+                iw, ih = it["w"], it["h"]
+            else:
+                isrc = it["src"] if i == 0 else (it.get("thumb") or it["src"])
+                iw, ih = (it["w"], it["h"]) if i == 0 else (tw, th)
             cells.append(
                 f'    <a class="pg-item{span}" href="{u(it["src"], depth)}" data-w="{it["w"]}" data-h="{it["h"]}" data-caption="{esc(cap)}">'
-                f'<img src="{u(it["src"] if i == 0 else (it.get("thumb") or it["src"]), depth)}" width="{it["w"] if i == 0 else tw}" height="{it["h"] if i == 0 else th}" alt="{esc(it["alt"])}" loading="lazy" decoding="async"{contain_style(it)}>'
+                f'<img src="{u(isrc, depth)}"{ss} width="{iw}" height="{ih}" alt="{esc(it["alt"])}" loading="lazy" decoding="async"{contain_style(it)}>'
                 f'{tag}' + (f'<span class="pg-cap">{esc(vcap)}</span>' if vcap else '') + '</a>')
         note = f"{gword}을 누르면 크게 볼 수 있습니다." if n_photo else "이미지를 누르면 크게 볼 수 있습니다."
         if n_render and not n_photo:
@@ -982,7 +1058,7 @@ def hub_card(prod, depth=0):
     type_chip = '<span class="badge badge-line">키오스크</span>' if prod["type"] == "kiosk" else '<span class="badge badge-line">부스</span>'
     return f"""    <article class="pc" data-tags="{tags_of(prod)}">
       <a href="{pre}products/{prod['slug']}.html">
-        <figure class="pc-im">{img_tag(img, depth, cover_alt(prod, img))}<span class="pc-no">{prod['order']:02d}</span>{badge}{render_tag(img)}</figure>
+        <figure class="pc-im">{img_tag(img, depth, cover_alt(prod, img), sizes=SZ_HUB)}<span class="pc-no">{prod['order']:02d}</span>{badge}{render_tag(img)}</figure>
         <div class="pc-body">
           <div class="pc-chips">{type_chip}{ha}</div>
           <h3>{esc(prod['name'])}</h3>
@@ -1017,7 +1093,7 @@ def featured_card(prod):
     fc_cls = "is-render" if is_r else ""
     fc_bg = f' style="--fc-bg:{edge_color(img["src"])}"' if is_r else ""  # 좁은 화면에서 렌더를 통째로 보일 때 여백 색
     return f"""    <article class="fc">
-      <a class="fc-im" href="products/{prod['slug']}.html" tabindex="-1" aria-hidden="true"{fc_bg}>{img_tag(img, 0, cover_alt(prod, img), cls=fc_cls)}{render_tag(img, large=True)}</a>
+      <a class="fc-im" href="products/{prod['slug']}.html" tabindex="-1" aria-hidden="true"{fc_bg}>{img_tag(img, 0, cover_alt(prod, img), cls=fc_cls, lazy=False, sizes=SZ_FEAT)}{render_tag(img, large=True)}</a>
       <div class="fc-body">
         <div class="pc-chips"><span class="badge badge-{prod.get('badge_kind', 'main')}">{esc(prod['badge'])}</span><span class="fc-no">{prod['order']:02d} / {len(LINEUP):02d}</span></div>
         <h3><a href="products/{prod['slug']}.html">{esc(prod['name'])}</a></h3>
@@ -1035,7 +1111,7 @@ def concept_card(cp):
     img = cover(cp, "4x5")
     tag = re.sub(r"\s*·\s*신규 컨셉\s*$", "", c["tagline"])
     if img:
-        fig = f'<figure class="cc-im">{img_tag(img, 0, cp["name"] + " — CAD 3D 렌더")}{render_tag(img)}</figure>'
+        fig = f'<figure class="cc-im">{img_tag(img, 0, cp["name"] + " — CAD 3D 렌더", sizes=SZ_CONCEPT)}{render_tag(img)}</figure>'
     else:
         fig = (f'<figure class="cc-im cc-empty" aria-hidden="true"><span class="cc-mark">{esc(cp["name_en"])}</span>'
                f'<span class="cc-pending">CAD 3D 렌더 준비 중</span></figure>')
@@ -1657,7 +1733,17 @@ def main():
         rel = f"cases/{f.name}"
         outputs[rel] = case_relprod(rel, f.read_text(encoding="utf-8"))
 
-    changed = []
+    # 3D 표지 축소본(srcset 작은 후보): 필요한데 없으면 만든다(--check 는 '바뀔 파일'로 보고), 더는 안 쓰는 축소본은 지운다
+    small_new = [r for r in sorted(_small_needed) if not (ROOT / r).exists()]
+    small_dir = ROOT / SMALL_DIR
+    small_old = sorted(str(f_.relative_to(ROOT)) for f_ in small_dir.glob("*.jpg") if str(f_.relative_to(ROOT)) not in _small_needed) if small_dir.exists() else []
+    if not a.check:
+        for r in small_new:
+            make_small(_small_needed[r], r)
+        for r in small_old:
+            (ROOT / r).unlink()
+
+    changed = small_new + small_old
     for rel, s in outputs.items():
         f = ROOT / rel
         old = f.read_text(encoding="utf-8") if f.exists() else None
@@ -1666,6 +1752,8 @@ def main():
 
     if not a.check:
         for rel in changed:
+            if rel not in outputs:  # 표지 축소본은 위에서 이미 만들거나 지웠다
+                continue
             f = ROOT / rel
             f.parent.mkdir(parents=True, exist_ok=True)
             f.write_text(outputs[rel], encoding="utf-8")
