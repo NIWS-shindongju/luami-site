@@ -16,7 +16,7 @@
     },
     "gallery_hide_scenes": [],
     "install_fields": {"_doc": "제품 상세 '설치 조건' 표의 행 순서·이름. 제품 install 에 값이 있는 행만 그린다(빈 값·없는 키는 행을 만들지 않음). 전원·설치/철수 시간·1회 촬영~인화 시간은 현장 실측 전이라 비워 둔다.", "footprint": "차지 면적", "height": "높이", "head": "촬영 헤드 크기", "weight": "무게", "entrance": "출입구", "structure": "구조", "power": "전원", "setup_time": "설치·철수 시간", "print_time": "1회 촬영~인화 시간", "carry_in": "반입·이동"},
-    "kakao": "http://pf.kakao.com/_YRxoPX/chat",
+    "kakao": "https://pf.kakao.com/_YRxoPX/chat",
     "contact": "index.html#contact"
   },
   "lineup": [

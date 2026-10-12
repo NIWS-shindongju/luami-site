@@ -22,7 +22,7 @@ MENU = [
 ]
 CONTACT = ("index.html#contact", "무료 견적")
 TEL = ("tel:01036297743", "010-3629-7743")
-KAKAO = "http://pf.kakao.com/_YRxoPX/chat"
+KAKAO = "https://pf.kakao.com/_YRxoPX/chat"
 # 푸터 바로가기 — 메뉴 + 렌탈 가이드(상단 메뉴에서 빠진 순위 페이지로 가는 전역 링크)
 QUICK = MENU + [("guide.html", "렌탈 가이드"), CONTACT]
 SECTION_OF = {"blog": "blog.html", "cases": "portfolio.html", "products": "products.html"}
@@ -65,7 +65,7 @@ def chrome(prefix, current):
     <div class="drawer-contact">
       <a href="tel:01036297743">010-3629-7743</a>
       <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a>
-      <a href="http://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카톡으로 바로 상담</a>
+      <a href="https://pf.kakao.com/_YRxoPX/chat" target="_blank" rel="noopener">카톡으로 바로 상담</a>
     </div>
   </div>
 </div>
@@ -75,7 +75,7 @@ def chrome(prefix, current):
     footer = f'''<footer><div class="wrap">
   <div class="foot-grid">
     <div class="col"><b>루아미 (Luami)</b>무인 포토부스 렌탈 · 설치 · 운영<br>전국 상담 가능</div>
-    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="http://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
+    <address class="col"><b>문의</b><a href="tel:01036297743">전화 010-3629-7743</a><br><a href="mailto:luami@luamiphoto.com">이메일 luami@luamiphoto.com</a><br>카카오톡 채널 <a href="https://pf.kakao.com/_YRxoPX" target="_blank" rel="noopener">@루아미</a><br><a href="https://instagram.com/luami_photo" target="_blank" rel="noopener">인스타그램</a> · <a href="https://youtube.com/@luami_photo" target="_blank" rel="noopener">유튜브</a> · <a href="https://blog.naver.com/luami_photo" target="_blank" rel="noopener">네이버 블로그</a> @luami_photo</address>
     <div class="col"><b>바로가기</b>{quick}<br><a href="{prefix}index.html#faq">자주 묻는 질문</a></div>
   </div>
   {BIZ}
