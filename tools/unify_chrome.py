@@ -43,7 +43,8 @@ def chrome(prefix, current):
         return f'<a href="{prefix}{href}"{cur}{extra}>{label}</a>'
 
     top = "".join(link(h, l) for h, l in MENU)
-    drawer = "\n".join("    " + link(h, l) for h, l in MENU + [CONTACT])
+    # 서랍 메뉴 = 메뉴 4개(견적은 아래 '무료 견적 받기' 버튼 하나 — 같은 목적지 두 번 금지, D18 F15)
+    drawer = "\n".join("    " + link(h, l) for h, l in MENU)
     header = f'''<header class="nav"><div class="wrap nav-in">
   <a href="{prefix}index.html" class="logo">Luami<span class="dot"></span></a>
   <nav class="nav-links">{top}</nav>
