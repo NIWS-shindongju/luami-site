@@ -87,6 +87,18 @@
   .h-cases{grid-template-columns:repeat(2,1fr)}
   .h-band{grid-template-columns:1fr}
 }
+/* 767px 이하: '무료 견적'을 누르고 내려왔을 때 첫 화면에 폼이 보이게(D02) — 제목(라벨·h2·설명) → 폼 → 가격 한눈에 → 신뢰 한 줄.
+   .h-band-l 을 display:contents 로 풀어 자식마다 순서를 준다(제목은 폼 위에 남고 .pbox·.trust-mini 만 폼 아래로) */
+@media(max-width:767px){
+  .h-band{row-gap:0}
+  .h-band-l{display:contents}
+  .h-band-l>.idxlabel{order:1}
+  .h-band-l>h2{order:2}
+  .h-band-l>p:first-of-type{order:3}
+  .h-band-r{order:4;margin-top:22px}
+  .h-band .pbox{order:5}
+  .h-band .trust-mini{order:6}
+}
 /* ---------- 모바일 ---------- */
 @media(max-width:560px){
   .h-head p{font-size:15px}
