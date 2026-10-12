@@ -22,7 +22,7 @@
   "lineup": [
     {
       "slug": "photo-kiosk",
-      "order": 1,
+      "order": 2,
       "name": "포토키오스크",
       "name_en": "Photo Kiosk",
       "type": "kiosk",
@@ -40,7 +40,7 @@
     },
     {
       "slug": "mirror-booth",
-      "order": 2,
+      "order": 3,
       "name": "미러포토부스",
       "name_en": "Mirror Photo Booth",
       "type": "booth",
@@ -56,7 +56,7 @@
     },
     {
       "slug": "vintage-elevator",
-      "order": 3,
+      "order": 4,
       "name": "빈티지 엘리베이터 부스",
       "name_en": "Vintage Elevator Booth",
       "type": "booth",
@@ -72,7 +72,7 @@
     },
     {
       "slug": "steel-elevator",
-      "order": 4,
+      "order": 5,
       "name": "스텐 엘리베이터 부스",
       "name_en": "Stainless Elevator Booth",
       "type": "booth",
@@ -88,7 +88,7 @@
     },
     {
       "slug": "subway-booth",
-      "order": 5,
+      "order": 6,
       "name": "지하철부스",
       "name_en": "Subway Booth",
       "type": "booth",
@@ -104,7 +104,7 @@
     },
     {
       "slug": "standard-booth",
-      "order": 6,
+      "order": 1,
       "name": "스탠다드 부스",
       "name_en": "Standard Booth",
       "type": "booth",
