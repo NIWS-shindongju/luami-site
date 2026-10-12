@@ -15,6 +15,7 @@
   services.html               스텁(noindex · canonical/refresh → pricing.html · 옛 앵커 JS 매핑)
   index.html · guide.html     <!-- GEN:이름 --> … <!-- /GEN:이름 --> 사이만 갈아 끼움
   cases/*.html                "이 현장에 쓰인 제품" 줄을 content_map 기준으로 갱신
+  blog/*.html                 <!-- GEN:related-product --> 가 있는 글: 끝 상담 띠 앞 '이 글의 제품' 카드(content_map 역방향 대표 제품 1개)
   sitemap.xml                 새 페이지 추가 · services·없어진 페이지 제거 · 본문이 바뀐 페이지 lastmod = 오늘
                               (판정은 site-gate.js --stale-lastmod-json 과 같은 규칙: 메뉴·푸터·버전 쿼리만 바뀐 건 제외)
 
@@ -1471,6 +1472,49 @@ def guide_prices():
   </aside>"""
 
 
+# ───────────────────────── 블로그 글 끝 '이 글의 제품' 카드(GEN:related-product, D12) ─────────────────────────
+def blog_reverse_map():
+    """content_map.json 역방향: 블로그 글 → 그 글을 가진 제품 slug 들."""
+    rev = {}
+    for slug, m in CM.items():
+        if slug.startswith("_"):
+            continue
+        for rel in m.get("blog", []):
+            rev.setdefault(rel, []).append(slug)
+    return rev
+
+
+def primary_product(rel, rev):
+    """글 하나에 대표 제품 하나. ① blog/<slug>-story.html 은 그 제품 ② 제품 상세가 있는 제품이 하나뿐이면 그것
+    ③ 신규 컨셉만 걸린 글은 커스텀 제작(컨셉은 실물 미제작 — 제작 상담은 커스텀 상세로). 정할 수 없으면 빌드를 멈춘다."""
+    detail = {x["slug"] for x in DETAIL}
+    own = re.match(r"blog/([a-z0-9-]+)-story\.html$", rel)
+    if own and own.group(1) in detail:
+        return BYSLUG[own.group(1)]
+    slugs = rev.get(rel, [])
+    det = [x for x in slugs if x in detail]
+    if len(det) == 1:
+        return BYSLUG[det[0]]
+    if slugs and not det and all(x in {c["slug"] for c in CONCEPTS} for x in slugs):
+        return CUSTOM
+    raise SystemExit(f"{rel}: GEN:related-product 대표 제품을 정할 수 없음(content_map: {slugs})")
+
+
+def related_product(prod):
+    """제품 이름(상세 링크 글자) · 한 줄 소개 · prices.json 가격(렌탈·구매) · 이 제품 견적 링크."""
+    slug = prod["slug"]
+    tag, img = tile_img(prod, "thumb", depth=1)
+    rows = "".join(f"<div><dt>{a}</dt><dd>{b}</dd></div>" for a, b, _ in price_of(slug))
+    return (f'<section class="relp-sec"><div class="wrap"><div class="relp">'
+            f'<a class="relp-im" href="../products/{slug}.html" tabindex="-1" aria-hidden="true">{tag}{render_tag(img)}</a>'
+            f'<div class="relp-body"><span class="idxlabel">이 글의 제품</span>'
+            f'<h2 class="relp-h"><a href="../products/{slug}.html">{esc(prod["name"])}</a></h2>'
+            f'<p class="relp-tag">{esc(COPY[slug]["tagline"])}</p>'
+            f'<dl class="relp-price">{rows}</dl>'
+            f'<a class="btn relp-q" href="{quote_href(1, prod["name"])}">무료 견적 받기 <span aria-hidden="true">→</span></a>'
+            f'</div></div></div></section>\n')
+
+
 def replace_gen(src, name, content, path):
     pat = re.compile(r"(<!-- GEN:%s -->)(.*?)(<!-- /GEN:%s -->)" % (re.escape(name), re.escape(name)), re.S)
     if not pat.search(src):
@@ -1600,6 +1644,13 @@ def main():
     outputs["index.html"] = sync_faq_jsonld(idx2)
     gd = (ROOT / "guide.html").read_text(encoding="utf-8")
     outputs["guide.html"] = replace_gen(gd, "guide-prices", guide_prices(), "guide.html")
+
+    rev = blog_reverse_map()
+    for f in sorted(ROOT.glob("blog/*.html")):
+        src = f.read_text(encoding="utf-8")
+        if "<!-- GEN:related-product -->" in src:
+            rel = f"blog/{f.name}"
+            outputs[rel] = replace_gen(src, "related-product", related_product(primary_product(rel, rev)), rel)
 
     case_files = sorted(f for f in ROOT.glob("cases/*.html") if 'content="noindex' not in f.read_text(encoding="utf-8"))  # 옛 주소 안내 스텁 제외
     for f in case_files:
