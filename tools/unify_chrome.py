@@ -6,6 +6,7 @@
   880px 이하에선 숨기고 하단 바(.mcta: 카톡·전화·무료 견적)가 대신한다.
   렌탈 가이드는 상단 메뉴에서 빠지고 푸터 바로가기에 남는다(사이트 전역 내부 링크 유지).
 - 현재 페이지 메뉴에 aria-current="page"
+- 맨 위 띠(.util)의 '상담 010-…' 은 tel: 링크(UTIL)
 - 푸터 최하단 사업자 정보 한 줄(BIZ) — 메뉴 없는 단독 페이지(404·thanks)엔 얇은 푸터로
 - 장식 제거: 스프로킷 띠(.sprocket), 이미지 띠(.strip-sec), 푸터 대형 워드마크(.bigmark)
 재실행해도 결과가 같다(멱등). 사용: python3 tools/unify_chrome.py
@@ -31,6 +32,9 @@ BIZ = ('<p class="biz">주식회사 니우스 · 대표 신동주 · 사업자�
        '인천광역시 서해구 청라한울로 17 · '
        '문의 <a href="mailto:luami@luamiphoto.com">luami@luamiphoto.com</a></p>')
 MINI_FOOTER = f'<footer class="foot-min"><div class="wrap">\n  {BIZ}\n</div></footer>'
+# 맨 위 띠 — 전화번호는 눌러서 바로 걸 수 있게(모바일 탭 높이 44px 는 style.css .util a)
+UTIL = (f'<div class="util"><div class="wrap"><span>포토부스 렌탈 · 전국 설치</span>'
+        f'<a href="{TEL[0]}" aria-label="전화 상담 {TEL[1]}">상담 {TEL[1]}</a></div></div>')
 
 
 def chrome(prefix, current):
@@ -98,6 +102,7 @@ def transform(rel, src):
         return out.replace("</body>", MINI_FOOTER + "\n</body>", 1)
     header, drawer, footer = chrome(prefix, current)
     out = re.sub(r'<header class="nav".*?</header>', header, src, count=1, flags=re.S)
+    out = re.sub(r'<div class="util"><div class="wrap">.*?</div></div>', lambda m: UTIL, out, count=1, flags=re.S)
     out = re.sub(r'<div class="drawer-scrim".*?(?=<div class="stickybar")', drawer, out, count=1, flags=re.S)
     out = re.sub(r'<footer>.*?</footer>', footer, out, count=1, flags=re.S)
     out = re.sub(r'\n?<div class="sprocket[^"]*"></div>', "", out)

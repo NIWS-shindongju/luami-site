@@ -441,7 +441,7 @@ def asset_ver(rel):
     return hashlib.md5((ROOT / rel).read_bytes()).hexdigest()[:8]
 
 
-STYLE_V = "20261004c"
+STYLE_V = "20261012a"
 
 
 def ld(obj):
@@ -502,7 +502,7 @@ def body_open(depth, body_class):
     return f"""<body class="prp {body_class}">
 <div class="grain"></div>
 <div class="progress" id="prog"></div>
-<div class="util"><div class="wrap"><span>포토부스 렌탈 · 전국 설치</span><span>상담 010-3629-7743</span></div></div>
+{unify_chrome.UTIL}
 <header class="nav"></header>
 
 <div class="drawer-scrim" id="drawerScrim" aria-hidden="true"></div>
