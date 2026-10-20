@@ -37,8 +37,36 @@
   }
   if (next) next.addEventListener('click', function () { go(2, true); });
   back.addEventListener('click', function () { go(1, true); });
+  /* 휴대폰 칸 — 형식이 틀리면 한국어로 안내(CV-04 · pattern 은 HTML 에 있어 JS 가 없어도 브라우저가 막는다) */
+  var phone = f.querySelector('input[name="phone"]');
+  if (phone) {
+    phone.addEventListener('invalid', function () {
+      phone.setCustomValidity(phone.validity.valueMissing ? '연락받으실 휴대폰 번호를 적어 주세요.' : '휴대폰 번호를 010-1234-5678 처럼 적어 주세요.');
+    });
+    phone.addEventListener('input', function () { phone.setCustomValidity(''); });
+  }
+  /* 두 번 전송 막기(CV-07) — 전송이 시작되면 버튼을 잠그고 '보내는 중…'. 뒤로 가기(bfcache)로 돌아오면 되돌린다 */
+  var sub = f.querySelector('button[type="submit"]');
+  var subT = sub && sub.querySelector('.cbtn-t');
+  var subLabel = subT ? subT.textContent : '';
+  function unlock() { if (sub) { sub.disabled = false; sub.removeAttribute('aria-busy'); if (subT) subT.textContent = subLabel; } }
   f.addEventListener('submit', function (e) {
-    if (!picked()) { e.preventDefault(); go(1, true); }
+    if (!picked()) { e.preventDefault(); go(1, true); return; }
+    if (e.defaultPrevented || !sub) return;
+    if (sub.disabled) { e.preventDefault(); return; }
+    /* 잠그는 건 이번 전송이 시작된 다음 틱 — 같은 틱에 disabled 를 걸면 일부 브라우저가 전송 자체를 취소한다 */
+    setTimeout(function () { sub.disabled = true; sub.setAttribute('aria-busy', 'true'); if (subT) subT.textContent = '보내는 중…'; }, 0);
+  });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) unlock(); });
+  /* 입력 중에는 모바일 하단 바를 내려 입력칸·키보드 위를 가리지 않는다(A11Y-02) */
+  var root = document.documentElement, hideT = null;
+  f.addEventListener('focusin', function (e) {
+    if (!/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return;
+    clearTimeout(hideT); root.classList.add('mcta-hide');
+  });
+  f.addEventListener('focusout', function () {
+    clearTimeout(hideT);
+    hideT = setTimeout(function () { if (!f.contains(document.activeElement) || !/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)) root.classList.remove('mcta-hide'); }, 150);
   });
   go(picked() ? 2 : 1, false);
 
@@ -83,4 +111,18 @@
   }
   show();
   sel.addEventListener('change', show);
+  /* 홈 안에서 고르는 견적(2026-10-20) — <a href="#contact" data-pick-product="포토키오스크"> 를 누르면 새로고침 없이
+     그 제품을 미리 고른다(?product= 링크는 페이지를 다시 불러온다, CV-06). 선택지에 없는 값은 무시. */
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('[data-pick-product]') : null;
+    if (!a) return;
+    var v = a.getAttribute('data-pick-product');
+    for (var j = 0; j < sel.options.length; j++) if (sel.options[j].value === v) {
+      sel.value = v;
+      var more = f.querySelector('details.qf-more');
+      if (more) more.open = true;
+      show();
+      break;
+    }
+  });
 })();

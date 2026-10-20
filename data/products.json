@@ -12,7 +12,7 @@
       "label": "CAD 3D 렌더",
       "baked_label_slugs": {"_doc": "표지 이미지 안에 'CAD 기반 3D 렌더 (실물 사진 아님)' 글자를 박아 내보낸 레인(L60a)의 slug. --covers-from 이 복사한 뒤 tools/strip_baked_label.py text 로 지운다(페이지의 HTML 칩 하나로만 표기, BRIEF 1-5 #4). thumb 는 축소본이라 글자 없음.", "slugs": ["mirror-booth", "steel-elevator", "vintage-elevator"], "variants": ["4x5", "1x1", "angle1", "angle2", "angle3"]},
       "hide": {"_doc": "쓰지 않는 표지 각도(slug → variant 목록). cover_path 가 없는 것으로 보고 --covers-from 도 복사하지 않는다. 2026-10-04 r4 V1: 엘리베이터 2종 angle2 = 크롬 벽에 흑백 줄무늬가 비쳐 깨진 그림처럼 보임, 미러 angle2 = 아무것도 없는 회색 뒷벽.", "vintage-elevator": ["angle2"], "steel-elevator": ["angle2"], "mirror-booth": ["angle2"]},
-      "extra": {"_doc": "제품 갤러리에 더하는 보조 렌더(covers.json 의 set_* 등). 파일이 covers 폴더에 있을 때만 쓴다. covers.json 의 set_status 가 superseded 면 --covers-from 이 복사하지 않는다.", "standard-booth": [{"variant": "set_4x5", "caption": "CAD 3D 렌더 · 부스 안 촬영 키오스크 구성", "alt": "스탠다드 부스 CAD 3D 렌더 — 열린 앞면 안쪽에 진회색 경사형 촬영 키오스크와 원형 링조명 카메라"}, {"variant": "set_wrap_4x5", "caption": "CAD 3D 렌더 · 4면 랩핑 예시 무늬", "alt": "스탠다드 부스 CAD 3D 렌더 — 겉면에 일러스트 무늬를 랩핑한 예시와 안쪽 촬영 키오스크"}]}
+      "extra": {"_doc": "제품 갤러리에 더하는 보조 렌더(covers.json 의 set_* 등). 파일이 covers 폴더에 있을 때만 쓴다. covers.json 의 set_status 가 superseded 면 --covers-from 이 복사하지 않는다.", "standard-booth": [{"variant": "set_4x5", "caption": "CAD 3D 렌더 · 부스 안 촬영 키오스크 구성", "alt": "스탠다드 부스 CAD 3D 렌더 — 열린 앞면 안쪽에 진회색 경사형 촬영 키오스크와 원형 링조명 카메라"}, {"variant": "set_wrap_4x5", "caption": "CAD 3D 렌더 · 4면 랩핑 예시 무늬", "alt": "스탠다드 부스 CAD 3D 렌더 — 겉면에 일러스트 무늬를 랩핑한 예시와 안쪽 촬영 키오스크"}], "photo-kiosk": [{"variant": "shelf_close", "caption": "CAD 3D 렌더 · 선반형 — 카운터 위 헤드·프린터·카드 결제기", "alt": "포토키오스크 선반형 CAD 3D 렌더 — 카운터 위 월넛 헤드와 프린터, 헤드 오른쪽 옆면 카드 결제기"}, {"variant": "shelf_wide", "caption": "CAD 3D 렌더 · 선반형 — 카운터 전체", "alt": "포토키오스크 선반형 CAD 3D 렌더 — 오크 상판 카운터 위에 놓인 월넛 헤드와 프린터"}]}
     },
     "gallery_hide_scenes": [],
     "install_fields": {"_doc": "제품 상세 '설치 조건' 표의 행 순서·이름. 제품 install 에 값이 있는 행만 그린다(빈 값·없는 키는 행을 만들지 않음). 전원·설치/철수 시간·1회 촬영~인화 시간은 현장 실측 전이라 비워 둔다.", "footprint": "차지 면적", "height": "높이", "head": "촬영 헤드 크기", "weight": "무게", "entrance": "출입구", "structure": "구조", "power": "전원", "setup_time": "설치·철수 시간", "print_time": "1회 촬영~인화 시간", "carry_in": "반입·이동"},
@@ -29,13 +29,13 @@
       "badge": "추천",
       "badge_kind": "recommend",
       "highangle": null,
-      "install": {"height": "전체 1,700mm", "head": "410 × 348 × 513mm (진한 월넛 원목)", "weight": "약 44.5kg", "structure": "접이식 원목 삼각대 위에 촬영 헤드, 삼각대 선반 위에 사진 프린터", "power": "", "setup_time": "", "print_time": "", "note": "설계값입니다. 제품 이미지는 설계 3D 이미지(CAD 3D 렌더)라 세부 모양은 바뀔 수 있습니다."},
+      "install": {"height": "전체 1,700mm", "head": "410 × 348 × 513mm (진한 월넛 원목)", "weight": "약 44.5kg", "structure": "삼각대형: 접이식 원목 삼각대 위에 촬영 헤드, 삼각대 선반 위에 사진 프린터 · 선반형: 매장 카운터·선반 위에 헤드와 프린터", "power": "", "setup_time": "", "print_time": "", "note": "설계값입니다. 제품 이미지는 설계 3D 이미지(CAD 3D 렌더)라 세부 모양은 바뀔 수 있습니다."},
       "fallback": {"4x5": "assets/images/products/photo-kiosk/l53-cad-3q.jpg", "thumb": "assets/images/products/photo-kiosk/l53-cad-3q-thumb.jpg", "kind": "render", "baked_label": false, "position": "50% 50%"},
       "legacy_anchors": ["p-a02"],
       "seo": {
-        "title": "포토키오스크 렌탈·구매 | 월넛 원목 삼각대형 — 루아미",
+        "title": "포토키오스크 렌탈·구매 | 월넛 원목 삼각대형·선반형 — 루아미",
         "description": "진한 월넛 원목 박스 헤드를 접이식 원목 삼각대에 올린 포토키오스크. 부스 자리가 없는 매장 입구·카페·로비에도 섭니다. 키오스크만 렌탈 {price:wood_monthly}·인화지 700매 포함, 구매가 {price:wood_buy}.",
-        "keywords": "포토키오스크,포토키오스크 렌탈,포토키오스크 구매,원목 포토키오스크,월넛 포토키오스크,삼각대 포토키오스크,무인 포토키오스크,루아미"
+        "keywords": "포토키오스크,포토키오스크 렌탈,포토키오스크 구매,원목 포토키오스크,월넛 포토키오스크,삼각대 포토키오스크,카운터 포토키오스크,무인 포토키오스크,루아미"
       }
     },
     {
