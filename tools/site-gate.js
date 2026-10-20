@@ -893,7 +893,8 @@ if (process.argv.includes('--selftest')) {
     plant('pricing.html', null, (m) => m.replace(man(a0 + b0), man(a0 + b0 + 20)), 'price-mismatch', 'FAQ JSON-LD 답변에만 틀린 2대 합계',
       /<script type="application\/ld\+json">\s*\{"@context":"https:\/\/schema\.org","@type":"FAQPage"[\s\S]*?<\/script>/);
     plant('pricing.html', null, (m) => m.replace(man(a0), WRONG), 'price-mismatch', 'og:description 에만 틀린 금액', /<meta property="og:description" content="[^"]*">/);
-    plant('index.html', '포토키오스크 ' + wb, '포토키오스크 ' + sb, 'price-binding', '손글 "포토키오스크 구매가" 자리에 스탠다드 구매가');
+    // 2026-10-20: 홈 라인업의 손글 '포토키오스크 650만원' 줄이 없어져(정가는 가격 2카드에 한 번만) FAQ 비용 답변(표식 없는 손글)에 심는다
+    plant('index.html', '포토키오스크는 키오스크만 렌탈 월 ' + man(it0.wood_monthly.amount), '포토키오스크는 키오스크만 렌탈 월 ' + sb, 'price-binding', '손글 "포토키오스크 렌탈가" 자리에 스탠다드 구매가');
     plant('products/standard-booth.html', null, '', 'package-binding', '포함 목록에서 설치·회수 삭제', /<li data-item="설치·회수">[\s\S]*?<\/li>/g);
     plant('products/standard-booth.html', '<ul class="ie-list" data-list="included">', '<ul class="ie-list" data-list="included"><li>운송비 별도</li>', 'included-list', "'포함' 목록에 운송비 별도");
     plant('products/standard-booth.html', '</tbody></table><p class="ins-note">', '<tr><th scope="row">전원</th><td></td></tr></tbody></table><p class="ins-note">', 'empty-row', '설치 조건 표에 빈 값 행');

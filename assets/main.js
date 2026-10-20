@@ -1,4 +1,7 @@
 /* Luami shared JS */
+/* 이 파일이 돌았다는 표식 — 홈 head 의 실패세이프(1.8초)가 이걸 보고 .js 숨김을 풀지 정한다 */
+window.__luamiMain = 1;
+var __reduceMotion = (function(){ try{ return matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } })();
 document.addEventListener('DOMContentLoaded', function(){
   requestAnimationFrame(function(){
     document.querySelectorAll('.hero h1,.hero .sub').forEach(function(e){e.classList.add('in')});
@@ -40,6 +43,14 @@ document.addEventListener('DOMContentLoaded', function(){
     }
     if(prog){var d=document.documentElement;prog.style.width=(st/(d.scrollHeight-d.clientHeight)*100)+'%'}
   },{passive:true});
+  /* 홈 하단 바(.mcta): 히어로가 보이는 동안엔 내려 두고, 히어로가 화면을 벗어나면 올린다(V12·CR-05).
+     IntersectionObserver 가 없거나 이 파일이 안 돌면 html.mcta-io 가 안 붙어 예전처럼 항상 보인다 */
+  (function(){
+    var hero=document.querySelector('body.home .hero'), bar=document.querySelector('.mcta');
+    if(!hero||!bar||!('IntersectionObserver' in window)) return;
+    document.documentElement.classList.add('mcta-io');
+    new IntersectionObserver(function(es){ es.forEach(function(e){ bar.classList.toggle('show', !e.isIntersecting); }); },{threshold:0}).observe(hero);
+  })();
   /* 모바일 바텀시트 네비 */
   var drawer=document.getElementById('drawer'), scrim=document.getElementById('drawerScrim');
   function dOpen(){
@@ -188,8 +199,8 @@ document.addEventListener('DOMContentLoaded', function(){
         }
       }
     }
-    /* 마그네틱 버튼 */
-    document.querySelectorAll('.btn,.btn-ghost').forEach(function(b){
+    /* 마그네틱 버튼 — 마우스(hover) 환경에서만, 동작 줄이기 설정이면 끔(A11Y-06) */
+    if(!__reduceMotion && matchMedia('(hover:hover)').matches) document.querySelectorAll('.btn,.btn-ghost').forEach(function(b){
       b.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();gsap.to(b,{x:(e.clientX-r.left-r.width/2)*0.12,y:(e.clientY-r.top-r.height/2)*0.16,duration:0.5,ease:'power2.out'})});
       b.addEventListener('mouseleave',function(){gsap.to(b,{x:0,y:0,duration:0.5,ease:'power2.out'})});
     });
@@ -280,8 +291,11 @@ document.addEventListener('DOMContentLoaded', function(){
       svg.appendChild(p);
       paths.push(p);
     }
-    var running=false,rafId=null;
+    var running=false,rafId=null,last=0,ready=false,want=false;
     function frame(ts){
+      /* 30fps 로 충분(위상 변화가 느림) — 매 프레임 path 11개를 다시 그리던 부하를 반으로(PERF-4) */
+      if(ts-last<33){ if(running) rafId=requestAnimationFrame(frame); return; }
+      last=ts;
       for(var i=0;i<LINES;i++){
         var baseY=60+(H-120)*(i/(LINES-1));
         var phase=ts/1600+i*0.32;
@@ -295,13 +309,16 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       if(running) rafId=requestAnimationFrame(frame);
     }
-    function start(){if(running)return;running=true;rafId=requestAnimationFrame(frame);}
-    function stop(){running=false;if(rafId)cancelAnimationFrame(rafId);rafId=null;}
-    /* 화면 밖이거나 탭이 백그라운드면 정지 — 불필요한 CPU/배터리 소모 방지 */
+    function start(){want=true;if(running||!ready||document.hidden)return;running=true;rafId=requestAnimationFrame(frame);}
+    function stop(){want=false;running=false;if(rafId)cancelAnimationFrame(rafId);rafId=null;}
+    /* 화면 밖이거나 탭이 백그라운드면 정지 — 불필요한 CPU/배터리 소모 방지.
+       첫 화면을 그리는 동안(load 전)엔 시작하지 않는다 — 느린 기기에서 첫 그림·LCP 와 CPU 를 다투지 않게 */
     if('IntersectionObserver' in window){
-      new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting&&!document.hidden?start():stop()})},{threshold:0}).observe(svg);
-    } else { start(); }
-    document.addEventListener('visibilitychange',function(){document.hidden?stop():(svg.getBoundingClientRect().bottom>0&&start())});
+      new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?start():stop()})},{threshold:0}).observe(svg);
+    } else { want=true; }
+    function arm(){ready=true;if(want)start();}
+    if(document.readyState==='complete') setTimeout(arm,300); else window.addEventListener('load',function(){setTimeout(arm,300)});
+    document.addEventListener('visibilitychange',function(){if(document.hidden){var w=want;stop();want=w;}else if(want){start();}});
   }catch(e){}
 })();
 
@@ -311,5 +328,5 @@ window.addEventListener('load',function(){
 });
 document.addEventListener('click',function(e){
   var a=e.target.closest('a[href^="#"]');if(!a)return;var el=document.querySelector(a.getAttribute('href'));
-  if(el){setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'start'});},60);}
+  if(el){setTimeout(function(){el.scrollIntoView({behavior:__reduceMotion?'auto':'smooth',block:'start'});},60);}
 });

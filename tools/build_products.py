@@ -315,18 +315,23 @@ def u(rel, depth):
     return "../" * depth + rel
 
 
-def render_tag(img, large=False):
+def render_tag(img, large=False, alt=None):
     """'CAD 3D 렌더' 표기 보장.
     - 3D 표지(covers/)는 이미지 안 표기 여부를 모르므로 화면 위에 표기를 얹는다.
     - 갤러리 렌더(data/gallery.json·wrap.json)는 우하단에 표기가 박혀 있지만 썸네일에선 글자가 작다 →
-      contain 으로 통째로 보여 주고(img_tag, 박힌 표기가 잘리지 않게) 왼쪽에 읽히는 크기로 한 번 더 얹는다."""
+      contain 으로 통째로 보여 주고(img_tag, 박힌 표기가 잘리지 않게) 왼쪽에 읽히는 크기로 한 번 더 얹는다.
+    - alt 를 넘기면: 대체글에 이미 같은 표기가 들어 있을 때 칩은 화면에만 보이고 화면낭독기엔 숨긴다(aria-hidden) —
+      홈 카드 링크 이름에 'CAD 3D 렌더'가 두 번 읽히던 결함(A11Y-10). alt 를 안 넘기는 자리는 예전과 같다."""
     if img and img.get("kind") == "mockup":  # 랩핑 디자인 목업(사진 아님) — 화면 위에 표기
-        return f'<span class="render-tag">{esc(img.get("label", "디자인 목업"))}</span>'
-    if not img or img.get("kind") != "render":
+        label = img.get("label", "디자인 목업")
+    elif not img or img.get("kind") != "render":
         return ""
-    if large and not img.get("is_cover") and img.get("baked_label", True):
+    elif large and not img.get("is_cover") and img.get("baked_label", True):
         return ""  # 크게 보이는 자리(상세 표지·주력 카드·가격 그림)에선 이미지에 박힌 표기가 충분히 읽힌다
-    return f'<span class="render-tag">{esc(SITE["covers"]["label"])}</span>'
+    else:
+        label = SITE["covers"]["label"]
+    hide = ' aria-hidden="true"' if alt and label in alt else ""
+    return f'<span class="render-tag"{hide}>{esc(label)}</span>'
 
 
 _bg_cache = {}
@@ -597,11 +602,7 @@ def body_open(depth, body_class):
 <header class="nav"></header>
 
 <div class="drawer-scrim" id="drawerScrim" aria-hidden="true"></div>
-<div class="stickybar" id="sbar">
-  <a href="{pre}index.html" class="logo">Luami<span class="dot"></span></a>
-  <a href="{pre}index.html#contact" class="btn-mini">무료 견적</a>
-  <button class="navtoggle" id="navToggle2" aria-label="메뉴 열기" aria-controls="drawer"><span></span><span></span><span></span></button>
-</div>
+{unify_chrome.stickybar(pre)}
 """
 
 
@@ -804,6 +805,29 @@ def detail_page(prod, idx):
 </div></section>
 """)
 
+    # 놓는 방식(구성) — copy 의 configs (2026-10-20 포토키오스크: 삼각대형 / 선반형). 표지 변형 파일이 없으면 그 칸은 빠진다.
+    cfgs = []
+    for cf in c.get("configs", []):
+        rel = cover_path(slug, cf["variant"])
+        if not rel:
+            continue
+        w, h = dims(rel)
+        ss = srcset_attr(rel, w, depth, SZ_CELL) if Image is not None else ""
+        isrc = small_cover(rel) if (ss and Image is not None) else rel
+        alt = cf["alt"]
+        tag = render_tag({"kind": "render", "is_cover": True}, alt=alt)
+        cfgs.append(f'    <figure class="cf-item"><div class="cf-img"><img src="{u(isrc, depth)}"{ss} width="{w}" height="{h}" alt="{esc(alt)}" loading="lazy" decoding="async">{tag}</div>'
+                    f'<figcaption><b>{esc(cf["title"])}</b><span>{esc(tmpl(cf["body"]))}</span></figcaption></figure>')
+    if cfgs:
+        ch = c.get("configs_head", {})
+        out.append(f"""<section class="pd-configs" id="configs"><div class="wrap">
+{sec_head(esc(ch.get('label', '구성')), esc(ch.get('title', '놓는 방식')), esc(ch.get('note', '')))}
+  <div class="cf-grid">
+{chr(10).join(cfgs)}
+  </div>
+</div></section>
+""")
+
     # 하이앵글 구조
     if prod.get("highangle"):
         ht = P["highangle_text"][prod["highangle"]]
@@ -851,6 +875,32 @@ def detail_page(prod, idx):
         out.append(f"""<section class="pd-gallery" id="gallery"><div class="wrap">
 {sec_head(f'{gword} {len(gal)}장', f'{gword}으로 보기' if n_photo else '3D 이미지로 보기', note)}
   <div class="pg-grid" data-gallery="{slug}">
+{chr(10).join(cells)}
+  </div>
+</div></section>
+""")
+
+    # 매장 설치 예시(연출 렌더) — copy 의 staged (2026-10-20). ★실제 설치 사례가 아니다: 갤러리·cases/ 와 분리하고
+    #   모든 칸에 '설치 예시 · 연출 렌더' 표기 + 머리말에 합성 방법을 밝힌다(표시광고법). 파일이 없는 칸은 빠진다.
+    stg = c.get("staged")
+    if stg:
+        cells = []
+        for it in stg.get("items", []):
+            rel = cover_path(slug, it["variant"])
+            if not rel:
+                continue
+            w, h = dims(rel)
+            ss = srcset_attr(rel, w, depth, SZ_CELL) if Image is not None else ""
+            isrc = small_cover(rel) if (ss and Image is not None) else rel
+            alt = f"{it['label']} 설치 예시 — 실내 사진에 {prod['name']} 3D 모델을 합성한 연출 렌더(실제 설치 사진 아님)"
+            cap = f"{it['label']} · 설치 예시(연출 렌더)"
+            cells.append(f'    <a class="pg-item" href="{u(rel, depth)}" data-w="{w}" data-h="{h}" data-caption="{esc(cap)}">'
+                         f'<img src="{u(isrc, depth)}"{ss} width="{w}" height="{h}" alt="{esc(alt)}" loading="lazy" decoding="async">'
+                         f'<span class="render-tag stg-tag" aria-hidden="true">연출 렌더</span><span class="pg-cap">{esc(cap)}</span></a>')
+        if cells:
+            out.append(f"""<section class="pd-staged" id="staged"><div class="wrap">
+{sec_head(esc(stg.get('label', '설치 예시')), esc(stg.get('title', '매장 설치 예시')), esc(stg.get('note', '')))}
+  <div class="pg-grid stg-grid" data-gallery="{slug}-staged">
 {chr(10).join(cells)}
   </div>
 </div></section>
@@ -1425,78 +1475,116 @@ def lineup_tile(prod):
         sub = esc(m.get("rental_text", ""))
     tag, img = tile_img(prod, "thumb")
     badge = f'<span class="lu-badge lu-{prod.get("badge_kind", "main")}">{esc(prod["badge"])}</span>' if prod.get("badge") else ""
-    return (f'<li><a class="lu-card" href="products/{prod["slug"]}.html"><span class="lu-im tile">{tag}{badge}{render_tag(img)}</span>'
+    return (f'<li><a class="lu-card" href="products/{prod["slug"]}.html"><span class="lu-im tile">{tag}{badge}{render_tag(img, alt=cover_alt(prod, img))}</span>'
             f'<b>{esc(prod["name"])}</b><em>{sub}</em></a></li>')
 
 
-def home_lineup():
-    """홈 라인업 — '정가로 바로 진행'(가격이 정해진 제품) / '기간·가격 협의'(나머지 + 커스텀) 두 묶음, 같은 타일 문법.
-    정가 묶음 아래에 가격 규칙 4줄(예전 '가격 한눈에' 띠)을 붙인다. 금액은 전부 prices.json."""
-    fixed = [x for x in DETAIL if has_fixed_price(x["slug"])]
-    fixed.sort(key=lambda x: (x.get("badge_kind") != "main", x["order"]))  # 주력(스탠다드) 먼저
-    neg = [x for x in DETAIL if not has_fixed_price(x["slug"])]
-    it = PR["items"]
+def separate_short():
+    """'운송비·부가세 별도' — 운송비(prices.json shipping_note) + 부가세 표기(vat.mode). 표기 안 함 모드면 '운송비 별도'."""
+    ship = PR.get("shipping_note", "운송비 별도")
     v = vat_label()
-    vs = f' <small class="vat">{esc(v)}</small>' if v else ""
-    notes = (f'<li><span class="lp-k">2대째부터 1대마다</span><span class="lp-v"><b data-price-key="std_extra_unit">{esc(amt("std_extra_unit"))}</b>{vs}</span>'
-             f'<span class="lp-d">4면 랩핑 포함 · 인화지는 700매 {esc(man(it["paper_700"]["amount"]))}씩 추가</span></li>'
-             f'<li><span class="lp-k">두 번째 달부터</span><span class="lp-v"><b data-price-key="std_monthly">부스당 {esc(amt("std_monthly"))}</b>{vs}</span>'
-             f'<span class="lp-d">1년 가까이 쓰실 곳이면 구매를 권해 드립니다</span></li>'
-             f'<li><span class="lp-k">구매</span><span class="lp-v"><b data-price-key="std_buy">{esc(man(it["std_buy"]["amount"]))}부터</b>{vs}</span>'
-             f'<span class="lp-d">스탠다드 부스 {esc(man(it["std_buy"]["amount"]))} · 포토키오스크 {esc(man(it["wood_buy"]["amount"]))}</span></li>')
+    if v.endswith(" 별도") and ship.endswith(" 별도"):
+        return f"{ship[:-3]}·{v}"
+    return f"{v} · {ship}" if v else ship
+
+
+def separate_sentence():
+    """문장형: '운송비와 부가세는 별도입니다.' — 예전 '(부가세 별도) … 운송비만 별도입니다' 모순(V7·CR-11) 정정."""
+    v = vat_label()
+    if v.endswith(" 별도"):
+        return "운송비와 부가세는 별도입니다."
+    return f"운송비는 별도이고, 금액은 {v}입니다." if v else "운송비는 별도입니다."
+
+
+def home_lineup():
+    """홈 라인업 — 협의 제품 묶음만(정가 2종의 금액은 바로 위 '가격' 2카드에 한 번만, CV-02·V3). 같은 타일 문법."""
+    neg = [x for x in DETAIL if not has_fixed_price(x["slug"])]
     return f"""<section class="h-lineup2 h-alt" id="lineup" aria-labelledby="luTitle"><div class="wrap">
   <div class="h-head">
-    <div><span class="idxlabel">제품 {len(LINEUP)}종 + 커스텀</span><h2 id="luTitle">정가 제품과 <i>협의 제품</i></h2><p>스탠다드 부스·포토키오스크는 아래 가격 그대로 바로 진행합니다. 나머지는 기간·대수·구성을 듣고 견적을 드립니다.</p></div>
+    <div><span class="idxlabel">테마 부스 · 커스텀</span><h2 id="luTitle">그 밖의 제품은 <i>기간·가격 협의</i></h2><p>테마 부스 {len(neg) - 1}종과 커스텀 제작은 기간·대수·구성을 듣고 견적을 드립니다.</p></div>
     <a class="h-link" href="products.html">제품 전체 보기 →</a>
   </div>
-  <div class="lu-groups">
-    <div class="lu-group lu-g-fixed" id="prices">
-      <div class="lu-gh"><h3>정가로 바로 진행</h3><span>{esc(v) if v else ""}</span></div>
-      <ul class="lu-grid lu-grid-2">{''.join(lineup_tile(x) for x in fixed)}</ul>
-      <ul class="lu-notes">{notes}</ul>
-      <p class="lu-foot">스탠다드 부스 렌탈은 설치·회수 포함, 운송비 별도 · 포토키오스크 운송·설치 조건은 상담 때 안내 · <a href="pricing.html">전체 가격표 보기 →</a></p>
-    </div>
-    <div class="lu-group lu-g-neg">
-      <div class="lu-gh"><h3>기간·가격 협의</h3><span>{len(neg) - 1}종 + 커스텀 제작</span></div>
-      <ul class="lu-grid lu-grid-3">{''.join(lineup_tile(x) for x in neg)}</ul>
-    </div>
-  </div>
+  <ul class="lu-grid lu-grid-6">{''.join(lineup_tile(x) for x in neg)}</ul>
 </div></section>"""
 
 
 def home_paths():
-    """첫 갈림길 2카드(BRIEF 2-1 #5) — 행사에 빌리기(스탠다드) / 매장에 들여놓기(포토키오스크). 카드마다 사진 1·버튼 1, 금액은 prices.json."""
+    """가격 2카드(BRIEF 2-1 #5) — 행사에 빌리기(스탠다드) / 매장에 들여놓기(포토키오스크). 홈에서 정가 금액이 나오는 유일한 곳
+    (예전 라인업 '정가로 바로 진행' 묶음과 같은 금액이 두 번 나오던 것을 합침, CV-02). 금액은 전부 prices.json.
+    행사 카드 사진 = 하늘 랩핑 스탠다드 부스 실사(부스 위 타사 문구를 지운 -clean 사본, CR-02)."""
     std, kio = BYSLUG["standard-booth"], BYSLUG["photo-kiosk"]
     it = PR["items"]
     v = vat_label()
     vs = f' <small class="vat">{esc(v)}</small>' if v else ""
-    ev = {"src": "assets/images/event-festival-white.webp", "kind": "photo", "position": "50% 60%", "is_cover": False}
+    ev = {"src": "assets/images/wrap-sky-clean.webp", "kind": "photo", "position": "16% 64%", "is_cover": False}
     ev["w"], ev["h"] = dims(ev["src"])
     k_tag, k_img = tile_img(kio, "4x5")
+    notes = (f'<div><dt>2대째부터 1대마다</dt><dd><b data-price-key="std_extra_unit">{esc(amt("std_extra_unit"))}</b></dd>'
+             f'<dd class="pn-sub">4면 랩핑 포함 · 인화지는 700매 {esc(man(it["paper_700"]["amount"]))}씩 추가</dd></div>'
+             f'<div><dt>두 번째 달부터</dt><dd><b data-price-key="std_monthly">부스당 {esc(amt("std_monthly"))}</b></dd>'
+             f'<dd class="pn-sub">1년 가까이 쓰실 곳이면 구매를 권해 드립니다</dd></div>'
+             f'<div><dt>구매</dt><dd><b data-price-key="std_buy">{esc(man(it["std_buy"]["amount"]))}</b></dd></div>')
+    foot = (f"금액은 모두 {esc(v)}입니다. " if v else "") + "포토키오스크 운송·설치 조건은 상담 때 안내해 드립니다."
     return f"""<section class="h-paths" id="paths" aria-labelledby="pathTitle"><div class="wrap">
-  <div class="h-head"><div><span class="idxlabel">어떻게 쓰시나요</span><h2 id="pathTitle">행사에 빌리거나, <i>매장에 들여놓거나</i></h2></div></div>
-  <div class="path-grid">
+  <div class="h-head"><div><span class="idxlabel">어떻게 쓰시나요</span><h2 id="pathTitle">포토부스 렌탈 <i>가격</i></h2><p>행사에 빌리거나 매장에 들여놓거나, 쓰시는 방식에 맞춰 두 가지로 정리했습니다.</p></div></div>
+  <div class="path-grid" id="prices">
     <article class="path-card">
-      <figure class="path-im">{img_tag(ev, 0, "서울 뷰티 트래블 위크 야외 행사에 설치한 스탠다드 부스")}</figure>
+      <figure class="path-im">{img_tag(ev, 0, "옥상 데크에 설치한 하늘·구름 그래픽 랩핑 스탠다드 부스")}</figure>
       <div class="path-body">
         <span class="path-k">행사·팝업 · 며칠에서 몇 주</span>
         <h3>행사에 빌리기</h3>
         <p class="path-price">{esc(std["name"])} <b data-price-key="std_short">{esc(man(it["std_short"]["amount"]))}</b>부터{vs}</p>
-        <p class="path-d">1대·1개월 미만 기준. 4면 랩핑·인화지 1,400매·설치·회수가 들어 있고 운송비만 별도입니다.</p>
+        <p class="path-d">1대·1개월 미만 기준. 4면 랩핑·인화지 1,400매·설치·회수가 들어 있고, {separate_sentence()}</p>
+        <dl class="path-notes">{notes}</dl>
         <a class="btn path-cta" href="products/{std["slug"]}.html">{esc(std["name"])} 자세히 보기 <span aria-hidden="true">→</span></a>
       </div>
     </article>
     <article class="path-card">
-      <figure class="path-im tile">{k_tag}{render_tag(k_img)}</figure>
+      <figure class="path-im tile">{k_tag}{render_tag(k_img, alt=cover_alt(kio, k_img))}</figure>
       <div class="path-body">
         <span class="path-k">매장·카페 · 한 달 단위</span>
         <h3>매장에 들여놓기</h3>
         <p class="path-price">{esc(kio["name"])} 키오스크만 <b data-price-key="wood_monthly">{esc(amt("wood_monthly"))}</b> · 구매 <b data-price-key="wood_buy">{esc(man(it["wood_buy"]["amount"]))}</b>{vs}</p>
         <p class="path-d">렌탈은 인화지 700매 포함, 한 달 단위입니다. 1년 가까이 두실 곳이면 구매를 권해 드립니다.</p>
+        <a class="path-new" href="products/{kio["slug"]}.html"><span class="nb">NEW</span>선반형 구성 가능</a>
         <a class="btn path-cta" href="products/{kio["slug"]}.html">{esc(kio["name"])} 자세히 보기 <span aria-hidden="true">→</span></a>
       </div>
     </article>
   </div>
+  <p class="path-foot">{foot} <a href="pricing.html">전체 가격표 보기 →</a></p>
+</div></section>"""
+
+
+def home_kiosk_staged():
+    """홈 '목재 포토키오스크' 띠(2026-10-20 동주님: "목재키오스크 새로 론칭한거 주력으로 팔아보자"). 설치 예시 3장 + 키오스크 견적.
+    ★매장 사진은 실제 설치 사례가 아니다 — 머리말·칸마다 '연출 렌더' 표기, 실사 갤러리(#gallery)와 섹션을 분리(표시광고법).
+    그림 = copy photo-kiosk.staged 의 home 목록(없으면 앞에서 3장) 중 파일이 있는 것. 하나도 없으면 띠 자체를 안 만든다."""
+    kio = BYSLUG["photo-kiosk"]
+    stg = COPY["photo-kiosk"].get("staged") or {}
+    items = {it["variant"]: it for it in stg.get("items", [])}
+    order = stg.get("home") or [it["variant"] for it in stg.get("items", [])]
+    cells = []
+    for var in order:
+        it = items.get(var)
+        rel = cover_path("photo-kiosk", var) if it else None
+        if not rel:
+            continue
+        w, h = dims(rel)
+        ss = srcset_attr(rel, w, 0, SZ_CELL) if Image is not None else ""
+        isrc = small_cover(rel) if (ss and Image is not None) else rel
+        alt = f"{it['label']} 설치 예시 — 실내 사진에 {kio['name']} 3D 모델을 합성한 연출 렌더(실제 설치 사진 아님)"
+        cells.append(f'    <figure class="ks-item"><img src="{u(isrc, 0)}"{ss} width="{w}" height="{h}" alt="{esc(alt)}" loading="lazy" decoding="async">'
+                     f'<span class="render-tag" aria-hidden="true">연출 렌더</span><figcaption>{esc(it["label"])} · 설치 예시(연출 렌더)</figcaption></figure>')
+        if len(cells) == 3:
+            break
+    if not cells:
+        return ""
+    return f"""<section class="h-kstage" id="kiosk-new" aria-labelledby="ksTitle"><div class="wrap">
+  <div class="h-head"><div><span class="idxlabel">NEW · 목재 포토키오스크</span><h2 id="ksTitle">매장에 들이는 <i>포토키오스크</i></h2><p>진한 월넛 원목 헤드를 삼각대에 세우거나 카운터에 올려 씁니다. 아래 사진은 실제 설치 사진이 아니라, 매장 실내 사진에 3D 모델을 합성한 설치 예시(연출 렌더)입니다.</p></div><a class="h-link" href="products/{kio["slug"]}.html#staged">설치 예시 더 보기 →</a></div>
+  <div class="ks-grid">
+{chr(10).join(cells)}
+  </div>
+  <div class="ks-cta"><a class="btn" href="#contact" data-pick-product="{esc(kio["name"])}">{esc(kio["name"])} 견적 받기 <span aria-hidden="true">→</span></a><a class="h-link" href="products/{kio["slug"]}.html#configs">삼각대형·선반형 보기 →</a></div>
 </div></section>"""
 
 
@@ -1507,10 +1595,23 @@ def home_hero_h1():
 
 
 def home_hero_sub():
+    """히어로 '포함' 칩 한 줄 + 기준·별도 한 줄(V7·R8 — 빽빽한 문단 대신). 포함 = prices.json std_short.includes."""
+    it = PR["items"]["std_short"]
+    chips = "".join(f'<li data-item="{esc(x)}">{esc(x)}</li>' for x in it.get("includes", []))
+    return (f'<div class="hero-inc"><span class="hi-k" id="heroIncK">포함</span>'
+            f'<ul role="list" data-list="included" aria-labelledby="heroIncK">{chips}</ul></div>'
+            f'<p class="hero-basis">{esc(BYSLUG["standard-booth"]["name"])} {esc(it.get("unit", "1대"))}·1개월 미만 기준 · {esc(separate_short())}</p>')
+
+
+def home_meta(kind):
+    """홈 meta description(kind='desc') · og:description(kind='og') — 주력 제안·금액 먼저(SEO-2). 금액·포함 목록은 prices.json."""
+    a = man(PR["items"]["std_short"]["amount"])
     v = vat_label()
-    basis = f"스탠다드 부스 1대·1개월 미만 기준({v})입니다." if v else "스탠다드 부스 1대·1개월 미만 기준입니다."
-    return (f'<div class="sub fade"><p>{esc(basis)} 부스·촬영 키오스크(찍고 출력하는 기계)·4면 랩핑(겉면 행사 디자인)·'
-            f'인화지(사진 용지) 1,400매에 설치·회수(행사 후 철거)까지 포함되고, 운송비만 별도입니다.</p></div>')
+    inc = "·".join(x for x in PR["items"]["std_short"].get("includes", []) if not x.startswith("부스") and "키오스크" not in x)
+    price = f"{a}({v})" if v else a
+    if kind == "desc":
+        return f'<meta name="description" content="{esc(f"포토부스 렌탈 {price}, {inc} 포함. 행사·팝업·매장 전국 설치, 24시간 안에 무료 견적.")}">'
+    return f'<meta property="og:description" content="{esc(f"포토부스 렌탈 {price} — {inc} 포함, 전국 설치. 24시간 안에 무료 견적.")}">'
 
 
 def home_pbox():
@@ -1710,10 +1811,13 @@ def main():
     outputs["services.html"] = chrome("services.html", services_stub())
 
     idx = (ROOT / "index.html").read_text(encoding="utf-8")
-    idx2 = replace_gen(idx, "home-hero-h1", home_hero_h1(), "index.html")
+    idx2 = replace_gen(idx, "home-meta-desc", home_meta("desc"), "index.html")
+    idx2 = replace_gen(idx2, "home-og-desc", home_meta("og"), "index.html")
+    idx2 = replace_gen(idx2, "home-hero-h1", home_hero_h1(), "index.html")
     idx2 = replace_gen(idx2, "home-hero-sub", home_hero_sub(), "index.html")
     idx2 = replace_gen(idx2, "home-paths", home_paths(), "index.html")
     idx2 = replace_gen(idx2, "home-lineup", home_lineup(), "index.html")
+    idx2 = replace_gen(idx2, "home-kiosk-staged", home_kiosk_staged(), "index.html")
     idx2 = replace_gen(idx2, "home-pbox", home_pbox(), "index.html")
     idx2 = replace_gen(idx2, "home-faq-cost", home_faq_cost(), "index.html")
     idx2 = replace_gen(idx2, "home-form-products", home_form_products(), "index.html")
