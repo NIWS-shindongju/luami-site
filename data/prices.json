@@ -1,6 +1,6 @@
 {
   "_doc": "루아미 가격 단일 출처(2026-10-04 확정). 금액은 만원 단위 정수. 화면 표기는 tools/build_products.py 가 이 파일로 만들고, tools/site-gate.js 가 사이트 HTML·data JSON 의 모든 금액을 이 파일과 대조한다(여기 없는 금액이 보이면 FAIL). 포토키오스크(진한 월넛 원목 박스형)의 렌탈·구매 키는 wood_monthly·wood_buy 다.",
-  "updated": "2026-10-04",
+  "updated": "2026-10-20",
   "currency": "KRW",
   "vat": {
     "_doc": "부가세 표기 스위치. mode 하나만 바꾸고 빌드하면 모든 금액 옆 표기가 바뀐다. excluded=부가세 별도, included=부가세 포함, none=표기 안 함.",
@@ -69,7 +69,7 @@
       "kind": "purchase"
     },
     "wood_buy": {
-      "amount": 600,
+      "amount": 650,
       "label": "포토키오스크",
       "kind": "purchase"
     }
