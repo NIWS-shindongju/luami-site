@@ -166,6 +166,11 @@
       ],
       "hero_ask": "운송·설치 조건은 상담 때 안내"
     },
+    "folding-booth": {
+      "rental": [],
+      "rental_text": "기간·가격 협의",
+      "purchase_text": "구매 문의"
+    },
     "mirror-booth": {
       "rental": [],
       "rental_text": "기간·가격 협의",

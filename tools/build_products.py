@@ -9,8 +9,8 @@
   content_map.json   제품별 블로그·사례 페이지
 
 출력(정적 HTML — GitHub Pages 가 그대로 서빙):
-  products.html               제품 허브(주력 모델 · 7종 그리드 · 커스텀 · 신규 컨셉)
-  products/<slug>.html        제품 상세 8장(7종 + 커스텀)
+  products.html               제품 허브(주력 모델 · 제품 그리드 · 커스텀 · 신규 컨셉)
+  products/<slug>.html        제품 상세(lineup 전부 + 커스텀)
   pricing.html                렌탈·구매 가격
   services.html               스텁(noindex · canonical/refresh → pricing.html · 옛 앵커 JS 매핑)
   index.html · guide.html     <!-- GEN:이름 --> … <!-- /GEN:이름 --> 사이만 갈아 끼움
@@ -448,7 +448,9 @@ def gallery(slug):
     첫 화면 표지가 이미 3D 렌더라 갤러리는 실제 현장 사진으로 시작한다(실사가 없는 제품은 렌더가 맨 앞)."""
     hide = set(SITE.get("gallery_hide_scenes") or [])
     items = []
+    labels = SITE["covers"].get("angle_labels", {}).get(slug, {})  # products.json site.covers.angle_labels — 정면 컷이 없는 제품의 이름 바꾸기
     for v, vname in (("angle1", "정면"), ("angle2", "다른 방향"), ("angle3", "높은 시점")):
+        vname = labels.get(v, vname)
         rel = cover_path(slug, v)
         if rel:
             w, h = dims(rel)
@@ -1497,14 +1499,23 @@ def separate_sentence():
 
 
 def home_lineup():
-    """홈 라인업 — 협의 제품 묶음만(정가 2종의 금액은 바로 위 '가격' 2카드에 한 번만, CV-02·V3). 같은 타일 문법."""
+    """홈 라인업 — 협의 제품 묶음만(정가 2종의 금액은 바로 위 '가격' 2카드에 한 번만, CV-02·V3). 같은 타일 문법.
+    제품에 "portable": "접이식" 같은 짧은 이름표가 있으면 테마 부스 개수에 세지 않고 따로 적는다(2026-10-21 접이식 포토부스).
+    격자 열 수 클래스 = lu-grid-<타일 수>(home.css 에 6·7 정의)."""
     neg = [x for x in DETAIL if not has_fixed_price(x["slug"])]
+    port = [x for x in neg if x.get("portable")]
+    themes = [x for x in neg if x["slug"] != CUSTOM["slug"] and not x.get("portable")]
+    label = " · ".join(["테마 부스"] + [x["portable"] for x in port] + ["커스텀"])
+    if port:
+        lead = f"테마 부스 {len(themes)}종, {', '.join(x['name'] for x in port)}, 커스텀 제작은"
+    else:
+        lead = f"테마 부스 {len(themes)}종과 커스텀 제작은"
     return f"""<section class="h-lineup2 h-alt" id="lineup" aria-labelledby="luTitle"><div class="wrap">
   <div class="h-head">
-    <div><span class="idxlabel">테마 부스 · 커스텀</span><h2 id="luTitle">그 밖의 제품은 <i>기간·가격 협의</i></h2><p>테마 부스 {len(neg) - 1}종과 커스텀 제작은 기간·대수·구성을 듣고 견적을 드립니다.</p></div>
+    <div><span class="idxlabel">{esc(label)}</span><h2 id="luTitle">그 밖의 제품은 <i>기간·가격 협의</i></h2><p>{esc(lead)} 기간·대수·구성을 듣고 견적을 드립니다.</p></div>
     <a class="h-link" href="products.html">제품 전체 보기 →</a>
   </div>
-  <ul class="lu-grid lu-grid-6">{''.join(lineup_tile(x) for x in neg)}</ul>
+  <ul class="lu-grid lu-grid-{len(neg)}">{''.join(lineup_tile(x) for x in neg)}</ul>
 </div></section>"""
 
 
@@ -1621,7 +1632,7 @@ def home_pbox():
 
 def home_faq_cost():
     return (f"스탠다드 부스는 1개월 미만 렌탈 {esc(amt_text('std_short'))}, 포토키오스크는 키오스크만 렌탈 월 "
-            f"{esc(man_text(PR['items']['wood_monthly']['amount']))}입니다. 미러·엘리베이터·지하철·원형 하이앵글 부스는 기간과 구성을 듣고 가격을 정합니다. "
+            f"{esc(man_text(PR['items']['wood_monthly']['amount']))}입니다. 접이식 포토부스와 미러·엘리베이터·지하철·원형 하이앵글 부스는 기간과 구성을 듣고 가격을 정합니다. "
             f"자세한 기준은 <a href=\"pricing.html\">가격 페이지</a>에 정리했습니다.")
 
 
