@@ -518,45 +518,6 @@
    "kind": "photo",
    "scene": "detail",
    "source_file": "1719109270584.jpg"
-  },
-  {
-   "src": "assets/images/products/standard-booth/11-render-hero.webp",
-   "thumb": "assets/images/products/standard-booth/thumb/11-render-hero.webp",
-   "alt": "스탠다드 부스 CAD 3D 렌더 — 1860×1860×2100mm 흰색 알루미늄 패널 부스, 문 없는 출입구와 하단 캐스터",
-   "caption": "CAD 3D 렌더 · 기본형",
-   "source_id": "SB_HERO",
-   "w": 1600,
-   "h": 1600,
-   "kind": "render",
-   "baked_label": false,
-   "scene": "render",
-   "label": "CAD 3D 렌더"
-  },
-  {
-   "src": "assets/images/products/standard-booth/12-render-scale.webp",
-   "thumb": "assets/images/products/standard-booth/thumb/12-render-scale.webp",
-   "alt": "사람 모형 옆에 세운 스탠다드 부스 CAD 3D 렌더 — 크기 비교",
-   "caption": "CAD 3D 렌더 · 사람과 크기 비교",
-   "source_id": "SB_FOLD",
-   "w": 1400,
-   "h": 894,
-   "kind": "render",
-   "baked_label": false,
-   "scene": "render",
-   "label": "CAD 3D 렌더"
-  },
-  {
-   "src": "assets/images/products/standard-booth/13-render-truck.webp",
-   "thumb": "assets/images/products/standard-booth/thumb/13-render-truck.webp",
-   "alt": "면별로 접은 스탠다드 부스 판넬을 트럭 적재함에 실은 CAD 3D 렌더",
-   "caption": "CAD 3D 렌더 · 접어서 트럭 운송",
-   "source_id": "R0617",
-   "w": 1400,
-   "h": 894,
-   "kind": "render",
-   "baked_label": false,
-   "scene": "render",
-   "label": "CAD 3D 렌더"
   }
  ],
  "round-highangle": [
