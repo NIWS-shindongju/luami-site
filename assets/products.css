@@ -130,16 +130,21 @@
 .cu-mosaic .pg-item:nth-child(even){transform:translateY(24px)}
 
 /* ── 허브: 신규 컨셉 ── */
+.cc-group+.cc-group{margin-top:clamp(40px,5vw,64px)}
+.cc-gh{display:flex;align-items:baseline;gap:8px 20px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.cc-gh h3{font-family:var(--serif);font-weight:700;font-size:clamp(20px,2vw,24px);line-height:1.3}
+.cc-gh h3 span{font-family:inherit;font-size:.7em;font-weight:600;color:var(--muted);margin-left:4px}
+.cc-gh p{font-size:15px;line-height:1.6;color:var(--ink2);flex:1 1 320px}
 .cc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 .cc{display:flex;flex-direction:column;background:var(--paper);border:1px dashed rgba(24,33,27,.3);border-radius:var(--r);overflow:hidden}
-.cc-im{position:relative;margin:0;aspect-ratio:4/3;background:var(--tile);overflow:hidden}
+.cc-im{position:relative;margin:0;aspect-ratio:4/5;background:var(--tile);overflow:hidden}  /* 표지가 4:5 라 4:3 cover 는 부스 지붕·바닥을 잘랐다 */
 .cc-im img{width:100%;height:100%;object-fit:cover}
 .cc-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:16px;
   background:repeating-linear-gradient(135deg,#E9E8E5 0 14px,#E3E2DF 14px 28px)}
 .cc-mark{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--ink2);letter-spacing:.01em}
 .cc-pending{font-size:13px;font-weight:600;color:var(--ink2);background:rgba(244,245,241,.85);padding:5px 10px;border-radius:3px}
 .cc-body{display:flex;flex-direction:column;gap:8px;padding:16px 18px 18px;flex:1}
-.cc h3{font-family:var(--serif);font-weight:700;font-size:20px;line-height:1.25}
+.cc h4{font-family:var(--serif);font-weight:700;font-size:20px;line-height:1.25}
 .cc-pts{list-style:none;display:grid;gap:4px}
 .cc-pts li{font-size:14px;line-height:1.55;color:var(--ink2);padding-left:14px;position:relative}
 .cc-pts li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--accent-dark)}
@@ -406,7 +411,10 @@ html.lb-open,html.lb-open body{overflow:hidden}
   .pc-badge{right:auto;left:8px;top:auto;bottom:8px}
   .pc .render-tag{font-size:12px;left:6px;bottom:6px;padding:3px 6px}
   .pc:has(.pc-badge) .render-tag{bottom:auto;top:36px;left:8px}
-  .cc-grid{grid-template-columns:1fr}
+  /* 신규 컨셉 = 묶음마다 옆으로 넘기는 한 줄(14장을 세로로 쌓으면 1만 px이 넘었다) — 다음 카드가 18% 보여 넘길 수 있음을 알린다 */
+  .cc-grid{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -22px;padding:0 22px 4px;scroll-padding:0 22px}
+  .cc-grid::-webkit-scrollbar{display:none}
+  .cc-grid>.cc{flex:0 0 82%;scroll-snap-align:start}
   .st-grid{grid-template-columns:1fr}
   .pg-mini{grid-template-columns:repeat(2,1fr);grid-auto-rows:auto}
   .pg-cap{opacity:1;font-size:13px;padding:18px 8px 6px}
