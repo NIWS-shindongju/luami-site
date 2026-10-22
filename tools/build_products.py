@@ -68,6 +68,7 @@ LINEUP = sorted(P["lineup"], key=lambda x: x["order"])
 CUSTOM = P["custom"]
 DETAIL = LINEUP + [CUSTOM]
 CONCEPTS = P["concepts"]
+CONCEPT_GROUPS = P["concept_groups"]
 COPY = {x["slug"]: load(f"data/copy/{x['slug']}.json") for x in DETAIL + CONCEPTS}
 BYSLUG = {x["slug"]: x for x in DETAIL + CONCEPTS}
 KAKAO = SITE["kakao"]
@@ -1174,13 +1175,33 @@ def concept_card(cp):
       {fig}
       <div class="cc-body">
         <div class="pc-chips"><span class="badge badge-line">신규 컨셉 · 제작 가능 · 실물 미제작</span>{ha}</div>
-        <h3>{esc(cp['name'])}</h3>
+        <h4>{esc(cp['name'])}</h4>
         <p class="pc-tag">{esc(tag)}</p>
         <ul class="cc-pts">{pts}</ul>
         <p class="cc-fit"><b>어울리는 곳</b> {' · '.join(esc(x) for x in c['fit'][:3])}</p>
         <p class="cc-price"><span class="ask">{esc(PR['products']['_concept']['rental_text'])}</span></p>
       </div>
     </article>"""
+
+
+def concept_groups_html():
+    """신규 컨셉을 products.json concept_groups 순서대로 묶어 소제목(h3) + 카드 그리드로. 묶음이 없는 컨셉이 있으면 빌드를 멈춘다."""
+    keys = [g["key"] for g in CONCEPT_GROUPS]
+    stray = [x["slug"] for x in CONCEPTS if x.get("group") not in keys]
+    if stray:
+        sys.exit(f"[build] concept_groups 에 없는 group 을 가진 신규 컨셉: {stray}")
+    out = []
+    for g in CONCEPT_GROUPS:
+        items = [x for x in CONCEPTS if x["group"] == g["key"]]
+        if not items:
+            continue
+        out.append(f"""  <div class="cc-group" id="concepts-{g['key']}">
+    <div class="cc-gh"><h3>{esc(g['title'])} <span>{len(items)}종</span></h3><p>{esc(g['desc'])}</p></div>
+    <div class="cc-grid">
+{chr(10).join(concept_card(x) for x in items)}
+    </div>
+  </div>""")
+    return "\n".join(out)
 
 
 def hub_page():
@@ -1261,9 +1282,7 @@ def hub_page():
 """)
     out.append(f"""<section class="ph-concepts" id="concepts"><div class="wrap">
 {sec_head('신규 컨셉', f'새로 제안하는 부스 {len(CONCEPTS)}종', '아직 실물로 만든 적은 없는 새 부스입니다. 그림은 설계 3D 이미지(CAD 3D 렌더)이고, 크기·구성·기간·가격은 상담 때 함께 정합니다.', '<a class="ps-link" href="blog/new-concepts-story.html">컨셉 이야기 읽기 →</a>')}
-  <div class="cc-grid">
-{chr(10).join(concept_card(x) for x in CONCEPTS)}
-  </div>
+{concept_groups_html()}
 </div></section>
 
 <section class="ph-faq" id="faq"><div class="wrap">

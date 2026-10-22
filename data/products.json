@@ -173,10 +173,26 @@
     }
   },
   "concepts": [
-    {"slug": "phone-booth", "name": "공중전화 부스", "name_en": "Phone Booth", "highangle": null},
-    {"slug": "paparazzi-booth", "name": "파파라치 플래시 부스", "name_en": "Paparazzi Flash Booth", "highangle": null},
-    {"slug": "overhead-bed-booth", "name": "누워서 찍는 부감 부스", "name_en": "Overhead Bed Booth", "highangle": "ceiling"},
-    {"slug": "karaoke-booth", "name": "K-노래방 부스", "name_en": "K-Karaoke Booth", "highangle": null}
+    {"slug": "id-photo-kiosk", "name": "증명·프로필 사진 부스", "name_en": "ID & Profile Photo Booth", "highangle": null, "group": "popular"},
+    {"slug": "retro-film-booth", "name": "레트로 흑백 필름 부스", "name_en": "Retro B&W Film Booth", "highangle": null, "group": "popular"},
+    {"slug": "spin-360-booth", "name": "360° 회전 영상 부스", "name_en": "360° Spin Video Booth", "highangle": null, "group": "popular"},
+    {"slug": "wedding-guestbook", "name": "웨딩 포토 방명록", "name_en": "Wedding Photo Guestbook", "highangle": null, "group": "audience"},
+    {"slug": "barrier-free-kiosk", "name": "배리어프리 포토키오스크", "name_en": "Barrier-free Photo Kiosk", "highangle": null, "group": "audience"},
+    {"slug": "kids-booth", "name": "키즈·병원 포토부스", "name_en": "Kids & Clinic Photo Booth", "highangle": null, "group": "audience"},
+    {"slug": "pet-booth", "name": "펫 포토부스", "name_en": "Pet Photo Booth", "highangle": null, "group": "audience"},
+    {"slug": "wall-slim-kiosk", "name": "벽걸이 슬림 포토키오스크", "name_en": "Wall-mounted Slim Kiosk", "highangle": null, "group": "install"},
+    {"slug": "outdoor-tent-booth", "name": "야외 방수 텐트형 부스", "name_en": "Outdoor Tent Booth", "highangle": null, "group": "install"},
+    {"slug": "linked-booth-zone", "name": "연결형 대형 포토존", "name_en": "Linked Booth Zone", "highangle": null, "group": "install"},
+    {"slug": "phone-booth", "name": "공중전화 부스", "name_en": "Phone Booth", "highangle": null, "group": "fun"},
+    {"slug": "paparazzi-booth", "name": "파파라치 플래시 부스", "name_en": "Paparazzi Flash Booth", "highangle": null, "group": "fun"},
+    {"slug": "overhead-bed-booth", "name": "누워서 찍는 부감 부스", "name_en": "Overhead Bed Booth", "highangle": "ceiling", "group": "fun"},
+    {"slug": "karaoke-booth", "name": "K-노래방 부스", "name_en": "K-Karaoke Booth", "highangle": null, "group": "fun"}
+  ],
+  "concept_groups": [
+    {"key": "popular", "title": "지금 많이 찾는 부스", "desc": "증명사진·흑백 즉석사진·360° 영상처럼 이미 찾는 사람이 많은 형태를 루아미 방식으로 다시 설계했어요."},
+    {"key": "audience", "title": "새로운 고객을 위한 부스", "desc": "결혼식 하객, 휠체어 사용자, 어린아이, 반려동물처럼 기존 부스가 놓치던 사람들에게 맞췄어요."},
+    {"key": "install", "title": "새로운 설치 방식", "desc": "벽에 걸거나, 야외 텐트 아래 두거나, 여러 대를 이어 붙이는 식으로 놓는 방식을 바꿨어요."},
+    {"key": "fun", "title": "이색 체험 부스", "desc": "공중전화·레드카펫·노래방처럼 찍는 과정 자체가 재미인 연출형 부스예요."}
   ],
   "unmapped_anchors": ["p-a05", "p-a07", "p-a13", "p-a14", "p-a16", "p-b01", "p-b02", "p-b03", "p-b05", "p-b06", "p-b07", "p-b08", "p-b09", "p-b10", "p-b11", "p-b12"],
   "legacy_sections": {"g-booth": "#lineup", "g-kiosk": "#lineup", "g-theme": "#lineup", "g-experience": "#custom", "g-event": "#custom", "find": "#lineup", "use-all": "#lineup", "use-event": "#lineup", "use-store": "#lineup", "use-wedding": "#lineup", "use-school": "#lineup", "use-outdoor": "#lineup"},
