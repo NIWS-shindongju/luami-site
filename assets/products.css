@@ -411,7 +411,7 @@ html.lb-open,html.lb-open body{overflow:hidden}
   .pc-badge{right:auto;left:8px;top:auto;bottom:8px}
   .pc .render-tag{font-size:12px;left:6px;bottom:6px;padding:3px 6px}
   .pc:has(.pc-badge) .render-tag{bottom:auto;top:36px;left:8px}
-  /* 신규 컨셉 = 묶음마다 옆으로 넘기는 한 줄(14장을 세로로 쌓으면 1만 px이 넘었다) — 다음 카드가 18% 보여 넘길 수 있음을 알린다 */
+  /* 신규 컨셉 = 묶음마다 옆으로 넘기는 한 줄(14장을 세로로 쌓으면 11,000px 넘게 길어졌다) — 다음 카드가 18% 보여 넘길 수 있음을 알린다 */
   .cc-grid{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -22px;padding:0 22px 4px;scroll-padding:0 22px}
   .cc-grid::-webkit-scrollbar{display:none}
   .cc-grid>.cc{flex:0 0 82%;scroll-snap-align:start}
