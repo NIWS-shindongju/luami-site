@@ -5,7 +5,7 @@
   products.json      제품 정의(순서·이름·배지·하이앵글·표지 규칙·옛 앵커)
   prices.json        가격 단일 출처 + 부가세 표기 스위치(vat.mode)
   copy/<slug>.json   제품 카피 / copy/pricing.json 가격 페이지 카피
-  gallery.json       제품별 사례 사진 / wrap.json 4면 랩핑 사진
+  gallery.json       제품별 사례 사진 / wrap.json 랩핑 사진
   content_map.json   제품별 블로그·사례 페이지
 
 출력(정적 HTML — GitHub Pages 가 그대로 서빙):
@@ -173,6 +173,13 @@ def sep_li(s):
     return f'<li><span class="ie-l">{lab}{note}</span><span class="ie-r">{val}</span></li>'
 
 
+def wrap_4side_line():
+    """'4면 랩핑 시 185만원' 한 줄(2026-10-30 동주님) — 세부 페이지(가격표·스탠다드 상세)에서만. 내역(랩핑비·설치비)은 안 적는다."""
+    if "std_short_4side" not in PR["items"]:
+        return ""
+    return f' <span class="wrap-4side">4면 랩핑 시 {amt_html("std_short_4side")}</span>'
+
+
 def package_card(slug):
     """정가 제품 가격 카드: 큰 금액 + 포함 ✓ / 별도 2열(한 목록에 섞지 않음) + (스탠다드) 계산 예시 문장."""
     m = PR["products"][slug]
@@ -189,8 +196,11 @@ def package_card(slug):
         calc = (f'<p class="pkg-calc">첫 1대 {man(a)} · 2대째부터 1대마다 +{man(b)} · 두 번째 달부터 부스마다 매달 +{man(c)}. '
                 f'2대면 {man(std_total(2, 1))}, 3대면 {man(std_total(3, 1))}' + (f'({esc(v)})' if v else '') + '입니다.</p>')
     unit = " · ".join(x for x in [it.get("unit", ""), "한 달 단위" if it.get("per") == "월" else ""] if x)
+    # 4면 랩핑 금액 한 줄 — 이 제품 렌탈 목록에 std_short_4side 가 있을 때만(스탠다드 부스)
+    opt = (f'\n      <p class="pkg-opt">4면 랩핑 시 {amt_html("std_short_4side")}</p>'
+           if "std_short_4side" in (m.get("rental") or []) and "std_short_4side" in PR["items"] else "")
     return f"""<div class="pkg" data-package="{slug}">
-      <div class="pkg-head"><div class="pkg-name"><span class="pkg-k">{esc(it['label'])}</span><span class="pkg-u">{esc(unit)}</span></div><div class="pkg-v">{amt_html(base)}</div></div>
+      <div class="pkg-head"><div class="pkg-name"><span class="pkg-k">{esc(it['label'])}</span><span class="pkg-u">{esc(unit)}</span></div><div class="pkg-v">{amt_html(base)}</div></div>{opt}
       <div class="ie-grid">
         <div class="ie ie-in"><b class="ie-t">가격에 포함</b><ul class="ie-list" data-list="included">{inc}</ul></div>
         <div class="ie ie-out"><b class="ie-t">별도</b><ul class="ie-list" data-list="separate">{sep}</ul></div>
@@ -909,7 +919,7 @@ def detail_page(prod, idx):
 </div></section>
 """)
 
-    # 스탠다드 부스 — 4면 랩핑 한눈에
+    # 스탠다드 부스 — 3면 랩핑 한눈에(4면은 그 안의 한 줄 §wrap_4side_line)
     if slug == "standard-booth":
         out.append(wrap_section(depth, compact=True))
 
@@ -1031,7 +1041,7 @@ def vat_sentence():
     return "부가세는 상담 때 안내해 드립니다"
 
 
-# ───────────────────────── 4면 랩핑(가격·스탠다드 상세 공용) ─────────────────────────
+# ───────────────────────── 3면 랩핑(가격·스탠다드 상세 공용) ─────────────────────────
 def wrap_section(depth, compact=False):
     pre = "../" * depth
     w = PC["wrapping"]
@@ -1051,7 +1061,7 @@ def wrap_section(depth, compact=False):
     if compact:
         sets = sets[:1]
         return f"""<section class="pd-wrap"><div class="wrap">
-{sec_head('4면 랩핑', esc(w['title']) + ' — <i>렌탈에 포함</i>', esc(w['lead']), f'<a class="ps-link" href="{pre}pricing.html#wrap">랩핑 자세히 →</a>')}
+{sec_head('3면 랩핑', esc(w['title']) + ' — <i>렌탈에 포함</i>', esc(w['lead']) + wrap_4side_line(), f'<a class="ps-link" href="{pre}pricing.html#wrap">랩핑 자세히 →</a>')}
 {chr(10).join(sets)}
 </div></section>
 """
@@ -1064,7 +1074,7 @@ def wrap_section(depth, compact=False):
                    f'<span class="pg-cap">{esc(it["caption"])}</span></a>')
     links = "".join(f'<li><a href="{pre}{x["href"]}">{esc(x["title"])}</a></li>' for x in w["examples"])
     return f"""<section class="pp-wrap" id="wrap"><div class="wrap">
-{sec_head('4면 랩핑', esc(w['title']) + ' — <i>스탠다드 부스 렌탈에 포함</i>', esc(w['lead']))}
+{sec_head('3면 랩핑', esc(w['title']) + ' — <i>스탠다드 부스 렌탈에 포함</i>', esc(w['lead']) + wrap_4side_line())}
 {chr(10).join(sets)}
   <div class="wrap-grid">
     <div class="wrap-txt">
@@ -1239,7 +1249,7 @@ def hub_page():
 </div></section>
 {anchors}
 <section class="ph-featured" id="featured"><div class="wrap">
-{sec_head('주력', '주력 제품', '스탠다드 부스와 포토키오스크는 표의 가격 그대로 바로 진행할 수 있습니다. 스탠다드 부스 렌탈에는 촬영 키오스크(부스 안에서 찍고 출력하는 기계)·4면 랩핑(겉면 네 면에 행사 디자인을 인쇄해 붙이는 것)·인화지(사진 출력 용지)·설치·회수(행사 후 철거해 가져감)가 들어 있습니다.')}
+{sec_head('주력', '주력 제품', '스탠다드 부스와 포토키오스크는 표의 가격 그대로 바로 진행할 수 있습니다. 스탠다드 부스 렌탈에는 촬영 키오스크(부스 안에서 찍고 출력하는 기계)·3면 랩핑(겉면 세 면에 행사 디자인을 인쇄해 붙이는 것)·인화지(사진 출력 용지)·설치·회수(행사 후 철거해 가져감)가 들어 있습니다.')}
   <div class="fc-grid">
 {chr(10).join(featured_card(x) for x in feat)}
   </div>
@@ -1303,7 +1313,7 @@ def pricing_page():
     pg = PC["page"]
     depth = 0
     lds = [breadcrumb([("홈", ""), ("가격", "pricing.html")]), faq_ld(PC["faq"])]
-    desc = tmpl("스탠다드 부스 1개월 미만 렌탈 {price:std_short} — 촬영 키오스크·4면 랩핑·인화지 1,400매·설치·회수 포함(운송비 별도). "
+    desc = tmpl("스탠다드 부스 1개월 미만 렌탈 {price:std_short} — 촬영 키오스크·3면 랩핑·인화지 1,400매·설치·회수 포함(운송비 별도). "
                 "포토키오스크만 렌탈 {price:wood_monthly}, 인화지 700매 포함. 구매가 스탠다드 부스 {price:std_buy}, 포토키오스크 {price:wood_buy}. 루아미 렌탈·구매 가격표.")
     og = cover(BYSLUG["standard-booth"], "1x1") or {"src": WRAP["hero"]["src"]}
     out = [head("포토부스 렌탈·구매 가격 | 스탠다드 부스 · 포토키오스크 — 루아미", desc,
@@ -1320,11 +1330,11 @@ def pricing_page():
   <h1>{esc(pg['h1'])}</h1>
   <p>{esc(pg['lead'])}</p>
   <div class="sum-grid">
-    <a class="sum" href="#rental"><span class="sum-k">스탠다드 부스 렌탈 · 1개월 미만</span><span class="sum-v">{amt_html('std_short')}</span><span class="sum-d">4면 랩핑·인화지 1,400매·설치·회수 포함 · 운송비 별도</span></a>
+    <a class="sum" href="#rental"><span class="sum-k">스탠다드 부스 렌탈 · 1개월 미만</span><span class="sum-v">{amt_html('std_short')}</span><span class="sum-d">3면 랩핑·인화지 1,400매·설치·회수 포함 · 운송비 별도</span></a>
     <a class="sum" href="#kiosk"><span class="sum-k">포토키오스크 · 키오스크만</span><span class="sum-v">{amt_html('wood_monthly')}</span><span class="sum-d">인화지 700매 포함 · 한 달 단위</span></a>
     <a class="sum" href="#purchase"><span class="sum-k">구매</span><span class="sum-v"><span class="amt" data-price-key="{buy_min_key}">{esc(man(buy_min))}부터</span>{vat_html()}</span><span class="sum-d">{esc(it[buy_min_key]['label'])} 기준 · 제품별 구매가는 아래 표</span></a>
   </div>
-  <nav class="jump" aria-label="이 페이지 바로가기"><a href="#rental">렌탈</a><a href="#examples">계산 예시</a><a href="#wrap">4면 랩핑</a><a href="#kiosk">키오스크만</a><a href="#negotiable">협의 제품</a><a href="#purchase">구매</a><a href="#notes">운송비·부가세</a><a href="#faq">자주 묻는 질문</a></nav>
+  <nav class="jump" aria-label="이 페이지 바로가기"><a href="#rental">렌탈</a><a href="#examples">계산 예시</a><a href="#wrap">랩핑</a><a href="#kiosk">키오스크만</a><a href="#negotiable">협의 제품</a><a href="#purchase">구매</a><a href="#notes">운송비·부가세</a><a href="#faq">자주 묻는 질문</a></nav>
 </div></section>
 """)
     # 렌탈 — 스탠다드 부스 가격 카드(큰 금액 + 포함/별도 2열 + 계산 예시 문장, BRIEF 2-3 #2)
@@ -1550,7 +1560,7 @@ def home_paths():
     ev["w"], ev["h"] = dims(ev["src"])
     k_tag, k_img = tile_img(kio, "4x5")
     notes = (f'<div><dt>2대째부터 1대마다</dt><dd><b data-price-key="std_extra_unit">{esc(amt("std_extra_unit"))}</b></dd>'
-             f'<dd class="pn-sub">4면 랩핑 포함 · 인화지는 700매 {esc(man(it["paper_700"]["amount"]))}씩 추가</dd></div>'
+             f'<dd class="pn-sub">3면 랩핑 포함 · 인화지는 700매 {esc(man(it["paper_700"]["amount"]))}씩 추가</dd></div>'
              f'<div><dt>두 번째 달부터</dt><dd><b data-price-key="std_monthly">부스당 {esc(amt("std_monthly"))}</b></dd>'
              f'<dd class="pn-sub">1년 가까이 쓰실 곳이면 구매를 권해 드립니다</dd></div>'
              f'<div><dt>구매</dt><dd><b data-price-key="std_buy">{esc(man(it["std_buy"]["amount"]))}</b></dd></div>')
@@ -1564,7 +1574,7 @@ def home_paths():
         <span class="path-k">행사·팝업 · 며칠에서 몇 주</span>
         <h3>행사에 빌리기</h3>
         <p class="path-price">{esc(std["name"])} <b data-price-key="std_short">{esc(man(it["std_short"]["amount"]))}</b>부터{vs}</p>
-        <p class="path-d">1대·1개월 미만 기준. 4면 랩핑·인화지 1,400매·설치·회수가 들어 있고, {separate_sentence()}</p>
+        <p class="path-d">1대·1개월 미만 기준. 3면 랩핑·인화지 1,400매·설치·회수가 들어 있고, {separate_sentence()}</p>
         <dl class="path-notes">{notes}</dl>
         <a class="btn path-cta" href="products/{std["slug"]}.html">{esc(std["name"])} 자세히 보기 <span aria-hidden="true">→</span></a>
       </div>
@@ -1620,8 +1630,8 @@ def home_kiosk_staged():
 
 def home_hero_h1():
     a = man(PR["items"]["std_short"]["amount"])
-    return (f'<h1 aria-label="포토부스 렌탈 {esc(a)}, 4면 랩핑 포함"><span class="lm"><span>포토부스 렌탈</span></span>'
-            f'<span class="lm"><span data-price-key="std_short">{esc(a)},</span></span><span class="lm"><span><i>4면 랩핑</i> 포함</span></span></h1>')
+    return (f'<h1 aria-label="포토부스 렌탈 {esc(a)}, 3면 랩핑 포함"><span class="lm"><span>포토부스 렌탈</span></span>'
+            f'<span class="lm"><span data-price-key="std_short">{esc(a)},</span></span><span class="lm"><span><i>3면 랩핑</i> 포함</span></span></h1>')
 
 
 def home_hero_sub():
@@ -1646,7 +1656,7 @@ def home_meta(kind):
 
 def home_pbox():
     return f"""<h3>가격 한눈에</h3>
-        <p>스탠다드 부스 1대를 1개월 미만으로 빌리면 {esc(amt_text('std_short'))}이고, 촬영 키오스크·4면 랩핑·인화지 1,400매와 설치·회수가 포함됩니다. 2대째부터는 1대마다 {esc(man_text(PR['items']['std_extra_unit']['amount']))}, 두 번째 달부터는 부스당 {esc(amt_text('std_monthly'))}씩 더해집니다. 테마 부스와 커스텀 제작은 기간·가격을 협의하고, 운송비는 별도입니다. 상담·견적은 무료입니다. <a href="pricing.html">가격 자세히 보기</a></p>"""
+        <p>스탠다드 부스 1대를 1개월 미만으로 빌리면 {esc(amt_text('std_short'))}이고, 촬영 키오스크·3면 랩핑·인화지 1,400매와 설치·회수가 포함됩니다. 2대째부터는 1대마다 {esc(man_text(PR['items']['std_extra_unit']['amount']))}, 두 번째 달부터는 부스당 {esc(amt_text('std_monthly'))}씩 더해집니다. 테마 부스와 커스텀 제작은 기간·가격을 협의하고, 운송비는 별도입니다. 상담·견적은 무료입니다. <a href="pricing.html">가격 자세히 보기</a></p>"""
 
 
 def home_faq_cost():
@@ -1670,7 +1680,7 @@ def guide_prices():
     return f"""<aside class="g-price fade" aria-label="루아미 실제 가격 요약">
     <b class="g-price-t">루아미 실제 가격은?</b>
     <ul>
-      <li>스탠다드 부스 1개월 미만 렌탈 <strong data-price-key="std_short">{esc(amt_text('std_short'))}</strong> — 촬영 키오스크(찍고 출력하는 기계)·4면 랩핑(겉면 네 면 디자인 인쇄)·인화지(사진 출력 용지) 1,400매·설치·회수(행사 후 철거) 포함, 운송비 별도</li>
+      <li>스탠다드 부스 1개월 미만 렌탈 <strong data-price-key="std_short">{esc(amt_text('std_short'))}</strong> — 촬영 키오스크(찍고 출력하는 기계)·3면 랩핑(겉면 세 면 디자인 인쇄)·인화지(사진 출력 용지) 1,400매·설치·회수(행사 후 철거) 포함, 운송비 별도</li>
       <li>2대째부터 1대마다 <strong data-price-key="std_extra_unit">{esc(amt_text('std_extra_unit'))}</strong> · 두 번째 달부터 부스당 <strong data-price-key="std_monthly">{esc(amt_text('std_monthly'))}</strong></li>
       <li>포토키오스크만 렌탈 <strong data-price-key="wood_monthly">{esc(amt_text('wood_monthly'))}</strong> — 인화지 700매 포함</li>
       <li>구매 스탠다드 부스 <strong data-price-key="std_buy">{esc(amt_text('std_buy'))}</strong> · 포토키오스크 <strong data-price-key="wood_buy">{esc(amt_text('wood_buy'))}</strong></li>
