@@ -134,8 +134,8 @@
       "fallback": {"4x5": "assets/images/products/standard-booth/05-winter-front.webp", "thumb": "assets/images/products/standard-booth/thumb/05-winter-front.webp", "kind": "photo", "position": "50% 50%"},
       "legacy_anchors": ["p-a01", "p-a11", "p-a12"],
       "seo": {
-        "title": "스탠다드 포토부스 렌탈·구매 | 4면 랩핑 포함 — 루아미",
-        "description": "루아미 주력 모델. 1개월 미만 렌탈 {price:std_short}에 촬영 키오스크·4면 랩핑·인화지 1,400매·설치·회수 포함(운송비 별도). 구매가 {price:std_buy}.",
+        "title": "스탠다드 포토부스 렌탈·구매 | 3면 랩핑 포함 — 루아미",
+        "description": "루아미 주력 모델. 1개월 미만 렌탈 {price:std_short}에 촬영 키오스크·3면 랩핑·인화지 1,400매·설치·회수 포함(운송비 별도). 구매가 {price:std_buy}.",
         "keywords": "스탠다드 포토부스,포토부스 렌탈,포토부스 대여,포토부스 랩핑,포토부스 구매,행사 포토부스,루아미"
       }
     },

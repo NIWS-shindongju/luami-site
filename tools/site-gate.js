@@ -18,6 +18,9 @@
  *     c. 제품 상세 JSON-LD Offer 가격 = 그 제품의 렌탈·구매 항목 금액
  *     d. 표식이 없는 손글: 같은 글 조각(문단·목록 한 줄·표 한 행·메타·JSON-LD 문자열)에서 금액 바로 앞의 가장 가까운
  *        제품 이름이 그 금액의 주인 제품이 아니면 FAIL(예: '포토키오스크 … 500만원' 인데 500만원은 스탠다드 부스 구매가)
+ *     e. 조건부 금액(price-condition, 2026-10-30): prices.json 항목에 requires_word 가 있으면(예: 4면 랩핑 185만원 → '4면')
+ *        그 금액은 같은 글 조각에서 바로 앞 40자 안에 그 낱말이 있어야 한다. 옛 기본가(185만원)가 '4면' 없이 남아 있으면
+ *        허용 금액이라도 FAIL — 기본가를 내린 뒤 옛 금액이 조용히 통과하는 구멍을 막는다.
  *  5) 포함/별도 분리: data-list="included" 목록 안에 '별도' 항목(included-list) · 정가 제품 페이지·가격 페이지에
  *     prices.json includes 그대로의 포함 목록(package-binding) · 설치 조건 표의 빈 값 행(empty-row)
  *  6) 금지 카피(최저가·지금신청·초특가·파격할인) · 경쟁사 실명
@@ -109,6 +112,18 @@ function amountOwners(P) {
   }
   return out;
 }
+// 조건부 금액: requires_word 가 있는 항목 금액(원) → 낱말. 다른 항목·규칙 합계와 같은 금액이면 조건을 걸 수 없어 뺀다.
+function condAmounts(P) {
+  const out = new Map();
+  const plain = Object.assign({}, P, { items: {} });
+  for (const k of Object.keys(P.items)) if (!P.items[k].requires_word) plain.items[k] = P.items[k];
+  const others = allowedWon(plain);
+  for (const k of Object.keys(P.items)) {
+    const it = P.items[k];
+    if (it.requires_word && !others.has(it.amount * 10000)) out.set(it.amount * 10000, it.requires_word);
+  }
+  return out;
+}
 function productNames(PJ) {
   const all = [].concat(PJ.lineup || [], PJ.custom ? [PJ.custom] : [], PJ.concepts || []);
   return all.map((x) => [x.name, x.slug]).sort((a, b) => b[0].length - a[0].length);
@@ -152,11 +167,13 @@ function moneyHits(text) {
 let PRICES = null;
 let ALLOWED = new Set();
 let OWNERS = { key: {}, amount: new Map() };
+let COND = new Map();
 let NAMES = [];
 function usePrices(P, PJ) {
   PRICES = P;
   ALLOWED = allowedWon(P);
   OWNERS = { key: keyOwners(P), amount: amountOwners(P) };
+  COND = condAmounts(P);
   if (PJ) NAMES = productNames(PJ);
 }
 try {
@@ -388,8 +405,19 @@ function proximityViolations(text) {
   }
   return out;
 }
+function conditionViolations(text) {
+  const out = [];
+  for (const h of moneyHits(text)) {
+    const w = COND.get(h.won);
+    if (w && !text.slice(Math.max(0, h.index - 40), h.index).includes(w)) out.push('"' + h.raw + '" 은 \'' + w + '\' 조건 금액인데 바로 앞에 \'' + w + '\' 이 없음: …' + text.slice(Math.max(0, h.index - 40), h.index + h.raw.length) + '…');
+  }
+  return out;
+}
 function checkProximity(file, html) {
-  for (const s of textSegments(html)) for (const v of proximityViolations(s)) add(file, 'price-binding', v);
+  for (const s of textSegments(html)) {
+    for (const v of proximityViolations(s)) add(file, 'price-binding', v);
+    for (const v of conditionViolations(s)) add(file, 'price-condition', v);
+  }
 }
 
 // 5) 포함 목록 · 정가 제품 포함 목록 대조 · 설치 조건 표 빈 행
@@ -757,8 +785,11 @@ if (process.argv.includes('--selftest')) {
   const KOR = { 1: '일', 2: '이', 3: '삼', 4: '사', 5: '오', 6: '육', 7: '칠', 8: '팔', 9: '구' };
   const hangul = (n) => [[1000, '천'], [100, '백'], [10, '십']].reduce((acc, [u, c]) => { const q = Math.floor(acc[1] / u); return q ? [acc[0] + (q > 1 ? KOR[q] : '') + c, acc[1] % u] : acc; }, ['', n]).reduce((s, r) => s + (r ? KOR[r] : ''));
   const NOTMONEY = '<p>스탠다드 부스는 ' + hangul(a0) + '만원부터, 지금까지 사진 1만 장 넘게 뽑았습니다. <img src="assets/images/hero.webp" alt="스탠다드 부스 ' + man(a0) + ' 설치 모습"></p>';
+  // 조건부 금액(requires_word) 대조군 — 정상판엔 '낱말 + 금액'을 넣고(걸리면 오탐), 결함판은 낱말을 뺀다.
+  const CONDK = Object.keys(it0).find((k) => it0[k].requires_word);
+  const CONDP = CONDK ? '<p>스탠다드 부스 ' + it0[CONDK].requires_word + ' 랩핑 시 ' + man(it0[CONDK].amount) + '</p>' : '';
   const CLEAN_P = CLEAN.replace('렌탈 문의 주세요.', REAL).replace('</head>', OG + '</head>')
-    .replace('</section>', BOUND + INCL + NOTMONEY + '</section>')
+    .replace('</section>', BOUND + INCL + NOTMONEY + CONDP + '</section>')
     .replace('</body>', offer(a0 * 10000) + faq('2대면 ' + man(a0 + b0) + '(' + VAT + ')입니다.') + '</body>');
   const CASES = [
     ['price-mismatch', CLEAN_P.replace(REAL, REAL + ' 대여료 150,000원입니다.')],
@@ -775,6 +806,7 @@ if (process.argv.includes('--selftest')) {
     ['price-binding', CLEAN_P.replace('data-price-key="wood_buy">' + man(it0.wood_buy.amount), 'data-price-key="std_buy">' + man(it0.std_buy.amount))], // 포토키오스크 행에 스탠다드 구매가 항목
     ['price-binding', CLEAN_P.replace('포토키오스크 ' + man(it0.wood_buy.amount), '포토키오스크 ' + man(it0.std_buy.amount))], // 손글: 이름 ↔ 금액 뒤바뀜
     ['price-binding', CLEAN_P.replace(REAL, REAL + ' 미러포토부스는 ' + man(a0) + '입니다.')], // 협의 제품 이름 뒤 정가
+    ...(CONDK ? [['price-condition', CLEAN_P.replace(CONDP, '<p>스탠다드 부스 렌탈 ' + man(it0[CONDK].amount) + '</p>')]] : []), // 옛 기본가가 조건 낱말 없이 남음
     ['included-list', CLEAN_P.replace('<ul data-list="included">', '<ul data-list="included"><li>운송비 별도</li>')],
     ['empty-row', CLEAN_P.replace('</tbody></table>', '<tr><th scope="row">전원</th><td> </td></tr></tbody></table>')],
     ['vat-label', CLEAN_P.replace(REAL, REAL + ' (' + (OTHER_VAT || '부가세 포함') + ')')],
