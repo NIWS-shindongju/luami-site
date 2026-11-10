@@ -302,7 +302,7 @@ html.lb-open,html.lb-open body{overflow:hidden}
 .ask-box .pb-v{font-size:17px}
 
 /* ── 가격 페이지 ── */
-.sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px}
+.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px}  /* 스탠다드·키오스크·세트·구매 4칸(2026-11-10 세트) */
 .sum{display:flex;flex-direction:column;gap:6px;padding:20px 22px;background:var(--paper);border:1px solid var(--card-bd);border-radius:var(--r);transition:border-color .2s,box-shadow .2s}
 .sum:first-child{border-color:var(--ink);box-shadow:var(--shadow)}
 .sum:hover{border-color:var(--accent-dark)}
@@ -374,6 +374,7 @@ html.lb-open,html.lb-open body{overflow:hidden}
   .fc-im{aspect-ratio:4/3;min-height:0;background:var(--fc-bg,var(--tile))}
   .fc-im img.is-render{object-fit:contain}  /* 16:10 cover 는 세로로 긴 렌더의 머리·발을 잘랐다(V1 #6) — 통째로 + 렌더 가장자리 색 바탕 */
   .st-grid{grid-template-columns:repeat(2,1fr)}
+  .sum-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:880px){
   .prp section:not(.hero){padding:clamp(44px,10vw,64px) 0}
@@ -473,6 +474,23 @@ html.lb-open,html.lb-open body{overflow:hidden}
 .pkg-opt{margin-top:10px;text-align:right;font-size:15px;color:var(--ink2)}.pkg-opt .amt{font-weight:700;color:var(--ink)}
 .wrap-4side{display:inline-block;margin-left:4px;font-weight:600;color:var(--ink)}
 .pkg-calc{margin-top:16px;padding:14px 16px;border-radius:8px;background:var(--paper2);font-size:15px;line-height:1.7;color:var(--ink2)}
+/* 세트(2026-11-10): 가격표 세트 카드 · 상세 '세트로 함께 빌리면' 한 줄 · 별도 칸 세트 링크 · 허브 주력 아래 세트 띠 */
+.pkg-set{border-color:var(--ink)}
+.pkg-calc a,.pkg-setline a{color:var(--accent-dark);font-weight:700;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.pkg-setline{display:flex;gap:12px;align-items:flex-start;margin-top:14px;padding:14px 16px;border:1px solid var(--card-bd);border-radius:8px;background:var(--paper);font-size:15px;line-height:1.7;color:var(--ink2)}
+.pkg-setline b{flex-shrink:0;margin-top:2px;padding:1px 8px;border-radius:4px;background:var(--ink);color:var(--cream);font-size:12.5px;line-height:1.7}
+.pkg-setline .amt{font-size:16px}
+.ie-set{display:inline-flex;align-items:center;gap:4px;min-height:40px;font-size:14px;font-weight:700;color:var(--accent-dark);text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.set-figs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.set-figs .pp-fig a{max-height:none}
+.fc-set{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,.8fr);gap:clamp(16px,2.4vw,32px);align-items:start;margin-top:24px;padding:clamp(20px,2.4vw,32px);background:var(--paper);border:1px solid var(--ink);border-radius:var(--r);box-shadow:var(--shadow)}
+.fc-set h3{font-family:var(--serif);font-weight:700;font-size:clamp(22px,2.2vw,28px);line-height:1.2;margin-top:8px}
+.fs-head .fc-tag{margin-top:8px}
+.fs-inc,.fs-price{display:flex;flex-direction:column;gap:10px}
+.fs-price .fc-price{margin-top:0}
+.fs-price .fc-cta{margin-top:0;padding-top:0}
+@media(max-width:1080px){.fc-set{grid-template-columns:1fr 1fr}.fs-head{grid-column:1/-1}}
+@media(max-width:640px){.fc-set{grid-template-columns:1fr}.pkg-setline{flex-direction:column;gap:6px}}
 .pt-buy{margin-top:16px}
 /* 상세 첫 화면 가격 상자 — 포함 / 별도 두 줄 */
 .pb-ie{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}

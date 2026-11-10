@@ -124,6 +124,7 @@ def tmpl(s):
     s = re.sub(r"\{price:([a-z0-9_]+)\}", lambda m: amt_text(m.group(1)), s)
     s = re.sub(r"\{man:([a-z0-9_]+)\}", lambda m: man(PR["items"][m.group(1)]["amount"]), s)
     s = re.sub(r"\{total:(\d+):(\d+)\}", lambda m: man(std_total(int(m.group(1)), int(m.group(2)))), s)
+    s = re.sub(r"\{inc:([a-z0-9_]+)\}", lambda m: ", ".join(PR["items"][m.group(1)]["includes"]), s)
     v = vat_label()
     return s.replace("({vat})", f"({v})" if v else "")
 
@@ -161,16 +162,31 @@ def inc_li(x):
     return f'<li data-item="{esc(x)}"><span class="ie-ck" aria-hidden="true"></span><span>{esc(x)}</span></li>'
 
 
-def sep_li(s):
-    """'별도' 목록 한 줄 — 금액이 있으면 prices.json 항목(key)에서, 없으면 안내 문구."""
+def set_href(depth):
+    """세트 카드(가격표 #set) 링크 — 가격표 안에서는 #set, 하위 폴더 페이지에서는 ../pricing.html#set."""
+    return "#set" if depth == 0 else f"{'../' * depth}pricing.html#set"
+
+
+def sep_li(s, depth=0):
+    """'별도' 목록 한 줄 — 금액이 있으면 prices.json 항목(key)에서, 없으면 안내 문구.
+    set_link(2026-11-10): 포함되지 않는 것(포토키오스크) — 오른쪽 칸에 금액 대신 세트 링크(별도 추가 금액으로 읽히지 않게)."""
     lab = esc(s["label"]) + (f' <small>{esc(s["unit"])}</small>' if s.get("unit") else "")
     if s.get("key"):
         note = f'<span class="ie-n">{esc(s["note"])}</span>' if s.get("note") else ""
         val = amt_html(s["key"])
+    elif s.get("set_link"):
+        note = f'<span class="ie-n">{esc(s["note"])}</span>' if s.get("note") else ""
+        val = f'<a class="ie-set" href="{set_href(depth)}">세트로 함께 빌리기 <span aria-hidden="true">→</span></a>'
     else:
         note = ""
         val = f'<span class="ie-ask">{esc(s.get("note", ""))}</span>'
     return f'<li><span class="ie-l">{lab}{note}</span><span class="ie-r">{val}</span></li>'
+
+
+def inc_ul(key, cls="ie-list"):
+    """'가격에 포함' 목록 — data-includes = prices.json 항목 key(site-gate 가 이 목록을 그 항목 includes 와 하나하나 대조)."""
+    lis = "".join(inc_li(x) for x in PR["items"][key].get("includes", []))
+    return f'<ul class="{cls}" data-list="included" data-includes="{key}">{lis}</ul>'
 
 
 def wrap_4side_line():
@@ -180,13 +196,12 @@ def wrap_4side_line():
     return f' <span class="wrap-4side">4면 랩핑 시 {amt_html("std_short_4side")}</span>'
 
 
-def package_card(slug):
+def package_card(slug, depth=0):
     """정가 제품 가격 카드: 큰 금액 + 포함 ✓ / 별도 2열(한 목록에 섞지 않음) + (스탠다드) 계산 예시 문장."""
     m = PR["products"][slug]
     base = m["rental_summary"]
     it = PR["items"][base]
-    inc = "".join(inc_li(x) for x in it.get("includes", []))
-    sep = "".join(sep_li(s) for s in m.get("separate", []))
+    sep = "".join(sep_li(s, depth) for s in m.get("separate", []))
     # 포함인지 별도(추가 비용)인지 사양서에 없는 조건은 어느 목록에도 넣지 않고 '상담 때 안내' 한 줄로(R11: 확인 안 된 표현 금지)
     ask = "".join(f'<p class="pkg-ask"><b>상담 때 안내</b> {esc(a["label"])} — {esc(a["note"])}</p>' for a in m.get("ask", []))
     calc = ""
@@ -202,11 +217,43 @@ def package_card(slug):
     return f"""<div class="pkg" data-package="{slug}">
       <div class="pkg-head"><div class="pkg-name"><span class="pkg-k">{esc(it['label'])}</span><span class="pkg-u">{esc(unit)}</span></div><div class="pkg-v">{amt_html(base)}</div></div>{opt}
       <div class="ie-grid">
-        <div class="ie ie-in"><b class="ie-t">가격에 포함</b><ul class="ie-list" data-list="included">{inc}</ul></div>
+        <div class="ie ie-in"><b class="ie-t">가격에 포함</b>{inc_ul(base)}</div>
         <div class="ie ie-out"><b class="ie-t">별도</b><ul class="ie-list" data-list="separate">{sep}</ul></div>
       </div>
       {ask}{calc}
     </div>"""
+
+
+def set_card(key, depth=0):
+    """세트 가격 카드(2026-11-10): 큰 금액 + 포함(두 제품 includes 합집합 = prices.json set 항목 includes) / 별도(운송비)
+    + 조건 문장 — 대수·기간 추가·4면 랩핑·인화지 추가는 각 제품 조건 그대로(세트 전용 파생 금액은 만들지 않는다).
+    금액 앞에 '세트'(requires_word) — site-gate price-condition 이 같은 글 조각 40자 안에서 확인한다."""
+    it = PR["items"][key]
+    sc = PC["set"]
+    pre = "#" if depth == 0 else f"{'../' * depth}pricing.html#"
+    ship = PR.get("shipping_note", "운송비 별도").replace(" 별도", "")
+    cond = (f'<p class="pkg-calc">{esc(sc["conditions"])} '
+            f'<a href="{pre}rental">스탠다드 부스 조건</a> · <a href="{pre}kiosk">포토키오스크 조건</a></p>')
+    return f"""<div class="pkg pkg-set" data-set="{key}">
+      <div class="pkg-head"><div class="pkg-name"><span class="pkg-k">{esc(it['label'])}</span><span class="pkg-u">{esc(it.get('unit', ''))}</span></div><div class="pkg-v">{amt_html(key, it.get('requires_word', ''))}</div></div>
+      <div class="ie-grid">
+        <div class="ie ie-in"><b class="ie-t">세트 가격에 포함</b>{inc_ul(key)}</div>
+        <div class="ie ie-out"><b class="ie-t">별도</b><ul class="ie-list" data-list="separate"><li><span class="ie-l">{esc(ship)}</span><span class="ie-r"><span class="ie-ask">설치 장소에 따라 따로 안내</span></span></li></ul></div>
+      </div>
+      {cond}
+    </div>"""
+
+
+def set_line(slug, depth=1):
+    """제품 상세 가격 카드 아래 한 줄 — '스탠다드 부스와 포토키오스크를 세트로 함께 빌리면 210만원' + 가격표 세트 링크.
+    prices.json products[slug].set 이 있는 제품만(스탠다드 부스·포토키오스크)."""
+    k = (PR["products"].get(slug) or {}).get("set")
+    if not k or k not in PR["items"]:
+        return ""
+    name = PR["items"][k].get("name", PR["items"][k]["label"])  # '스탠다드 부스 + 포토키오스크 세트'
+    a, b = (x.strip() for x in name.replace(" 세트", "").split("+"))
+    return (f'<p class="pkg-setline"><b>세트</b><span>{esc(a)}와 {esc(b)}를 세트로 함께 빌리면 {amt_html(k)}. '
+            f'두 제품의 포함 내용을 모두 합친 구성입니다. <a href="{set_href(depth)}">세트 구성 보기 <span aria-hidden="true">→</span></a></span></p>')
 
 
 def hero_ie(slug):
@@ -218,7 +265,7 @@ def hero_ie(slug):
     inc = PR["items"][m["rental_summary"]].get("includes", [])
     lis = "".join(f'<li data-item="{esc(x)}">{esc(x)}</li>' for x in inc)
     sep = m.get("hero_separate", "")
-    return (f'<div class="pb-ie"><span class="pb-k">포함</span><ul class="pb-inc" data-list="included">{lis}</ul></div>'
+    return (f'<div class="pb-ie"><span class="pb-k">포함</span><ul class="pb-inc" data-list="included" data-includes="{m["rental_summary"]}">{lis}</ul></div>'
             + (f'<div class="pb-ie"><span class="pb-k">별도</span><span class="pb-sep">{esc(sep)}</span></div>' if sep else "")
             + (f'<div class="pb-ie"><span class="pb-k">상담</span><span class="pb-sep">{esc(m["hero_ask"])}</span></div>' if m.get("hero_ask") else ""))
 
@@ -996,7 +1043,7 @@ def detail_price_section(slug, depth):
     m = PR["products"].get(slug) or PR["products"]["_concept"]
     body = ""
     if m.get("rental_summary"):
-        body += package_card(slug)
+        body += package_card(slug, depth) + set_line(slug, depth)
     if m.get("purchase"):
         k = m["purchase"]
         body += (f'<table class="ptable pt-buy"><tbody><tr><th scope="row">구매 · {esc(PR["items"][k]["label"])}'
@@ -1142,7 +1189,7 @@ def featured_card(prod):
         # 포함 목록에는 포함만(BRIEF R5: 포함과 별도를 한 목록에 섞지 않는다). 별도는 아래 한 줄로 따로.
         hl_html = "".join(f'<li data-item="{esc(x)}">{esc(x)}</li>' for x in PR["items"][pk["rental_summary"]]["includes"])
         hl_title = "렌탈 가격에 포함"
-        hl_attr = ' data-list="included"'
+        hl_attr = f' data-list="included" data-includes="{pk["rental_summary"]}"'
         if pk.get("hero_separate"):
             sep_line = f'<p class="fc-sep"><b>별도</b> {esc(pk["hero_separate"])}</p>'
         if pk.get("hero_ask"):
@@ -1167,6 +1214,33 @@ def featured_card(prod):
         <div class="fc-cta"><a class="btn" href="products/{prod['slug']}.html">자세히 보기</a><a class="btn-ghost" href="{quote_href(0, prod['name'])}">무료 견적 받기</a></div>
       </div>
     </article>"""
+
+
+def featured_set():
+    """허브 주력 영역 아래 세트 띠(2026-11-10) — 두 주력 제품을 함께 빌리는 세트. 포함 목록·금액은 prices.json 세트 항목."""
+    keys = sorted({(PR["products"].get(x["slug"]) or {}).get("set") for x in LINEUP} - {None})
+    out = []
+    for k in keys:
+        it = PR["items"][k]
+        lis = "".join(f'<li data-item="{esc(x)}">{esc(x)}</li>' for x in it.get("includes", []))
+        ship = PR.get("shipping_note", "")
+        out.append(f"""    <article class="fc-set" data-set="{k}">
+      <div class="fs-head">
+        <div class="pc-chips"><span class="badge badge-main">세트</span></div>
+        <h3>{esc(it.get('name', it['label']))}</h3>
+        <p class="fc-tag">{esc(PC['set']['desc'])}</p>
+      </div>
+      <div class="fs-inc">
+        <b class="fc-hl-t">세트 가격에 포함</b>
+        <ul class="fc-hl" data-list="included" data-includes="{k}">{lis}</ul>
+        <p class="fc-sep"><b>별도</b> {esc(ship.replace(' 별도', ''))}</p>
+      </div>
+      <div class="fs-price">
+        <div class="pricebox fc-price"><div class="pb-row"><span class="pb-k">세트 렌탈</span><span class="pb-v">{amt_html(k, '1개월 미만')}</span></div></div>
+        <div class="fc-cta"><a class="btn" href="pricing.html#set">세트 자세히 보기</a></div>
+      </div>
+    </article>""")
+    return "\n".join(out)
 
 
 def concept_card(cp):
@@ -1249,10 +1323,11 @@ def hub_page():
 </div></section>
 {anchors}
 <section class="ph-featured" id="featured"><div class="wrap">
-{sec_head('주력', '주력 제품', '스탠다드 부스와 포토키오스크는 표의 가격 그대로 바로 진행할 수 있습니다. 스탠다드 부스 렌탈에는 촬영 키오스크(부스 안에서 찍고 출력하는 기계)·3면 랩핑(겉면 세 면에 행사 디자인을 인쇄해 붙이는 것)·인화지(사진 출력 용지)·설치·회수(행사 후 철거해 가져감)가 들어 있습니다.')}
+{sec_head('주력', '주력 제품', '스탠다드 부스와 포토키오스크는 표의 가격 그대로 바로 진행할 수 있습니다. 스탠다드 부스 렌탈에는 3면 랩핑(겉면 세 면에 행사 디자인을 인쇄해 붙이는 것)과 설치·회수(행사 후 철거해 가져감)가 들어 있고, 찍고 출력하는 포토키오스크는 들어 있지 않습니다. 두 제품을 함께 쓰시려면 세트로 빌리시면 됩니다.')}
   <div class="fc-grid">
 {chr(10).join(featured_card(x) for x in feat)}
   </div>
+{featured_set()}
 </div></section>
 
 <section class="ph-lineup" id="lineup"><div class="wrap">
@@ -1313,8 +1388,10 @@ def pricing_page():
     pg = PC["page"]
     depth = 0
     lds = [breadcrumb([("홈", ""), ("가격", "pricing.html")]), faq_ld(PC["faq"])]
-    desc = tmpl("스탠다드 부스 1개월 미만 렌탈 {price:std_short} — 촬영 키오스크·3면 랩핑·인화지 1,400매·설치·회수 포함(운송비 별도). "
-                "포토키오스크만 렌탈 {price:wood_monthly}, 인화지 700매 포함. 구매가 스탠다드 부스 {price:std_buy}, 포토키오스크 {price:wood_buy}. 루아미 렌탈·구매 가격표.")
+    std_inc = "·".join(x for x in PR["items"]["std_short"].get("includes", []) if not x.startswith("부스"))  # '3면 랩핑·설치·회수'
+    desc = tmpl("스탠다드 부스 1개월 미만 렌탈 {price:std_short} — " + std_inc + " 포함(운송비 별도). "
+                "포토키오스크만 렌탈 {price:wood_monthly}, 인화지 700매 포함. 두 제품을 함께 빌리는 세트 {price:set_std_wood}, 운송비 별도. "
+                "구매가 스탠다드 부스 {price:std_buy}, 포토키오스크 {price:wood_buy}. 루아미 렌탈·구매 가격표.")
     og = cover(BYSLUG["standard-booth"], "1x1") or {"src": WRAP["hero"]["src"]}
     out = [head("포토부스 렌탈·구매 가격 | 스탠다드 부스 · 포토키오스크 — 루아미", desc,
                 "포토부스 렌탈 가격,포토부스 렌탈 비용,포토부스 대여 비용,포토부스 구매,포토키오스크 가격,포토부스 랩핑,루아미",
@@ -1330,11 +1407,12 @@ def pricing_page():
   <h1>{esc(pg['h1'])}</h1>
   <p>{esc(pg['lead'])}</p>
   <div class="sum-grid">
-    <a class="sum" href="#rental"><span class="sum-k">스탠다드 부스 렌탈 · 1개월 미만</span><span class="sum-v">{amt_html('std_short')}</span><span class="sum-d">3면 랩핑·인화지 1,400매·설치·회수 포함 · 운송비 별도</span></a>
+    <a class="sum" href="#rental"><span class="sum-k">스탠다드 부스 렌탈 · 1개월 미만</span><span class="sum-v">{amt_html('std_short')}</span><span class="sum-d">{esc(std_inc)} 포함 · 포토키오스크 미포함 · 운송비 별도</span></a>
     <a class="sum" href="#kiosk"><span class="sum-k">포토키오스크 · 키오스크만</span><span class="sum-v">{amt_html('wood_monthly')}</span><span class="sum-d">인화지 700매 포함 · 한 달 단위</span></a>
+    <a class="sum" href="#set"><span class="sum-k">{esc(it['set_std_wood']['name'])}</span><span class="sum-v">{amt_html('set_std_wood')}</span><span class="sum-d">두 제품 포함 내용 합침 · 1개월 미만 · 운송비 별도</span></a>
     <a class="sum" href="#purchase"><span class="sum-k">구매</span><span class="sum-v"><span class="amt" data-price-key="{buy_min_key}">{esc(man(buy_min))}부터</span>{vat_html()}</span><span class="sum-d">{esc(it[buy_min_key]['label'])} 기준 · 제품별 구매가는 아래 표</span></a>
   </div>
-  <nav class="jump" aria-label="이 페이지 바로가기"><a href="#rental">렌탈</a><a href="#examples">계산 예시</a><a href="#wrap">랩핑</a><a href="#kiosk">키오스크만</a><a href="#negotiable">협의 제품</a><a href="#purchase">구매</a><a href="#notes">운송비·부가세</a><a href="#faq">자주 묻는 질문</a></nav>
+  <nav class="jump" aria-label="이 페이지 바로가기"><a href="#rental">렌탈</a><a href="#examples">계산 예시</a><a href="#wrap">랩핑</a><a href="#kiosk">키오스크만</a><a href="#set">세트</a><a href="#negotiable">협의 제품</a><a href="#purchase">구매</a><a href="#notes">운송비·부가세</a><a href="#faq">자주 묻는 질문</a></nav>
 </div></section>
 """)
     # 렌탈 — 스탠다드 부스 가격 카드(큰 금액 + 포함/별도 2열 + 계산 예시 문장, BRIEF 2-3 #2)
@@ -1387,6 +1465,20 @@ def pricing_page():
   <div class="price-grid">
     <div>{package_card('photo-kiosk')}</div>
     <figure class="pp-fig pp-fig-sm"><a href="products/photo-kiosk.html">{img_tag(wimg, 0, cover_alt(kiosk, wimg))}{render_tag(wimg, large=True)}</a><figcaption>포토키오스크 · 월넛 원목 헤드 + 원목 삼각대</figcaption></figure>
+  </div>
+</div></section>
+""")
+    # 세트(2026-11-10) — 주력 두 제품을 함께. 포함 = 두 제품 포함의 합집합, 조건은 각 제품 그대로(파생 금액 없음)
+    sc = PC["set"]
+    simg = cover(std, "4x5")
+    out.append(f"""<section class="pp-set" id="set"><div class="wrap">
+{sec_head('세트', esc(sc['title']), esc(sc['desc']))}
+  <div class="price-grid">
+    <div>{set_card('set_std_wood', depth)}</div>
+    <div class="set-figs">
+      <figure class="pp-fig"><a href="products/standard-booth.html">{img_tag(simg, 0, cover_alt(std, simg), sizes=SZ_CELL)}{render_tag(simg)}</a><figcaption>스탠다드 부스</figcaption></figure>
+      <figure class="pp-fig"><a href="products/photo-kiosk.html">{img_tag(wimg, 0, cover_alt(kiosk, wimg), sizes=SZ_CELL)}{render_tag(wimg)}</a><figcaption>포토키오스크</figcaption></figure>
+    </div>
   </div>
 </div></section>
 """)
@@ -1559,8 +1651,13 @@ def home_paths():
     ev = {"src": "assets/images/wrap-sky-clean.webp", "kind": "photo", "position": "16% 64%", "is_cover": False}
     ev["w"], ev["h"] = dims(ev["src"])
     k_tag, k_img = tile_img(kio, "4x5")
-    notes = (f'<div><dt>2대째부터 1대마다</dt><dd><b data-price-key="std_extra_unit">{esc(amt("std_extra_unit"))}</b></dd>'
-             f'<dd class="pn-sub">3면 랩핑 포함 · 인화지는 700매 {esc(man(it["paper_700"]["amount"]))}씩 추가</dd></div>'
+    std_inc = "·".join(x for x in it["std_short"].get("includes", []) if not x.startswith("부스"))  # '3면 랩핑·설치·회수'
+    sk = (PR["products"].get(std["slug"]) or {}).get("set")
+    # 세트 한 줄(2026-11-10) — 부스 렌탈엔 포토키오스크가 없다는 것과 세트를 같은 줄에. 금액 앞 '세트'(requires_word)
+    set_row = (f'<div><dt>포토키오스크까지</dt><dd><b data-price-key="{sk}">세트 {esc(amt(sk))}</b></dd>'
+               f'<dd class="pn-sub">부스 렌탈엔 포토키오스크 미포함 · <a href="pricing.html#set">세트 보기</a></dd></div>') if sk else ""
+    notes = (set_row + f'<div><dt>2대째부터 1대마다</dt><dd><b data-price-key="std_extra_unit">{esc(amt("std_extra_unit"))}</b></dd>'
+             f'<dd class="pn-sub">3면 랩핑 포함</dd></div>'
              f'<div><dt>두 번째 달부터</dt><dd><b data-price-key="std_monthly">부스당 {esc(amt("std_monthly"))}</b></dd>'
              f'<dd class="pn-sub">1년 가까이 쓰실 곳이면 구매를 권해 드립니다</dd></div>'
              f'<div><dt>구매</dt><dd><b data-price-key="std_buy">{esc(man(it["std_buy"]["amount"]))}</b></dd></div>')
@@ -1574,7 +1671,7 @@ def home_paths():
         <span class="path-k">행사·팝업 · 며칠에서 몇 주</span>
         <h3>행사에 빌리기</h3>
         <p class="path-price">{esc(std["name"])} <b data-price-key="std_short">{esc(man(it["std_short"]["amount"]))}</b>부터{vs}</p>
-        <p class="path-d">1대·1개월 미만 기준. 3면 랩핑·인화지 1,400매·설치·회수가 들어 있고, {separate_sentence()}</p>
+        <p class="path-d">1대·1개월 미만 기준. {esc(std_inc)}가 들어 있고, {separate_sentence()}</p>
         <dl class="path-notes">{notes}</dl>
         <a class="btn path-cta" href="products/{std["slug"]}.html">{esc(std["name"])} 자세히 보기 <span aria-hidden="true">→</span></a>
       </div>
@@ -1639,7 +1736,7 @@ def home_hero_sub():
     it = PR["items"]["std_short"]
     chips = "".join(f'<li data-item="{esc(x)}">{esc(x)}</li>' for x in it.get("includes", []))
     return (f'<div class="hero-inc"><span class="hi-k" id="heroIncK">포함</span>'
-            f'<ul role="list" data-list="included" aria-labelledby="heroIncK">{chips}</ul></div>'
+            f'<ul role="list" data-list="included" data-includes="std_short" aria-labelledby="heroIncK">{chips}</ul></div>'
             f'<p class="hero-basis">{esc(BYSLUG["standard-booth"]["name"])} {esc(it.get("unit", "1대"))}·1개월 미만 기준 · {esc(separate_short())}</p>')
 
 
@@ -1656,7 +1753,7 @@ def home_meta(kind):
 
 def home_pbox():
     return f"""<h3>가격 한눈에</h3>
-        <p>스탠다드 부스 1대를 1개월 미만으로 빌리면 {esc(amt_text('std_short'))}이고, 촬영 키오스크·3면 랩핑·인화지 1,400매와 설치·회수가 포함됩니다. 2대째부터는 1대마다 {esc(man_text(PR['items']['std_extra_unit']['amount']))}, 두 번째 달부터는 부스당 {esc(amt_text('std_monthly'))}씩 더해집니다. 테마 부스와 커스텀 제작은 기간·가격을 협의하고, 운송비는 별도입니다. 상담·견적은 무료입니다. <a href="pricing.html">가격 자세히 보기</a></p>"""
+        <p>스탠다드 부스 1대를 1개월 미만으로 빌리면 {esc(amt_text('std_short'))}이고, {esc('·'.join(x for x in PR['items']['std_short'].get('includes', []) if not x.startswith('부스')))}가 포함됩니다. 2대째부터는 1대마다 {esc(man_text(PR['items']['std_extra_unit']['amount']))}, 두 번째 달부터는 부스당 {esc(amt_text('std_monthly'))}씩 더해집니다. 테마 부스와 커스텀 제작은 기간·가격을 협의하고, 운송비는 별도입니다. 상담·견적은 무료입니다. <a href="pricing.html">가격 자세히 보기</a></p>"""
 
 
 def home_faq_cost():
@@ -1680,7 +1777,7 @@ def guide_prices():
     return f"""<aside class="g-price fade" aria-label="루아미 실제 가격 요약">
     <b class="g-price-t">루아미 실제 가격은?</b>
     <ul>
-      <li>스탠다드 부스 1개월 미만 렌탈 <strong data-price-key="std_short">{esc(amt_text('std_short'))}</strong> — 촬영 키오스크(찍고 출력하는 기계)·3면 랩핑(겉면 세 면 디자인 인쇄)·인화지(사진 출력 용지) 1,400매·설치·회수(행사 후 철거) 포함, 운송비 별도</li>
+      <li>스탠다드 부스 1개월 미만 렌탈 <strong data-price-key="std_short">{esc(amt_text('std_short'))}</strong> — 3면 랩핑(겉면 세 면 디자인 인쇄)·설치·회수(행사 후 철거) 포함, 운송비 별도</li>
       <li>2대째부터 1대마다 <strong data-price-key="std_extra_unit">{esc(amt_text('std_extra_unit'))}</strong> · 두 번째 달부터 부스당 <strong data-price-key="std_monthly">{esc(amt_text('std_monthly'))}</strong></li>
       <li>포토키오스크만 렌탈 <strong data-price-key="wood_monthly">{esc(amt_text('wood_monthly'))}</strong> — 인화지 700매 포함</li>
       <li>구매 스탠다드 부스 <strong data-price-key="std_buy">{esc(amt_text('std_buy'))}</strong> · 포토키오스크 <strong data-price-key="wood_buy">{esc(amt_text('wood_buy'))}</strong></li>
