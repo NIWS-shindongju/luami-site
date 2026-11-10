@@ -23,6 +23,10 @@
  *        허용 금액이라도 FAIL — 기본가를 내린 뒤 옛 금액이 조용히 통과하는 구멍을 막는다.
  *  5) 포함/별도 분리: data-list="included" 목록 안에 '별도' 항목(included-list) · 정가 제품 페이지·가격 페이지에
  *     prices.json includes 그대로의 포함 목록(package-binding) · 설치 조건 표의 빈 값 행(empty-row)
+ *     b. (2026-11-10) 포함 목록마다 data-includes="key" 로 prices.json 항목에 묶고 하나하나 집합 대조 — 표식 없는 포함 목록도 FAIL.
+ *        가격표엔 세트(products[*].set) 포함 목록도 있어야 한다.
+ *     c. bundle-includes: 세트 항목(bundle)의 includes = 묶인 항목 includes 의 합집합(빠짐·지어냄 FAIL)
+ *     d. sheet-count: 'N매'(인화지 매수)는 prices.json 항목에 있는 매수만 — 빠진 '인화지 1,400매' 같은 손글 잔재를 잡는다
  *  6) 금지 카피(최저가·지금신청·초특가·파격할인) · 경쟁사 실명
  *  7) 이미지 참조 실물 존재 + index 이미지 중복 · 깨진 내부 링크
  *  8) sitemap ↔ 실제 파일 정합 + lastmod 정책(stale-lastmod, 아래)
@@ -89,7 +93,8 @@ function keyOwners(P) {
   for (const slug of Object.keys(P.products || {})) {
     const m = P.products[slug];
     if (slug.startsWith('_') || !m || typeof m !== 'object') continue;
-    const keys = [].concat(m.rental || [], m.purchase || [], m.rental_summary || [], (m.separate || []).map((s) => s.key));
+    // set(2026-11-10): 이 제품이 묶이는 세트 항목 — 세트 금액은 묶인 두 제품 모두의 몫(어느 상세에서 말해도 됨)
+    const keys = [].concat(m.rental || [], m.purchase || [], m.rental_summary || [], m.set || [], (m.separate || []).map((s) => s.key));
     for (const k of keys) if (k) (own[k] = own[k] || new Set()).add(slug);
   }
   return own;
@@ -421,31 +426,100 @@ function checkProximity(file, html) {
 }
 
 // 5) 포함 목록 · 정가 제품 포함 목록 대조 · 설치 조건 표 빈 행
+// 목록마다 { key: data-includes 값(prices.json 항목), items: [{ item: data-item, text: 화면 글자 }] }
 function includedLists(html) {
   const out = [];
-  const re = /<(ul|ol)\b[^>]*\bdata-list="included"[^>]*>([\s\S]*?)<\/\1>/gi;
+  const re = /<(ul|ol)\b([^>]*\bdata-list="included"[^>]*)>([\s\S]*?)<\/\1>/gi;
   let m;
   while ((m = re.exec(html))) {
-    const lis = m[2].split(/<li\b/i).slice(1);
-    out.push(lis.map((li) => ({ item: decodeEntities((li.match(/\bdata-item="([^"]*)"/) || [])[1] || ''), text: tagText('<li' + li) })));
+    const key = (m[2].match(/\bdata-includes="([^"]*)"/) || [])[1] || null;
+    const lis = m[3].split(/<li\b/i).slice(1);
+    out.push({ key, items: lis.map((li) => ({ item: decodeEntities((li.match(/\bdata-item="([^"]*)"/) || [])[1] || ''), text: tagText('<li' + li) })) });
   }
   return out;
 }
 function checkLists(file, html) {
-  for (const l of includedLists(html)) for (const x of l) if (/별도/.test(x.text)) add(file, 'included-list', "'포함' 목록 안에 별도 항목: \"" + x.text.slice(0, 40) + '"');
+  for (const l of includedLists(html)) for (const x of l.items) if (/별도/.test(x.text)) add(file, 'included-list', "'포함' 목록 안에 별도 항목: \"" + x.text.slice(0, 40) + '"');
 }
-function packagePagesFor(relPath, P) {
-  const fixed = Object.keys(P.products || {}).filter((s) => !s.startsWith('_') && P.products[s] && P.products[s].rental_summary);
-  if (relPath === 'pricing.html') return fixed;
+// 이 페이지에 반드시 있어야 하는 포함 목록(prices.json 항목 key): 가격표 = 정가 제품 대표 렌탈 전부 + 세트, 정가 제품 상세 = 그 제품 대표 렌탈
+function packageKeysFor(relPath, P) {
+  const prods = Object.keys(P.products || {}).filter((s) => !s.startsWith('_') && P.products[s] && typeof P.products[s] === 'object');
+  const fixed = prods.filter((s) => P.products[s].rental_summary);
+  if (relPath === 'pricing.html') {
+    const sets = prods.map((s) => P.products[s].set).filter(Boolean);
+    return [...new Set(fixed.map((s) => P.products[s].rental_summary).concat(sets))];
+  }
   const m = relPath.match(/^products\/([a-z0-9-]+)\.html$/);
-  return m && fixed.includes(m[1]) ? [m[1]] : [];
+  return m && fixed.includes(m[1]) ? [P.products[m[1]].rental_summary] : [];
 }
+// 5b) 포함 목록 하나하나 = prices.json 그 항목 includes (2026-11-10). 예전엔 '페이지 어딘가에 같은 목록이 하나 있으면' 통과라서
+//     카드 목록에 '촬영 키오스크'를 다시 넣어도 첫 화면 목록이 맞으면 조용히 통과했다. 이제 목록마다 data-includes 로 묶어 대조:
+//     빠짐·덧붙임·순서 무관 집합 비교, data-item 과 화면 글자가 다름, data-includes 없는 포함 목록 → 전부 package-binding.
 function checkPackages(file, html, relPath) {
   if (!PRICES) return;
-  const lists = includedLists(html).map((l) => l.map((x) => x.item).filter(Boolean).sort().join('|'));
-  for (const slug of packagePagesFor(relPath || rel(file), PRICES)) {
-    const inc = (PRICES.items[PRICES.products[slug].rental_summary].includes || []).slice().sort().join('|');
-    if (!lists.includes(inc)) add(file, 'package-binding', slug + ' 의 포함 목록(prices.json includes: ' + inc.replace(/\|/g, '·') + ')이 이 페이지 포함 목록에 그대로 없음');
+  const lists = includedLists(html);
+  for (const l of lists) {
+    if (!l.key) {
+      add(file, 'package-binding', "'포함' 목록에 data-includes(prices.json 항목) 표식이 없음: " + l.items.map((x) => x.text).join('·').slice(0, 50));
+      continue;
+    }
+    const it = PRICES.items[l.key];
+    if (!it || !Array.isArray(it.includes)) {
+      add(file, 'package-binding', 'data-includes="' + l.key + '" — prices.json 에 포함 목록이 있는 항목이 아님');
+      continue;
+    }
+    const want = it.includes.slice().sort().join('|');
+    const got = l.items.map((x) => x.item).sort().join('|');
+    if (want !== got) add(file, 'package-binding', l.key + ' 포함 목록이 prices.json 과 다름 — 화면: ' + (got.replace(/\|/g, '·') || '(빈 목록)') + ' / 가격표: ' + want.replace(/\|/g, '·'));
+    for (const x of l.items) if (x.item && x.text !== x.item) add(file, 'package-binding', l.key + ' 포함 목록 글자 "' + x.text.slice(0, 30) + '" ≠ data-item "' + x.item + '"');
+  }
+  const bound = new Set(lists.map((l) => l.key).filter(Boolean));
+  for (const k of packageKeysFor(relPath || rel(file), PRICES)) {
+    if (!bound.has(k)) add(file, 'package-binding', k + ' 의 포함 목록(prices.json includes: ' + (PRICES.items[k].includes || []).join('·') + ')이 이 페이지에 없음');
+  }
+}
+// 5c) 세트(bundle) 항목의 포함 = 묶인 항목 includes 의 합집합(2026-11-10). '스탠다드 부스 1대'처럼 더 구체적인 이름은 '부스 1대'를 덮는다.
+//     빠진 것(묶인 제품엔 있는데 세트엔 없음)·지어낸 것(어느 묶인 제품에도 없음) 모두 FAIL. 순수 함수 — 셀프테스트에서 합성 가격표로 시험.
+function bundleViolations(P) {
+  const out = [];
+  const covers = (a, b) => a === b || a.endsWith(' ' + b);
+  for (const k of Object.keys(P.items || {})) {
+    const it = P.items[k];
+    if (!it || !Array.isArray(it.bundle)) continue;
+    const comp = [];
+    for (const c of it.bundle) {
+      if (!P.items[c]) out.push(k + ': 묶음 항목 ' + c + ' 이 가격표에 없음');
+      else comp.push(...(P.items[c].includes || []));
+    }
+    const inc = it.includes || [];
+    for (const c of comp) if (!inc.some((x) => covers(x, c))) out.push(k + ' 포함 목록에 "' + c + '" 없음(묶은 ' + it.bundle.join('·') + ' 에는 있음)');
+    for (const x of inc) if (!comp.some((c) => covers(x, c))) out.push(k + ' 포함 목록의 "' + x + '" 은 묶은 ' + it.bundle.join('·') + ' 어디에도 없음');
+  }
+  return out;
+}
+// 5d) 인화지 매수(sheet-count, 2026-11-10): 'N매' 는 prices.json 항목(includes·unit·label·note)에 있는 매수만.
+//     기본 구성에서 빠진 '인화지 1,400매'가 손글(블로그·FAQ)에 남으면 FAIL — 금액이 아니라서 price-mismatch 가 못 잡던 자리.
+const SHEET_RE = /([0-9][0-9,]*)[ \t]*매(?![장출일년달주번])/g;
+function sheetCounts(P) {
+  const s = new Set();
+  for (const k of Object.keys(P.items || {})) {
+    const it = P.items[k];
+    for (const str of [].concat(it.includes || [], it.unit || [], it.label || [], it.note || [])) {
+      let m;
+      const re = new RegExp(SHEET_RE.source, 'g');
+      while ((m = re.exec(str))) s.add(Number(m[1].replace(/,/g, '')));
+    }
+  }
+  return s;
+}
+function checkSheets(file, text, where) {
+  if (!PRICES) return;
+  const ok = sheetCounts(PRICES);
+  let m;
+  const re = new RegExp(SHEET_RE.source, 'g');
+  while ((m = re.exec(text))) {
+    const n = Number(m[1].replace(/,/g, ''));
+    if (!ok.has(n)) add(file, 'sheet-count', '가격표(data/prices.json)에 없는 인화지 매수' + (where || '') + ': "' + m[0].trim() + '" (가격표 매수: ' + [...ok].map((x) => x.toLocaleString('en-US') + '매').join('·') + ')');
   }
 }
 function checkEmptyRows(file, html) {
@@ -477,6 +551,7 @@ function checkCopy(file, html) {
   checkBound(file, html);
   checkProximity(file, html);
   checkVat(file, exposed);
+  checkSheets(file, exposed);
   for (const re of BANNED_COPY) {
     const m = body.match(re);
     if (m) add(file, 'banned-copy', '금지 카피: "' + m[0] + '"');
@@ -516,8 +591,15 @@ function checkDataJson(dir) {
       else if (o && typeof o === 'object') Object.keys(o).forEach((k) => walk(o[k]));
     })(j);
     checkMoneyText(f, strs.join('\n'), ' (data)');
-    if (path.basename(f) !== 'prices.json') checkVat(f, strs.join('\n')); // prices.json 은 표기 후보 목록 자체를 담는다
+    if (path.basename(f) !== 'prices.json') {
+      checkVat(f, strs.join('\n')); // prices.json 은 표기 후보 목록 자체를 담는다
+      checkSheets(f, strs.join('\n'), ' (data)'); // prices.json 은 매수의 출처(_doc 에 옛 지시 원문 인용이 있다)
+    }
   }
+}
+function checkBundles() {
+  if (!PRICES) return;
+  for (const v of bundleViolations(PRICES)) add(path.join(ROOT, 'data', 'prices.json'), 'bundle-includes', v);
 }
 
 // HTML·data 밖의 저장소 텍스트(문서·메모 .md/.txt, sitemap, js, css)도 공개 URL로 나간다 → 같은 금액 규칙.
@@ -778,9 +860,16 @@ if (process.argv.includes('--selftest')) {
   const faq = (ans) => '<script type="application/ld+json">{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"얼마인가요?","acceptedAnswer":{"@type":"Answer","text":"' + ans + '"}}]}</script>';
   const BOUND = '<p>렌탈 <span class="amt" data-price-key="std_short">' + man(a0) + '</span> · 2대 <span class="amt" data-price-total="2:1">' + man(a0 + b0) + '</span></p>' +
     '<table><tr data-product="photo-kiosk"><th>포토키오스크</th><td><span class="amt" data-price-key="wood_buy">' + man(it0.wood_buy.amount) + '</span></td></tr></table>';
-  const STD_INC = it0[P0.products['standard-booth'].rental_summary].includes || [];
-  const INCL = '<ul data-list="included">' + STD_INC.map((x) => '<li data-item="' + x + '">' + x + '</li>').join('') + '</ul><ul data-list="separate"><li>운송비 별도</li></ul>' +
+  const STD_KEY = P0.products['standard-booth'].rental_summary;
+  const STD_INC = it0[STD_KEY].includes || [];
+  const STD_UL = '<ul data-list="included" data-includes="' + STD_KEY + '">';
+  const INCL = STD_UL + STD_INC.map((x) => '<li data-item="' + x + '">' + x + '</li>').join('') + '</ul><ul data-list="separate"><li>운송비 별도</li></ul>' +
     '<table data-table="install"><tbody><tr><th scope="row">차지 면적</th><td>1,860 × 1,860mm</td></tr></tbody></table>';
+  // 세트(2026-11-10) 대조군 — 정상판엔 '세트 + 금액'과 세트 포함 목록을 넣고(걸리면 오탐), 결함판은 낱말·항목을 바꾼다.
+  const BAD_SHEETS = [2, 3, 4, 5, 6, 7, 8, 9].map((i) => i * 700).find((n) => !sheetCounts(P0).has(n));
+  const SETK = P0.products['standard-booth'].set;
+  const SETP = SETK ? '<p>' + it0[SETK].name + ' ' + man(it0[SETK].amount) + '</p><ul data-list="included" data-includes="' + SETK + '">' +
+    it0[SETK].includes.map((x) => '<li data-item="' + x + '">' + x + '</li>').join('') + '</ul><p>인화지 ' + (it0.paper_700 ? it0.paper_700.unit : '') + ' 추가</p>' : '';
   const OG = '<meta property="og:description" content="스탠다드 부스 ' + man(a0) + '">';
   const KOR = { 1: '일', 2: '이', 3: '삼', 4: '사', 5: '오', 6: '육', 7: '칠', 8: '팔', 9: '구' };
   const hangul = (n) => [[1000, '천'], [100, '백'], [10, '십']].reduce((acc, [u, c]) => { const q = Math.floor(acc[1] / u); return q ? [acc[0] + (q > 1 ? KOR[q] : '') + c, acc[1] % u] : acc; }, ['', n]).reduce((s, r) => s + (r ? KOR[r] : ''));
@@ -789,7 +878,7 @@ if (process.argv.includes('--selftest')) {
   const CONDK = Object.keys(it0).find((k) => it0[k].requires_word);
   const CONDP = CONDK ? '<p>스탠다드 부스 ' + it0[CONDK].requires_word + ' 랩핑 시 ' + man(it0[CONDK].amount) + '</p>' : '';
   const CLEAN_P = CLEAN.replace('렌탈 문의 주세요.', REAL).replace('</head>', OG + '</head>')
-    .replace('</section>', BOUND + INCL + NOTMONEY + CONDP + '</section>')
+    .replace('</section>', BOUND + INCL + NOTMONEY + CONDP + SETP + '</section>')
     .replace('</body>', offer(a0 * 10000) + faq('2대면 ' + man(a0 + b0) + '(' + VAT + ')입니다.') + '</body>');
   const CASES = [
     ['price-mismatch', CLEAN_P.replace(REAL, REAL + ' 대여료 150,000원입니다.')],
@@ -807,7 +896,13 @@ if (process.argv.includes('--selftest')) {
     ['price-binding', CLEAN_P.replace('포토키오스크 ' + man(it0.wood_buy.amount), '포토키오스크 ' + man(it0.std_buy.amount))], // 손글: 이름 ↔ 금액 뒤바뀜
     ['price-binding', CLEAN_P.replace(REAL, REAL + ' 미러포토부스는 ' + man(a0) + '입니다.')], // 협의 제품 이름 뒤 정가
     ...(CONDK ? [['price-condition', CLEAN_P.replace(CONDP, '<p>스탠다드 부스 렌탈 ' + man(it0[CONDK].amount) + '</p>')]] : []), // 옛 기본가가 조건 낱말 없이 남음
-    ['included-list', CLEAN_P.replace('<ul data-list="included">', '<ul data-list="included"><li>운송비 별도</li>')],
+    ['included-list', CLEAN_P.replace(STD_UL, STD_UL + '<li>운송비 별도</li>')],
+    // 2026-11-10: 포함 목록 하나하나 대조 — 빠진 항목을 다시 넣음 / 표식 없는 포함 목록 / data-item 과 화면 글자 다름 / 매수 잔재 / 세트 낱말 없는 세트 금액
+    ['package-binding', CLEAN_P.replace(STD_UL, STD_UL + '<li data-item="촬영 키오스크">촬영 키오스크</li>')],
+    ['package-binding', CLEAN_P.replace(STD_UL, '<ul data-list="included">')],
+    ['package-binding', CLEAN_P.replace('<li data-item="' + STD_INC[STD_INC.length - 1] + '">' + STD_INC[STD_INC.length - 1] + '</li>', '<li data-item="' + STD_INC[STD_INC.length - 1] + '">' + STD_INC[STD_INC.length - 1] + ' · 촬영 키오스크</li>')],
+    ['sheet-count', CLEAN_P.replace(REAL, REAL + ' 인화지 ' + BAD_SHEETS.toLocaleString('en-US') + '매 포함.')], // 가격표에 없는 매수(계산해 만든다)
+    ...(SETK ? [['price-condition', CLEAN_P.replace(SETP, SETP + '<p>스탠다드 부스 렌탈 ' + man(it0[SETK].amount) + '</p>')]] : []),
     ['empty-row', CLEAN_P.replace('</tbody></table>', '<tr><th scope="row">전원</th><td> </td></tr></tbody></table>')],
     ['vat-label', CLEAN_P.replace(REAL, REAL + ' (' + (OTHER_VAT || '부가세 포함') + ')')],
     ['banned-copy', CLEAN.replace('렌탈 문의 주세요.', '업계 최저가 보장.')],
@@ -882,6 +977,19 @@ if (process.argv.includes('--selftest')) {
     ok(okD.length === 0, 'data JSON 정상판 통과');
     ok(badD.includes('price-mismatch'), 'data JSON — 틀린 금액을 물었다');
   }
+  // 5c 세트 포함 = 묶인 항목 합집합: 실제 가격표는 통과, 합성 가격표(빠짐·지어냄)는 FAIL
+  {
+    ok(bundleViolations(P0).length === 0, 'bundle-includes 정상판(실제 prices.json) 통과' + (bundleViolations(P0).length ? ' (' + bundleViolations(P0)[0] + ')' : ''));
+    if (SETK) {
+      const clone = () => JSON.parse(JSON.stringify(P0));
+      const miss = clone();
+      miss.items[SETK].includes = miss.items[SETK].includes.filter((x) => !/인화지/.test(x));
+      ok(bundleViolations(miss).length > 0, 'bundle-includes — 묶인 제품의 포함 항목(인화지)이 세트에서 빠지면 물었다');
+      const extra = clone();
+      extra.items[SETK].includes = extra.items[SETK].includes.concat(['촬영 키오스크']);
+      ok(bundleViolations(extra).length > 0, 'bundle-includes — 묶인 제품 어디에도 없는 항목(촬영 키오스크)을 세트에 지어내면 물었다');
+    }
+  }
   // 9d PDF: 글자를 뽑는 함수를 바꿔 끼워 양방향(실제 pdftotext 유무와 무관하게 규칙만 시험)
   {
     const runPdf = (ex) => {
@@ -900,10 +1008,10 @@ if (process.argv.includes('--selftest')) {
   fs.unlinkSync(tmp);
   // 실제 사이트: 지금 페이지는 가격·연결·포함 규칙에 통과해야 하고, 같은 페이지에 결함을 하나 심으면 FAIL 이어야 한다.
   {
-    const PRICE_RULES = new Set(['price-mismatch', 'price-binding', 'included-list', 'package-binding', 'empty-row', 'vat-label']);
+    const PRICE_RULES = new Set(['price-mismatch', 'price-binding', 'price-condition', 'included-list', 'package-binding', 'empty-row', 'vat-label', 'sheet-count']);
     const real = (r) => fs.readFileSync(path.join(ROOT, r), 'utf8');
     const runReal = (r, html) => run(html, path.join(ROOT, r), r).filter((x) => PRICE_RULES.has(x));
-    const pages = ['index.html', 'pricing.html', 'products.html', 'guide.html', 'products/standard-booth.html', 'products/photo-kiosk.html', 'products/mirror-booth.html'];
+    const pages = ['index.html', 'pricing.html', 'products.html', 'guide.html', 'products/standard-booth.html', 'products/photo-kiosk.html', 'products/mirror-booth.html', 'blog/standard-booth-story.html'];
     for (const r of pages) {
       const got = runReal(r, real(r));
       ok(got.length === 0, '실제 ' + r + ' 통과' + (got.length ? ' (걸린 것: ' + viol.filter((v) => PRICE_RULES.has(v.rule)).slice(0, 3).map((v) => v.rule + ' ' + v.msg).join(' / ') + ')' : ''));
@@ -928,9 +1036,24 @@ if (process.argv.includes('--selftest')) {
     // 2026-10-20: 홈 라인업의 손글 '포토키오스크 650만원' 줄이 없어져(정가는 가격 2카드에 한 번만) FAQ 비용 답변(표식 없는 손글)에 심는다
     plant('index.html', '포토키오스크는 키오스크만 렌탈 월 ' + man(it0.wood_monthly.amount), '포토키오스크는 키오스크만 렌탈 월 ' + sb, 'price-binding', '손글 "포토키오스크 렌탈가" 자리에 스탠다드 구매가');
     plant('products/standard-booth.html', null, '', 'package-binding', '포함 목록에서 설치·회수 삭제', /<li data-item="설치·회수">[\s\S]*?<\/li>/g);
-    plant('products/standard-booth.html', '<ul class="ie-list" data-list="included">', '<ul class="ie-list" data-list="included"><li>운송비 별도</li>', 'included-list', "'포함' 목록에 운송비 별도");
+    const STD_CARD_UL = '<ul class="ie-list" data-list="included" data-includes="' + STD_KEY + '">';
+    plant('products/standard-booth.html', STD_CARD_UL, STD_CARD_UL + '<li>운송비 별도</li>', 'included-list', "'포함' 목록에 운송비 별도");
     plant('products/standard-booth.html', '</tbody></table><p class="ins-note">', '<tr><th scope="row">전원</th><td></td></tr></tbody></table><p class="ins-note">', 'empty-row', '설치 조건 표에 빈 값 행');
     plant('products/standard-booth.html', '"price":' + it0.std_buy.amount * 10000, '"price":' + it0.wood_buy.amount * 10000, 'price-binding', 'JSON-LD Offer 구매가를 포토키오스크 구매가로');
+    // 2026-11-10 스탠다드 포함 목록에서 촬영 키오스크 삭제 · 세트 신설 — 되돌리거나 화면에만 바꾸면 FAIL
+    const KIOSK_LI = '<li data-item="촬영 키오스크"><span class="ie-ck" aria-hidden="true"></span><span>촬영 키오스크</span></li>';
+    plant('products/standard-booth.html', STD_CARD_UL, STD_CARD_UL + KIOSK_LI, 'package-binding', "가격 카드 포함 목록에 '촬영 키오스크' 다시 넣음(첫 화면 목록은 그대로)");
+    plant('pricing.html', STD_CARD_UL, STD_CARD_UL + KIOSK_LI, 'package-binding', "가격표 스탠다드 포함 목록에 '촬영 키오스크' 다시 넣음");
+    plant('index.html', '<ul role="list" data-list="included" data-includes="' + STD_KEY + '"', '<ul role="list" data-list="included"', 'package-binding', '히어로 포함 칩 목록의 data-includes 표식 뗌');
+    plant('blog/standard-booth-story.html', '3면 랩핑과 설치·회수가 함께 들어 있고', '3면 랩핑과 인화지 ' + BAD_SHEETS.toLocaleString('en-US') + '매가 함께 들어 있고', 'sheet-count', '손글 요약에 가격표에 없는 인화지 매수');
+    if (SETK) {
+      const sm = man(it0[SETK].amount);
+      const sw = it0[SETK].requires_word;
+      plant('pricing.html', 'data-price-key="' + SETK + '">' + sw + ' ' + sm, 'data-price-key="' + SETK + '">' + sw + ' ' + man(it0[SETK].amount - 10), 'price-binding', '세트 카드 금액을 화면에서만 10만원 내림');
+      plant('pricing.html', 'data-price-key="' + SETK + '">' + sm, 'data-price-key="' + SETK + '">' + man(it0[SETK].amount - 10), 'price-mismatch', '가격표 요약 세트 금액을 화면에서만 10만원 내림');
+      plant('index.html', '<b data-price-key="' + SETK + '">' + sw + ' ' + sm + '</b>', '<b data-price-key="' + SETK + '">' + sm + '</b>', 'price-condition', "홈 세트 금액 앞 '" + sw + "' 낱말 뗌");
+      plant('products.html', '<ul class="fc-hl" data-list="included" data-includes="' + SETK + '">', '<ul class="fc-hl" data-list="included" data-includes="' + SETK + '"><li data-item="촬영 키오스크">촬영 키오스크</li>', 'package-binding', "허브 세트 포함 목록에 '촬영 키오스크' 덧붙임");
+    }
     console.log(bad ? '\n역검증 FAIL — ' + bad + '/' + n + '건' : '\n역검증 PASS — ' + n + '개 시험(합성 결함 ' + CASES.length + '종 + 실제 페이지에 심은 결함 ' + planted + '종 검출, 정상판·실제 페이지 ' + pages.length + '장 통과)');
   }
   process.exit(bad ? 1 : 0);
@@ -942,6 +1065,7 @@ for (const f of files) checkFile(f, fs.readFileSync(f, 'utf8'));
 if (!argv.length) {
   checkSitemap(files);
   checkDataJson(path.join(ROOT, 'data'));
+  checkBundles();
   checkTextFiles();
   checkPdfs();
   checkPriceCoverage();
